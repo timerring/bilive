@@ -52,11 +52,11 @@ def upload_video(upload_path, yaml_file_path):
             os.remove(upload_path)
         else:
             print("Fail to upload, the files will be reserved.")
-            sys.exit(1)
+            return False
     
     except subprocess.CalledProcessError:
         print("Fail to upload, the files will be reserved.")
-        sys.exit(1)
+        return False
 
 def find_bv_number(target_str, my_list):
     for element in my_list:
@@ -107,7 +107,7 @@ def read_append_and_delete_lines(file_path):
                 
     except subprocess.CalledProcessError:
         print("Fail to upload, the files will be reserved.")
-        sys.exit(1)
+        return False
 
 def append_upload(upload_path, bv_result):
     try:
@@ -130,11 +130,11 @@ def append_upload(upload_path, bv_result):
             os.remove(upload_path)
         else:
             print("Fail to upload, the files will be reserved.")
-            sys.exit(1)
+            return False
     
     except subprocess.CalledProcessError:
         print("Fail to upload, the files will be reserved.")
-        sys.exit(1)
+        return False
 
 if __name__ == "__main__":    
     # read the queue and upload the video
