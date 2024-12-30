@@ -3,10 +3,13 @@
 import argparse
 import os
 import subprocess
-from src.config import GPU_EXIST, SRC_DIR, MODEL_TYPE
+from src.config import GPU_EXIST, SRC_DIR, MODEL_TYPE, AUTO_SLICE, SLICE_DURATION
 from src.burn.generate_danmakus import get_resolution, process_danmakus
 from src.burn.generate_subtitles import generate_subtitles
 from src.burn.render_video import render_video
+from src.autoslice.slice_video import slice_video, inject_metadata, zhipu_glm_4v_plus_generate_title
+from src.autoslice.calculate_density import extract_dialogues, calculate_density, format_time
+from src.upload.extract_video_info import get_video_info
 import queue
 import threading
 import time
@@ -52,7 +55,20 @@ def render_video_only(video_path):
     render_video(original_video_path, format_video_path, subtitle_font_size, subtitle_margin_v)
     print("complete danamku burning and wait for uploading!", flush=True)
 
-    # # Delete relative files
+    if AUTO_SLICE:
+        title, artist, date = get_video_info(format_video_path)
+        slice_video_path = format_video_path[:-4] + '_slice.mp4'
+        dialogues = extract_dialogues(ass_path)
+        max_start_time, max_density = calculate_density(dialogues)
+        formatted_time = format_time(max_start_time)
+        print(f"The 30-second window with the highest density starts at {formatted_time} seconds with {max_density} danmakus.", flush=True)
+        slice_video(format_video_path, max_start_time, slice_video_path)
+        glm_title = zhipu_glm_4v_plus_generate_title(slice_video_path, artist)
+        slice_video_flv_path = slice_video_path[:-4] + '.flv'
+        inject_metadata(slice_video_path, glm_title, slice_video_flv_path)
+        os.remove(slice_video_path)
+
+    # Delete relative files
     for remove_path in [original_video_path, xml_path, ass_path, srt_path, jsonl_path]:
         if os.path.exists(remove_path):
             os.remove(remove_path)
@@ -63,6 +79,9 @@ def render_video_only(video_path):
 
     with open(f"{SRC_DIR}/upload/uploadVideoQueue.txt", "a") as file:
         file.write(f"{format_video_path}\n")
+        if AUTO_SLICE:
+            print("complete slice video and wait for uploading!", flush=True)
+            file.write(f"{slice_video_flv_path}\n")
 
 class VideoRenderQueue:
     def __init__(self):

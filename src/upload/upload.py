@@ -5,7 +5,7 @@ import os
 import sys
 from src.config import SRC_DIR, BILIVE_DIR
 from datetime import datetime
-from src.upload.generate_yaml import generate_yaml_template
+from src.upload.generate_yaml import generate_yaml_template, generate_slice_yaml_template
 from src.upload.extract_video_info import generate_title
 import time
 import fcntl
@@ -87,23 +87,32 @@ def read_append_and_delete_lines(file_path):
 
             print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} " + "deal with " + upload_video_path, flush=True)
             # check if the live is already uploaded
-            query = generate_title(upload_video_path)
-            result = subprocess.check_output(f"{SRC_DIR}/upload/biliup" + " -u " + f"{SRC_DIR}/upload/cookies.json" + " list", shell=True)
-            upload_list = result.decode("utf-8").splitlines()
-            limit_list = upload_list[:30]
-            bv_result = find_bv_number(query, limit_list)
-            if bv_result:
-                print(f"BV number is: {bv_result}", flush=True)
-                append_upload(upload_video_path, bv_result)
-            else:
-                print("First upload this live", flush=True)
-                # generate the yaml template
-                yaml_template = generate_yaml_template(upload_video_path)
+            if upload_video_path.endswith('.flv'):
+                # upload slice video
+                yaml_template = generate_slice_yaml_template(upload_video_path)
                 yaml_file_path = SRC_DIR + "/upload/upload.yaml"
                 with open(yaml_file_path, 'w', encoding='utf-8') as file:
                     file.write(yaml_template)
                 upload_video(upload_video_path, yaml_file_path)
                 return
+            else:
+                query = generate_title(upload_video_path)
+                result = subprocess.check_output(f"{SRC_DIR}/upload/biliup" + " -u " + f"{SRC_DIR}/upload/cookies.json" + " list", shell=True)
+                upload_list = result.decode("utf-8").splitlines()
+                limit_list = upload_list[:30]
+                bv_result = find_bv_number(query, limit_list)
+                if bv_result:
+                    print(f"BV number is: {bv_result}", flush=True)
+                    append_upload(upload_video_path, bv_result)
+                else:
+                    print("First upload this live", flush=True)
+                    # generate the yaml template
+                    yaml_template = generate_yaml_template(upload_video_path)
+                    yaml_file_path = SRC_DIR + "/upload/upload.yaml"
+                    with open(yaml_file_path, 'w', encoding='utf-8') as file:
+                        file.write(yaml_template)
+                    upload_video(upload_video_path, yaml_file_path)
+                    return
                 
     except subprocess.CalledProcessError:
         print("Fail to upload, the files will be reserved.")
