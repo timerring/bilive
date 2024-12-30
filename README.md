@@ -4,11 +4,21 @@
     <img src="assets/headerLight.svg" alt="BILIVE" />
   </picture>
 
-*7 x 24 小时无人监守录制、渲染弹幕、识别字幕、自动上传，启动项目，人人都是录播员。*
+*7 x 24 小时无人监守录制、渲染弹幕、识别字幕、自动切片、自动上传，启动项目，人人都是录播员。*
+
+支持模型
+
+  <picture>
+    <img src="assets/openai.svg" alt="OpenAI whisper" />
+    <img src="assets/zhipu.svg" alt="Zhipu GLM-4V-PLUS" />
+    <img src="assets/gemini-brand.svg" alt="Google Gemini 1.5 Pro" />
+  </picture>
 
 [:page_facing_up: Documentation](https://timerring.github.io/bilive/) |
 [:gear: Installation](#quick-start) |
 [:thinking: Reporting Issues](https://github.com/timerring/bilive/issues/new/choose)
+
+
 
 </div>
 
@@ -29,6 +39,7 @@
 - **自动渲染弹幕**：自动转换xml为ass弹幕文件并且渲染到视频中形成**有弹幕版视频**并自动上传。
 - **硬件要求极低**：无需GPU，只需最基础的单核CPU搭配最低的运存即可完成录制，弹幕渲染，上传等等全部过程，无最低配置要求，10年前的电脑或服务器依然可以使用！
 - **( :tada: NEW)自动渲染字幕**(如需使用本功能，则需保证有 Nvidia 显卡)：采用 OpenAI 的开源模型 [`whisper`](https://github.com/openai/whisper)，自动识别视频内语音并转换为字幕渲染至视频中。
+- **( :tada: NEW)自动切片上传**：根据弹幕密度计算寻找高能片段并切片，结合多模态视频理解大模型 [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4) 自动生成有意思的切片标题及内容，并且自动上传。
 
 项目架构流程如下：
 
@@ -46,8 +57,13 @@ graph TD
         ifDanmaku -->|有弹幕| DanmakuFactory[DanmakuFactory]
         ifDanmaku -->|无弹幕| ffmpeg1[ffmpeg]
         DanmakuFactory[DanmakuFactory] --根据分辨率转换弹幕--> ffmpeg1[ffmpeg]
+        ffmpeg1[ffmpeg] --渲染弹幕及字幕 --> Video[视频文件]
+        Video[视频文件] --计算弹幕密度并切片--> GLM[多模态视频理解模型]
+        GLM[多模态视频理解模型] --生成切片信息--> slice[视频切片]
         end
-        ffmpeg1[ffmpeg] --渲染弹幕及字幕 --> uploadQueue[(上传队列)]
+        
+        slice[视频切片] --> uploadQueue[(上传队列)]
+        Video[视频文件] --> uploadQueue[(上传队列)]
 
         User((用户))--upload-->startUpload(启动视频上传进程)
         startUpload(启动视频上传进程) <--扫描队列并上传视频--> uploadQueue[(上传队列)]
@@ -110,8 +126,9 @@ pip install -r requirements.txt
 ./setPath.sh && source ~/.bashrc
 ```
 
-#### 3. 配置 whisper 模型
+#### 3. 配置 whisper 模型及 GLM-4V-PLUS 模型
 
+##### 3.1 whisper 模型
 项目默认采用 [`small`](https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt) 模型，请点击下载所需文件，并放置在 `src/subtitle/models` 文件夹中。
 
 > [!TIP]
@@ -119,6 +136,11 @@ pip install -r requirements.txt
 > + 更多模型请参考 [whisper 参数模型](https://timerring.github.io/bilive/models.html) 部分。
 > + 更换模型方法请参考 [更换模型方法](https://timerring.github.io/bilive/models.html#更换模型方法) 部分。
 
+##### 3.2 GLM-4V-PLUS 模型
+
+> 此功能默认关闭，如果需要打开请将 `src/config.py` 文件中的 `AUTO_SLICE` 参数设置为 `True`
+
+在配置文件 `src/config.py` 中，`SLICE_DURATION` 以秒为单位设置切片时长（不建议超过 1 分钟），在项目的自动切片功能需要使用到智谱的 [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4) 模型，请自行[注册账号](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D)并申请 API Key，填写到 `src/config.py` 文件中对应的 `Your_API_KEY` 中。
 
 #### 4. biliup-rs 登录
 
@@ -176,7 +198,7 @@ logs # 日志文件夹
 ```
 
 ### Installation(无 GPU 版本)
-无 GPU 版本过程基本同上，可以跳过步骤 3，需要注意在执行步骤 5 **之前**完成以下设置将确保完全用 CPU 渲染视频弹幕。
+无 GPU 版本过程基本同上，可以跳过步骤 3 配置 whisper 的部分，需要注意在执行步骤 5 **之前**完成以下设置将确保完全用 CPU 渲染视频弹幕。
 
 1. 请将 `src/config.py` 文件中的 `GPU_EXIST` 参数设置为 `False`。（若不置为 `False` 且则会使用 CPU 推理，不推荐，可自行根据硬件条件进行尝试。）
 2. 将 `MODEL_TYPE` 调整为 `merge` 或者 `append`。

@@ -10,7 +10,7 @@ GPU_EXIST=True
 # Can be pipeline, append, merge
 MODEL_TYPE = "pipeline"
 Inference_Model = "small"
-AUTO_SLICE = True
+AUTO_SLICE = False
 SLICE_DURATION = 30
 # Apply for your own GLM-4v-Plus API key at https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D
 Your_API_KEY = ""
