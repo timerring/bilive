@@ -1,3 +1,5 @@
+# Copyright (c) 2024 bilive.
+
 import subprocess
 from src.autoslice.calculate_density import extract_dialogues, calculate_density, format_time
 from src.config import Your_API_KEY, SLICE_DURATION

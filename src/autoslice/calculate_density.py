@@ -1,3 +1,5 @@
+# Copyright (c) 2024 bilive.
+
 import re
 from collections import defaultdict
 from src.config import SLICE_DURATION
