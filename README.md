@@ -13,8 +13,8 @@
 支持模型
 
   <img src="assets/openai.svg" alt="OpenAI whisper" width="60" height="60" />
-  <img src="assets/zhipu.svg" alt="Zhipu GLM-4V-PLUS" width="60" height="60" />
-  <img src="assets/gemini-brand.svg" alt="Google Gemini 1.5 Pro" width="60" height="60" />
+  <img src="assets/zhipu-color.svg" alt="Zhipu GLM-4V-PLUS" width="60" height="60" />
+  <img src="assets/gemini-brand-color.svg" alt="Google Gemini 1.5 Pro" width="60" height="60" />
 
 </div>
 
