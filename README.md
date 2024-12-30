@@ -6,17 +6,15 @@
 
 *7 x 24 小时无人监守录制、渲染弹幕、识别字幕、自动切片、自动上传，启动项目，人人都是录播员。*
 
+[:page_facing_up: Documentation](https://timerring.github.io/bilive/) |
+[:gear: Installation](#quick-start) |
+[:thinking: Reporting Issues](https://github.com/timerring/bilive/issues/new/choose)
+
 支持模型
 
   <img src="assets/openai.svg" alt="OpenAI whisper" width="60" height="60" />
   <img src="assets/zhipu.svg" alt="Zhipu GLM-4V-PLUS" width="60" height="60" />
   <img src="assets/gemini-brand.svg" alt="Google Gemini 1.5 Pro" width="60" height="60" />
-
-[:page_facing_up: Documentation](https://timerring.github.io/bilive/) |
-[:gear: Installation](#quick-start) |
-[:thinking: Reporting Issues](https://github.com/timerring/bilive/issues/new/choose)
-
-
 
 </div>
 
