@@ -24,6 +24,11 @@ def normalize_video_path(filepath):
     new_date_time = f"{date_time_parts[0][:4]}-{date_time_parts[0][4:6]}-{date_time_parts[0][6:8]}-{date_time_parts[1]}-{date_time_parts[2]}"
     return filepath.rsplit('/', 1)[0] + '/' + parts[0] + '_' + new_date_time + '-.mp4'
 
+def check_file_size(file_path):
+    file_size = os.path.getsize(file_path)
+    file_size_mb = file_size / (1024 * 1024)
+    return file_size_mb
+
 def render_video_only(video_path):
     if not os.path.exists(video_path):
         print(f"File {video_path} does not exist.")
@@ -56,17 +61,18 @@ def render_video_only(video_path):
     print("complete danamku burning and wait for uploading!", flush=True)
 
     if AUTO_SLICE:
-        title, artist, date = get_video_info(format_video_path)
-        slice_video_path = format_video_path[:-4] + '_slice.mp4'
-        dialogues = extract_dialogues(ass_path)
-        max_start_time, max_density = calculate_density(dialogues)
-        formatted_time = format_time(max_start_time)
-        print(f"The 30-second window with the highest density starts at {formatted_time} seconds with {max_density} danmakus.", flush=True)
-        slice_video(format_video_path, max_start_time, slice_video_path)
-        glm_title = zhipu_glm_4v_plus_generate_title(slice_video_path, artist)
-        slice_video_flv_path = slice_video_path[:-4] + '.flv'
-        inject_metadata(slice_video_path, glm_title, slice_video_flv_path)
-        os.remove(slice_video_path)
+        if check_file_size(format_video_path) > 200:
+            title, artist, date = get_video_info(format_video_path)
+            slice_video_path = format_video_path[:-4] + '_slice.mp4'
+            dialogues = extract_dialogues(ass_path)
+            max_start_time, max_density = calculate_density(dialogues)
+            formatted_time = format_time(max_start_time)
+            print(f"The 30-second window with the highest density starts at {formatted_time} seconds with {max_density} danmakus.", flush=True)
+            slice_video(format_video_path, max_start_time, slice_video_path)
+            glm_title = zhipu_glm_4v_plus_generate_title(slice_video_path, artist)
+            slice_video_flv_path = slice_video_path[:-4] + '.flv'
+            inject_metadata(slice_video_path, glm_title, slice_video_flv_path)
+            os.remove(slice_video_path)
 
     # Delete relative files
     for remove_path in [original_video_path, xml_path, ass_path, srt_path, jsonl_path]:
