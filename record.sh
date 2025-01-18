@@ -8,6 +8,6 @@ export no_proxy=*
 host=0.0.0.0
 port=2233
 
-kill -9 $(pgrep -f blrec)
+kill -9 $(ps aux | grep '[b]lrec' | awk '{print $2}')
 nohup blrec -c $config --open --host $host --port $port > $BILIVE_PATH/logs/blrec.log 2>&1 &
 echo "blrec run success!"
