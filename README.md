@@ -204,6 +204,23 @@ logs # 日志文件夹
 > + 默认描述是"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"
 > + 默认标签是根据主播名字自动在 b 站搜索推荐中抓取的[热搜词]，详见[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/suggest.md)。
 
+### Docker 运行
+
+也可以直接拉取 docker 镜像运行，默认 latest，如果无法pull，考虑使用镜像地址，例如 https://dockerpull.cn/
+
+> [!IMPORTANT]
+> 如果不需要使用可视化页面可以忽略以下提醒：
+> 不推荐在有公网 ip 的服务器上直接暴露 22333 端口访问管理页面，如果使用请自行限制端口入站 ip 规则或者采用 nginx 等反向代理配置密钥限制他人访问。
+
+> 默认启动 upload 进程，record 以及 scan 可以在配置后手动启动，相关配置流程从 3.2 开始即可。
+
+```bash
+sudo docker run \
+    -itd \
+    --name bilive_docker \
+    -p 22333:2233 \
+    timerring/bilive
+```
 
 ## 特别感谢
 

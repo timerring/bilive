@@ -1,0 +1,11 @@
+logs/*/*
+!logs/*/.gitkeep
+
+node_modules/
+pnpm-lock.yaml
+**/__pycache__
+test/*
+Videos/*
+settings-production.toml
+startRecord-production.sh
+src/upload/cookies.json
