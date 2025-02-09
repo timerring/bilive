@@ -10,8 +10,11 @@ GPU_EXIST=True
 # Can be pipeline, append, merge
 MODEL_TYPE = "pipeline"
 Inference_Model = "small"
+# ============================ The video slice configuration ==================
 AUTO_SLICE = False
 SLICE_DURATION = 30
+# The minimum video size to be sliced (MB)
+MIN_VIDEO_SIZE = 200
 # Apply for your own GLM-4v-Plus API key at https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D
 Your_API_KEY = ""
 # ============================ Basic configuration ============================

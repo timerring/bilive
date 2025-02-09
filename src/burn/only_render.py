@@ -3,7 +3,7 @@
 import argparse
 import os
 import subprocess
-from src.config import GPU_EXIST, SRC_DIR, MODEL_TYPE, AUTO_SLICE, SLICE_DURATION
+from src.config import GPU_EXIST, SRC_DIR, MODEL_TYPE, AUTO_SLICE, SLICE_DURATION, MIN_VIDEO_SIZE
 from src.burn.generate_danmakus import get_resolution, process_danmakus
 from src.burn.generate_subtitles import generate_subtitles
 from src.burn.render_video import render_video
@@ -61,7 +61,7 @@ def render_video_only(video_path):
     print("complete danamku burning and wait for uploading!", flush=True)
 
     if AUTO_SLICE:
-        if check_file_size(format_video_path) > 200:
+        if check_file_size(format_video_path) > MIN_VIDEO_SIZE:
             title, artist, date = get_video_info(format_video_path)
             slice_video_path = format_video_path[:-4] + '_slice.mp4'
             dialogues = extract_dialogues(ass_path)
