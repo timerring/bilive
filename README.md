@@ -206,14 +206,13 @@ logs # 日志文件夹
 
 ### Docker 运行
 
-也可以直接拉取 docker 镜像运行，默认 latest。
+也可以直接拉取 docker 镜像运行，默认 latest。默认启动 upload 进程，record 以及 scan 可以在配置后手动启动，相关配置流程从 3.2 开始即可，此版本 docker 镜像无 GPU 配置。
 
 > [!IMPORTANT]
 > 如果因为网络原因无法pull，考虑使用镜像地址，例如 https://dockerpull.cn/ ，将镜像改为 `dockerpull.cn/timerring/bilive` 即可。
 > 
 > 如果不需要使用可视化页面可以忽略以下提醒：
 > - 不推荐在有公网 ip 的服务器上直接暴露 22333 端口访问管理页面，如果使用请自行限制端口入站 ip 规则或者采用 nginx 等反向代理配置密钥限制他人访问。
-> - 默认启动 upload 进程，record 以及 scan 可以在配置后手动启动，相关配置流程从 3.2 开始即可，此版本 docker 镜像无 GPU 配置。
 
 ```bash
 sudo docker run \
