@@ -26,8 +26,8 @@ def get_resolution(in_video_path):
         print("The video resolution is " + resolution, flush=True)
         return resolution
     except subprocess.CalledProcessError as e:
-        print(f"Error: {e.stderr}")
-        return None
+        print(f"Error: {e.stderr}", flush=True)
+        return '1920x1080'
 
 def process_danmakus(in_xml_path, resolution):
     """Generate and process the danmakus according to different resolution.
