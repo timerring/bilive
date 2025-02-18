@@ -137,9 +137,11 @@ pip install -r requirements.txt
 
 在配置文件 `src/config.py` 中，`SLICE_DURATION` 以秒为单位设置切片时长（不建议超过 1 分钟），在项目的自动切片功能需要使用到智谱的 [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4) 模型，请自行[注册账号](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D)并申请 API Key，填写到 `src/config.py` 文件中对应的 `Your_API_KEY` 中。
 
-#### 4. biliup-rs 登录
+#### 4. biliup & bilitool 登录
 
 首先按照 [biliup-rs](https://github.com/biliup/biliup-rs) 登录b站，登录脚本在 `src/upload/biliup` ，登录产生的`cookies.json`保留在该文件夹下即可。
+
+然后同样通过 `bilitool login` 扫码登录（biliup 的 list 对应 api 已经失效，因此我写了 [bilitool](https://github.com/timerring/bilitool) 工具作为替换）。
 
 [常见问题收集](https://timerring.github.io/bilive/biliup.html)
 

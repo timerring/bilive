@@ -61,9 +61,9 @@ def upload_video(upload_path, yaml_file_path):
 def find_bv_number(target_str, my_list):
     for element in my_list:
         if target_str in element:
-            parts = element.split('\t')
+            parts = element.split('|')
             if len(parts) > 0:
-                return parts[0]
+                return parts[1].strip()
     return None
 
 def read_append_and_delete_lines(file_path):
@@ -97,10 +97,10 @@ def read_append_and_delete_lines(file_path):
                 return
             else:
                 query = generate_title(upload_video_path)
-                result = subprocess.check_output(f"{SRC_DIR}/upload/biliup" + " -u " + f"{SRC_DIR}/upload/cookies.json" + " list", shell=True)
+                result = subprocess.check_output("bilitool" + " list", shell=True)
+                # print(result.decode("utf-8"), flush=True)
                 upload_list = result.decode("utf-8").splitlines()
-                limit_list = upload_list[:30]
-                bv_result = find_bv_number(query, limit_list)
+                bv_result = find_bv_number(query, upload_list)
                 if bv_result:
                     print(f"BV number is: {bv_result}", flush=True)
                     append_upload(upload_video_path, bv_result)

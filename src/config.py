@@ -8,7 +8,7 @@ import configparser
 # ============================ Your configuration ============================
 GPU_EXIST=False
 # Can be pipeline, append, merge
-MODEL_TYPE = "pipeline"
+MODEL_TYPE = "append"
 Inference_Model = "small"
 # ============================ The video slice configuration ==================
 AUTO_SLICE = False
