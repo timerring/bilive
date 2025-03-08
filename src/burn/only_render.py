@@ -87,6 +87,8 @@ def render_video_only(video_path):
         file.write(f"{format_video_path}\n")
         if AUTO_SLICE:
             print("complete slice video and wait for uploading!", flush=True)
+            slice_video_path = format_video_path[:-4] + '_slice.mp4'
+            slice_video_flv_path = slice_video_path[:-4] + '.flv'
             file.write(f"{slice_video_flv_path}\n")
 
 class VideoRenderQueue:
