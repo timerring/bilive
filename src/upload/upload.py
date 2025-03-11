@@ -11,33 +11,13 @@ from src.log.logger import upload_log
 import time
 import fcntl
 
-def read_and_delete_lines(file_path):
-    while True:
-        if os.path.getsize(file_path) == 0:
-            upload_log.info("Empty queue, wait 2 minutes and check again.")
-            time.sleep(120)
-            continue
-
-        with open(file_path, "r") as file:
-            lines = file.readlines()
-            upload_video_path = lines.pop(0).strip()
-            upload_log.info(f"deal with {upload_video_path}")
-            # generate the yaml template
-            yaml_template = generate_yaml_template(upload_video_path)
-            yaml_file_path = SRC_DIR + "/upload/upload.yaml"
-            with open(yaml_file_path, 'w', encoding='utf-8') as file:
-                file.write(yaml_template)
-            upload_video(upload_video_path, yaml_file_path)
-        with open(file_path, "w") as file:
-            file.writelines(lines)
-
 def upload_video(upload_path, yaml_file_path):
     try:
         # Construct the command
         command = [
-            f"{BILIVE_DIR}/src/upload/biliup",
+            f"{SRC_DIR}/utils/biliup",
             "-u",
-            f"{SRC_DIR}/upload/cookies.json",
+            f"{SRC_DIR}/utils/cookies.json",
             "upload",
             upload_path,
             "--config",
@@ -124,9 +104,9 @@ def append_upload(upload_path, bv_result):
     try:
         # Construct the command
         command = [
-            f"{BILIVE_DIR}/src/upload/biliup",
+            f"{SRC_DIR}/utils/biliup",
             "-u",
-            f"{SRC_DIR}/upload/cookies.json",
+            f"{SRC_DIR}/utils/cookies.json",
             "append",
             "--vid",
             bv_result,
@@ -151,7 +131,6 @@ def append_upload(upload_path, bv_result):
 if __name__ == "__main__":    
     # read the queue and upload the video
     queue_path = SRC_DIR + "/upload/uploadVideoQueue.txt"
-    # read_and_delete_lines(queue_path)
     while True:
         read_append_and_delete_lines(queue_path)
         upload_log.info("wait for 20 seconds")

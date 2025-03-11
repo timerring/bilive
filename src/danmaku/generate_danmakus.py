@@ -1,11 +1,12 @@
 # Copyright (c) 2024 bilive.
 
-import subprocess
-from src.utils.adjustPrice import update_sc_prices
-from src.config import DanmakuFactory_PATH
 import os
-from src.utils.removeEmojis import *
+import subprocess
+from src.config import DanmakuFactory_PATH
 from src.log.logger import scan_log
+from .adjust_price import update_danmaku_prices
+from .remove_emojis import remove_emojis
+
 
 def get_resolution(in_video_path):
     """Return the resolution of video
@@ -40,7 +41,7 @@ def process_danmakus(in_xml_path, resolution):
     """
     if os.path.isfile(in_xml_path):
         # Adjust the price of sc and guard
-        update_sc_prices(in_xml_path)
+        update_danmaku_prices(in_xml_path)
         in_ass_path = in_xml_path[:-4] + '.ass'
         if resolution == '1280x720':
             boxsize = '500x720'

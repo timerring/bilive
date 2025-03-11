@@ -1,9 +1,9 @@
 # Copyright (c) 2024 bilive.
 
-import xml.etree.ElementTree as ET
 import argparse
+import xml.etree.ElementTree as ET
 
-def update_sc_prices(file_path):
+def update_danmaku_prices(file_path):
     """Adjust the price of sc and guard, see this:
             https://github.com/hihkm/DanmakuFactory/issues/53
     Args:
@@ -55,8 +55,8 @@ def main():
     # Parse the arguments
     args = parser.parse_args()
 
-    # Update sc prices
-    update_sc_prices(args.file_path)
+    # Update danmaku prices
+    update_danmaku_prices(args.file_path)
 
 if __name__ == '__main__':
     main()

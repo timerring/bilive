@@ -1,61 +1,90 @@
 # Copyright (c) 2024 bilive.
 
-import subprocess
-from src.config import GPU_EXIST
-from src.log.logger import scan_log
+import argparse
 import os
+import subprocess
+from src.config import GPU_EXIST, SRC_DIR, MODEL_TYPE, AUTO_SLICE, SLICE_DURATION, MIN_VIDEO_SIZE
+from src.danmaku.generate_danmakus import get_resolution, process_danmakus
+from src.subtitle.generate_subtitles import generate_subtitles
+from src.burn.render_command import render_command
+from src.autoslice.slice_video import slice_video, inject_metadata, zhipu_glm_4v_plus_generate_title
+from src.autoslice.calculate_density import extract_dialogues, calculate_density, format_time
+from src.upload.extract_video_info import get_video_info
+from src.log.logger import scan_log
 
-def render_video(in_video_path, out_video_path, in_subtitle_font_size, in_subtitle_margin_v):
-    """Burn the danmakus and subtitles into the videos
+def normalize_video_path(filepath):
+    """Normalize the video path to upload
     Args:
-        in_video_path: str, the path of video
-        out_video_path: str, the path of rendered video
-        in_subtitle_font_size: str, the font size of subtitles
-        in_subtitle_margin_v: str, the bottom margin of subtitles
+        filepath: str, the path of video
     """
-    in_ass_path = in_video_path[:-4] + '.ass'
+    parts = filepath.rsplit('/', 1)[-1].split('_')
+    date_time_parts = parts[1].split('-')
+    new_date_time = f"{date_time_parts[0][:4]}-{date_time_parts[0][4:6]}-{date_time_parts[0][6:8]}-{date_time_parts[1]}-{date_time_parts[2]}"
+    return filepath.rsplit('/', 1)[0] + '/' + parts[0] + '_' + new_date_time + '-.mp4'
+
+def check_file_size(file_path):
+    file_size = os.path.getsize(file_path)
+    file_size_mb = file_size / (1024 * 1024)
+    return file_size_mb
+
+def render_video(video_path):
+    if not os.path.exists(video_path):
+        scan_log.error(f"File {video_path} does not exist.")
+        return
+
+    original_video_path = str(video_path)
+    format_video_path = normalize_video_path(original_video_path)
+    xml_path = original_video_path[:-4] + '.xml'
+    ass_path = original_video_path[:-4] + '.ass'
+    srt_path = original_video_path[:-4] + '.srt'
+    jsonl_path = original_video_path[:-4] + '.jsonl'
+
+    # Recoginze the resolution of video
+    video_resolution = get_resolution(original_video_path)
+    try:
+        # Process the danmakus to ass and remove emojis
+        subtitle_font_size, subtitle_margin_v = process_danmakus(xml_path, video_resolution)
+    except TypeError as e:
+        scan_log.error(f"TypeError: {e} - Check the return value of process_danmakus")
+    except FileNotFoundError as e:
+        scan_log.error(f"FileNotFoundError: {e} - Check if the file exists")
+
+    # Generate the srt file via whisper model
     if GPU_EXIST:
-        in_srt_path = in_video_path[:-4] + '.srt'
-        if os.path.isfile(in_ass_path):
-            scan_log.info("Current Mode: GPU with danmaku")
-            command = [
-                'ffmpeg', '-y', '-hwaccel', 'cuda', '-c:v', 'h264_cuvid', '-i', in_video_path,
-                '-c:v', 'h264_nvenc', '-vf', f"subtitles={in_srt_path}:force_style='Fontsize={in_subtitle_font_size},MarginV={in_subtitle_margin_v}',subtitles={in_ass_path}", out_video_path
-            ]
-            try:
-                result = subprocess.run(command, check=True, capture_output=True, text=True)
-                scan_log.debug(f"FFmpeg output: {result.stdout}")
-                if result.stderr:
-                    scan_log.debug(f"FFmpeg debug: {result.stderr}")
-            except subprocess.CalledProcessError as e:
-                scan_log.error(f"Error: {e.stderr}")
-            
-        else:
-            scan_log.info("Current Mode: GPU without danmaku")
-            command_no_danmaku = [
-                'ffmpeg', '-y', '-hwaccel', 'cuda', '-c:v', 'h264_cuvid', '-i', in_video_path,
-                '-c:v', 'h264_nvenc', '-vf', f"subtitles={in_srt_path}:force_style='Fontsize={in_subtitle_font_size},MarginV={in_subtitle_margin_v}'", out_video_path
-            ]
-            try:
-                result = subprocess.run(command_no_danmaku, check=True, capture_output=True, text=True)
-                scan_log.debug(f"FFmpeg output: {result.stdout}")
-                if result.stderr:
-                    scan_log.debug(f"FFmpeg debug: {result.stderr}")
-            except subprocess.CalledProcessError as e:
-                scan_log.error(f"Error: {e.stderr}")
-    else:
-        if os.path.isfile(in_ass_path):
-            scan_log.info("Current Mode: CPU with danmaku")
-            command_without_gpu = [
-                'ffmpeg', '-y', '-i', in_video_path, '-vf', f'ass={in_ass_path}', '-preset', 'ultrafast', out_video_path
-            ]
-            try:
-                result = subprocess.run(command_without_gpu, check=True, capture_output=True, text=True)
-                scan_log.debug(f"FFmpeg output: {result.stdout}")
-                if result.stderr:
-                    scan_log.debug(f"FFmpeg debug: {result.stderr}")
-            except subprocess.CalledProcessError as e:
-                scan_log.error(f"Error: {e.stderr}")
-        else:
-            scan_log.info("Current Mode: CPU without danmaku")
-            subprocess.run(['mv', in_video_path, out_video_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if MODEL_TYPE != "pipeline":
+            generate_subtitles(original_video_path)
+
+    # Burn danmaku or subtitles into the videos 
+    render_command(original_video_path, format_video_path, subtitle_font_size, subtitle_margin_v)
+    scan_log.info("Complete danamku burning and wait for uploading!")
+
+    if AUTO_SLICE:
+        if check_file_size(format_video_path) > MIN_VIDEO_SIZE:
+            title, artist, date = get_video_info(format_video_path)
+            slice_video_path = format_video_path[:-4] + '_slice.mp4'
+            dialogues = extract_dialogues(ass_path)
+            max_start_time, max_density = calculate_density(dialogues)
+            formatted_time = format_time(max_start_time)
+            scan_log.info(f"The 30-second window with the highest density starts at {formatted_time} seconds with {max_density} danmakus.")
+            slice_video(format_video_path, max_start_time, slice_video_path)
+            glm_title = zhipu_glm_4v_plus_generate_title(slice_video_path, artist)
+            slice_video_flv_path = slice_video_path[:-4] + '.flv'
+            inject_metadata(slice_video_path, glm_title, slice_video_flv_path)
+            os.remove(slice_video_path)
+
+    # Delete relative files
+    for remove_path in [original_video_path, xml_path, ass_path, srt_path, jsonl_path]:
+        if os.path.exists(remove_path):
+            os.remove(remove_path)
+    
+    # # For test
+    # test_path = original_video_path[:-4]
+    # os.rename(original_video_path, test_path)
+
+    with open(f"{SRC_DIR}/upload/uploadVideoQueue.txt", "a") as file:
+        file.write(f"{format_video_path}\n")
+        if AUTO_SLICE:
+            scan_log.info("Complete slice video and wait for uploading!")
+            slice_video_path = format_video_path[:-4] + '_slice.mp4'
+            slice_video_flv_path = slice_video_path[:-4] + '.flv'
+            file.write(f"{slice_video_flv_path}\n")

@@ -1,12 +1,13 @@
 # Copyright (c) 2024 bilive.
 
 import os
-from pathlib import Path
-from src.burn.only_render import render_video_only, VideoRenderQueue
-from src.burn.render_and_merge import render_and_merge
 import time
-from src.config import VIDEOS_DIR, MODEL_TYPE
 import threading
+from pathlib import Path
+from src.config import VIDEOS_DIR, MODEL_TYPE
+from src.burn.render_queue import VideoRenderQueue
+from src.burn.render_video import render_video
+from src.burn.render_then_merge import render_then_merge
 from src.log.logger import scan_log
 
 def process_folder_merge(folder_path):
@@ -32,11 +33,11 @@ def process_folder_merge(folder_path):
             # If there are multiple segments with the same date, merge them
             sorted_files = sorted(files, key=lambda x: x.stem.split('_')[1])
             scan_log.info(f"Merging {sorted_files}...")
-            render_and_merge(sorted_files)
+            render_then_merge(sorted_files)
         else:
             for file in files:
                 scan_log.info(f"Begin processing {file}...")
-                render_video_only(file)
+                render_video(file)
 
 def process_folder_append(folder_path):
     # process the recorded files
@@ -47,7 +48,7 @@ def process_folder_append(folder_path):
         if MODEL_TYPE == "pipeline":
             video_render_queue.pipeline_render(file)
         else:
-            render_video_only(file)
+            render_video(file)
 
 if __name__ == "__main__":
     room_folder_path = VIDEOS_DIR

@@ -1,9 +1,11 @@
+# Copyright (c) 2024 bilive.
+
 import logging
 import time
 import os
 from typing import Optional
 from functools import partial
-from src.config import LOG_DIR
+from config import LOG_DIR
 
 class Logger:
     def __init__(self, log_file_prefix: Optional[str] = None):

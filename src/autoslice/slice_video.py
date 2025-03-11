@@ -1,10 +1,11 @@
 # Copyright (c) 2024 bilive.
 
-import subprocess
-from src.autoslice.calculate_density import extract_dialogues, calculate_density, format_time
-from src.config import Your_API_KEY, SLICE_DURATION
 import base64
+import subprocess
+from src.config import Your_API_KEY, SLICE_DURATION
 from zhipuai import ZhipuAI
+from src.autoslice.calculate_density import extract_dialogues, calculate_density, format_time
+from src.log.logger import scan_log
 
 def zhipu_glm_4v_plus_generate_title(video_path, artist):
     with open(video_path, 'rb') as video_file:
@@ -44,7 +45,13 @@ def inject_metadata(video_path, generate_title, output_path):
         '-c:a', 'copy',
         output_path
     ]
-    subprocess.run(command)
+    try:
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        scan_log.debug(f"FFmpeg output: {result.stdout}")
+        if result.stderr:
+            scan_log.debug(f"FFmpeg debug: {result.stderr}")
+    except subprocess.CalledProcessError as e:
+        scan_log.error(f"Error: {e.stderr}")
 
 def slice_video(video_path, start_time, output_path, duration=f'00:00:{SLICE_DURATION}'):
     """Slice the video using ffmpeg."""
@@ -58,4 +65,10 @@ def slice_video(video_path, start_time, output_path, duration=f'00:00:{SLICE_DUR
         '-c:a', 'copy',
         output_path
     ]
-    subprocess.run(command)
+    try:
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        scan_log.debug(f"FFmpeg output: {result.stdout}")
+        if result.stderr:
+            scan_log.debug(f"FFmpeg debug: {result.stderr}")
+    except subprocess.CalledProcessError as e:
+        scan_log.error(f"Error: {e.stderr}")

@@ -1,9 +1,9 @@
 # Copyright (c) 2024 bilive.
 
-import subprocess
-from src.config import SRC_DIR
-from src.log.logger import scan_log
 import os
+import subprocess
+from config import SRC_DIR
+from log.logger import scan_log
 
 # Generate the srt file via whisper model
 def generate_subtitles(in_video_path):
