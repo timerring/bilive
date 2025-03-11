@@ -1,7 +1,8 @@
 # Copyright (c) 2024 bilive.
 
 import subprocess
-from src.config import GPU_EXIST, BURN_LOG_PATH
+from src.config import GPU_EXIST
+from src.log.logger import scan_log
 import os
 
 def render_video(in_video_path, out_video_path, in_subtitle_font_size, in_subtitle_margin_v):
@@ -16,29 +17,45 @@ def render_video(in_video_path, out_video_path, in_subtitle_font_size, in_subtit
     if GPU_EXIST:
         in_srt_path = in_video_path[:-4] + '.srt'
         if os.path.isfile(in_ass_path):
-            print("wisper danmaku")
+            scan_log.info("Current Mode: GPU with danmaku")
             command = [
                 'ffmpeg', '-y', '-hwaccel', 'cuda', '-c:v', 'h264_cuvid', '-i', in_video_path,
                 '-c:v', 'h264_nvenc', '-vf', f"subtitles={in_srt_path}:force_style='Fontsize={in_subtitle_font_size},MarginV={in_subtitle_margin_v}',subtitles={in_ass_path}", out_video_path
             ]
-            with open(BURN_LOG_PATH, 'a') as blog:
-                subprocess.run(command, stdout=blog, stderr=subprocess.STDOUT)
+            try:
+                result = subprocess.run(command, check=True, capture_output=True, text=True)
+                scan_log.debug(f"FFmpeg output: {result.stdout}")
+                if result.stderr:
+                    scan_log.debug(f"FFmpeg debug: {result.stderr}")
+            except subprocess.CalledProcessError as e:
+                scan_log.error(f"Error: {e.stderr}")
+            
         else:
-            print("wisper no danmaku")
+            scan_log.info("Current Mode: GPU without danmaku")
             command_no_danmaku = [
                 'ffmpeg', '-y', '-hwaccel', 'cuda', '-c:v', 'h264_cuvid', '-i', in_video_path,
                 '-c:v', 'h264_nvenc', '-vf', f"subtitles={in_srt_path}:force_style='Fontsize={in_subtitle_font_size},MarginV={in_subtitle_margin_v}'", out_video_path
             ]
-            with open(BURN_LOG_PATH, 'a') as blog:
-                subprocess.run(command_no_danmaku, stdout=blog, stderr=subprocess.STDOUT)
+            try:
+                result = subprocess.run(command_no_danmaku, check=True, capture_output=True, text=True)
+                scan_log.debug(f"FFmpeg output: {result.stdout}")
+                if result.stderr:
+                    scan_log.debug(f"FFmpeg debug: {result.stderr}")
+            except subprocess.CalledProcessError as e:
+                scan_log.error(f"Error: {e.stderr}")
     else:
         if os.path.isfile(in_ass_path):
-            print("no gpu danmaku")
+            scan_log.info("Current Mode: CPU with danmaku")
             command_without_gpu = [
                 'ffmpeg', '-y', '-i', in_video_path, '-vf', f'ass={in_ass_path}', '-preset', 'ultrafast', out_video_path
             ]
-            with open(BURN_LOG_PATH, 'a') as blog:
-                subprocess.run(command_without_gpu, stdout=blog, stderr=subprocess.STDOUT)
+            try:
+                result = subprocess.run(command_without_gpu, check=True, capture_output=True, text=True)
+                scan_log.debug(f"FFmpeg output: {result.stdout}")
+                if result.stderr:
+                    scan_log.debug(f"FFmpeg debug: {result.stderr}")
+            except subprocess.CalledProcessError as e:
+                scan_log.error(f"Error: {e.stderr}")
         else:
-            print("no gpu no danmaku")
-            subprocess.run(['mv', in_video_path, out_video_path])
+            scan_log.info("Current Mode: CPU without danmaku")
+            subprocess.run(['mv', in_video_path, out_video_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

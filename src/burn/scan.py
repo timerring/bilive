@@ -7,12 +7,13 @@ from src.burn.render_and_merge import render_and_merge
 import time
 from src.config import VIDEOS_DIR, MODEL_TYPE
 import threading
+from src.log.logger import scan_log
 
 def process_folder_merge(folder_path):
     # Don't process the recording folder
     flv_files = list(Path(folder_path).glob('*.flv'))
     if flv_files:
-        print(f"Found flv files in {folder_path}. Skipping.", flush=True)
+        scan_log.info(f"Found flv files in {folder_path}. Skipping.")
         return
 
     files_by_date = {}
@@ -30,11 +31,11 @@ def process_folder_merge(folder_path):
         if len(files) > 1:
             # If there are multiple segments with the same date, merge them
             sorted_files = sorted(files, key=lambda x: x.stem.split('_')[1])
-            print(f"Merging {sorted_files}...", flush=True)
+            scan_log.info(f"Merging {sorted_files}...")
             render_and_merge(sorted_files)
         else:
             for file in files:
-                print(f"Processing {file}...", flush=True)
+                scan_log.info(f"Begin processing {file}...")
                 render_video_only(file)
 
 def process_folder_append(folder_path):
@@ -42,7 +43,7 @@ def process_folder_append(folder_path):
     mp4_files = [mp4_file for mp4_file in Path(folder_path).glob('*.mp4') if not mp4_file.name.endswith('-.mp4')]
     mp4_files.sort()
     for file in mp4_files:
-        print(f"Processing {file}...", flush=True)
+        scan_log.info(f"Begin processing {file}...")
         if MODEL_TYPE == "pipeline":
             video_render_queue.pipeline_render(file)
         else:
@@ -60,5 +61,5 @@ if __name__ == "__main__":
                     process_folder_merge(room_folder)
                 else:
                     process_folder_append(room_folder)
-        print(f"{time.strftime('%Y-%m-%d %H:%M:%S')} There is no file recorded. Check again in 120 seconds.", flush=True)
+        scan_log.info("There is no file recorded. Check again in 120 seconds.")
         time.sleep(120)

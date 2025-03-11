@@ -10,6 +10,7 @@ from src.burn.render_video import render_video
 from src.autoslice.slice_video import slice_video, inject_metadata, zhipu_glm_4v_plus_generate_title
 from src.autoslice.calculate_density import extract_dialogues, calculate_density, format_time
 from src.upload.extract_video_info import get_video_info
+from src.log.logger import scan_log
 import queue
 import threading
 import time
@@ -31,7 +32,7 @@ def check_file_size(file_path):
 
 def render_video_only(video_path):
     if not os.path.exists(video_path):
-        print(f"File {video_path} does not exist.")
+        scan_log.error(f"File {video_path} does not exist.")
         return
 
     original_video_path = str(video_path)
@@ -47,9 +48,9 @@ def render_video_only(video_path):
         # Process the danmakus to ass and remove emojis
         subtitle_font_size, subtitle_margin_v = process_danmakus(xml_path, video_resolution)
     except TypeError as e:
-        print(f"TypeError: {e} - Check the return value of process_danmakus")
+        scan_log.error(f"TypeError: {e} - Check the return value of process_danmakus")
     except FileNotFoundError as e:
-        print(f"FileNotFoundError: {e} - Check if the file exists")
+        scan_log.error(f"FileNotFoundError: {e} - Check if the file exists")
 
     # Generate the srt file via whisper model
     if GPU_EXIST:
@@ -58,7 +59,7 @@ def render_video_only(video_path):
 
     # Burn danmaku or subtitles into the videos 
     render_video(original_video_path, format_video_path, subtitle_font_size, subtitle_margin_v)
-    print("complete danamku burning and wait for uploading!", flush=True)
+    scan_log.info("Complete danamku burning and wait for uploading!")
 
     if AUTO_SLICE:
         if check_file_size(format_video_path) > MIN_VIDEO_SIZE:
@@ -67,7 +68,7 @@ def render_video_only(video_path):
             dialogues = extract_dialogues(ass_path)
             max_start_time, max_density = calculate_density(dialogues)
             formatted_time = format_time(max_start_time)
-            print(f"The 30-second window with the highest density starts at {formatted_time} seconds with {max_density} danmakus.", flush=True)
+            scan_log.info(f"The 30-second window with the highest density starts at {formatted_time} seconds with {max_density} danmakus.")
             slice_video(format_video_path, max_start_time, slice_video_path)
             glm_title = zhipu_glm_4v_plus_generate_title(slice_video_path, artist)
             slice_video_flv_path = slice_video_path[:-4] + '.flv'
@@ -86,7 +87,7 @@ def render_video_only(video_path):
     with open(f"{SRC_DIR}/upload/uploadVideoQueue.txt", "a") as file:
         file.write(f"{format_video_path}\n")
         if AUTO_SLICE:
-            print("complete slice video and wait for uploading!", flush=True)
+            scan_log.info("Complete slice video and wait for uploading!")
             slice_video_path = format_video_path[:-4] + '_slice.mp4'
             slice_video_flv_path = slice_video_path[:-4] + '.flv'
             file.write(f"{slice_video_flv_path}\n")
@@ -106,7 +107,7 @@ class VideoRenderQueue:
                 try:
                     render_video_only(video_path)
                 except Exception as e:
-                    print(f"Error processing video {video_path}: {e}", flush=True)
+                    scan_log.error(f"Error processing video {video_path}: {e}")
             else:
                 time.sleep(1)
 

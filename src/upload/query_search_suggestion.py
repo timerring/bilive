@@ -1,6 +1,7 @@
 # Copyright (c) 2024 bilive.
 
 import requests
+from src.log.logger import upload_log
 
 def get_bilibili_suggestions(term):
     """use the bilibili search suggestion api to get the most popular search suggestions
@@ -22,10 +23,10 @@ def get_bilibili_suggestions(term):
             values_list = [item['value'][:20] for item in suggestions['result']['tag']]
             result = ",".join(values_list)
             return result
-        print(f"Request failed with status code: {response.status_code}")
+        upload_log.error(f"Request get_bilibili_suggestions failed with status code: {response.status_code}")
         return None
     except requests.RequestException as e:
-        print(f"Request failed with exception: {e}")
+        upload_log.error(f"Request get_bilibili_suggestions failed with exception: {e}")
         return None
 
 if __name__ == "__main__":

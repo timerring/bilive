@@ -3,11 +3,12 @@
 import argparse
 import os
 import subprocess
-from src.config import GPU_EXIST, SRC_DIR, MERGE_LOG_PATH
+from src.config import GPU_EXIST, SRC_DIR
 from src.burn.generate_danmakus import get_resolution, process_danmakus
 from src.burn.generate_subtitles import generate_subtitles
 from src.burn.render_video import render_video
 from src.upload.extract_video_info import get_video_info
+from src.log.logger import scan_log
 
 def normalize_video_path(filepath):
     """Normalize the video path to upload
@@ -28,9 +29,15 @@ def merge_videos(in_final_video, title, artist, date, merge_list):
     'ffmpeg', '-f', 'concat', '-safe', '0', '-i', merge_list, '-metadata', f'title={title}', '-metadata', f'artist={artist}', '-metadata', f'date={date}', '-use_wallclock_as_timestamps', '1', 
     '-c', 'copy', in_final_video
     ]
-    with open(MERGE_LOG_PATH, 'a') as mlog:
-        subprocess.run(merge_command, stdout=mlog, stderr=subprocess.STDOUT)
-    subprocess.run(['rm', merge_list])
+    try:
+        scan_log.info("Begin merging videos...")
+        result = subprocess.run(merge_command, check=True, capture_output=True, text=True)
+        scan_log.debug(f"FFmpeg output: {result.stdout}")
+        if result.stderr:
+            scan_log.debug(f"FFmpeg debug: {result.stderr}")
+    except subprocess.CalledProcessError as e:
+        scan_log.error(f"Error: {e.stderr}")
+    subprocess.run(['rm', merge_list], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def render_and_merge(video_path_list):
     title = ''
@@ -48,8 +55,8 @@ def render_and_merge(video_path_list):
             if output_video_path == '':
                 title, artist, date = get_video_info(stripped_line)
                 output_video_path = normalize_video_path(stripped_line)
-                print("The output video is " + output_video_path)
-                subprocess.run(['mkdir', tmp])
+                scan_log.info("The output video is " + output_video_path)
+                subprocess.run(['mkdir', tmp], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
             video_to_be_merged = tmp + video_name
             original_video_path = stripped_line
@@ -70,7 +77,7 @@ def render_and_merge(video_path_list):
                 open(merge_list, 'w').close() 
             with open(merge_list, 'a') as f:
                 f.write(f"file '{video_to_be_merged}'\n")
-            print("complete danamku burning and wait for uploading!", flush=True)
+            scan_log.info("Complete danamku burning and wait for uploading!")
     
         for remove_path in [original_video_path, xml_path, ass_path, srt_path, jsonl_path]:
             if os.path.exists(remove_path):

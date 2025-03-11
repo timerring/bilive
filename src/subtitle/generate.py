@@ -21,6 +21,7 @@ from config import get_model_path, get_interface_config
 import whisper
 from zhconv.zhconv import convert
 import argparse
+from log.logger import scan_log
 
 def process_line(line):
     # Due to the base model's poor performance, we need to remove the lines containing below words:
@@ -253,7 +254,7 @@ class SubtitleGenerator:
         converter = FLACConverter(source_path=audio_filename)
         recognizer = AudioRecogniser(language=self.language)
         transcripts = []
-        print(f"{get_interface_config()['Main']['StartGenerateSub']}")
+        scan_log.info(f"{get_interface_config()['Main']['StartGenerateSub']}")
         start_time = time.time()
 
         if regions:
@@ -289,9 +290,9 @@ class SubtitleGenerator:
         os.remove(audio_filename)
         self.isFinished = True
         elapse = time.time() - start_time
-        print(f"{get_interface_config()['Main']['FinishGenerateSub']}")
-        print(f"{get_interface_config()['Main']['SubLocation']}{dest}")
-        print(f"{get_interface_config()['Main']['Elapse']}: {elapse}s")
+        scan_log.info(f"{get_interface_config()['Main']['FinishGenerateSub']}")
+        scan_log.info(f"{get_interface_config()['Main']['SubLocation']}{dest}")
+        scan_log.info(f"{get_interface_config()['Main']['Elapse']}: {elapse}s")
         return dest
 
 
@@ -306,5 +307,5 @@ if __name__ == '__main__':
 
     video_path = args.filename or input(f"{get_interface_config()['Main']['InputFile']}").strip()
     sg = SubtitleGenerator(video_path, language='zh-cn')
-    print('Start project.')
+    scan_log.info('Begin generating subtitles using the Whisper model.')
     sg.run()

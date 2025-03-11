@@ -5,6 +5,7 @@ from src.utils.adjustPrice import update_sc_prices
 from src.config import DanmakuFactory_PATH
 import os
 from src.utils.removeEmojis import *
+from src.log.logger import scan_log
 
 def get_resolution(in_video_path):
     """Return the resolution of video
@@ -23,10 +24,10 @@ def get_resolution(in_video_path):
             check=True
         )
         resolution = result.stdout.strip()
-        print("The video resolution is " + resolution, flush=True)
+        scan_log.info("The video resolution is " + resolution)
         return resolution
     except subprocess.CalledProcessError as e:
-        print(f"Error: {e.stderr}", flush=True)
+        scan_log.error(f"Error: {e.stderr}")
         return '1920x1080'
 
 def process_danmakus(in_xml_path, resolution):
@@ -72,8 +73,14 @@ def process_danmakus(in_xml_path, resolution):
             subtitle_font_size = '16'
             subtitle_margin_v = '60'
         # Convert danmakus to ass file
-        subprocess.run([DanmakuFactory_PATH, "-o", in_ass_path, "-i", in_xml_path, "--resolution", resolution, "--msgboxsize", boxsize, "--msgboxfontsize", boxfont, "-S", danmakufont, "--ignore-warnings"])
+        try:
+            result = subprocess.run(
+                [DanmakuFactory_PATH, "-o", in_ass_path, "-i", in_xml_path, "--resolution", resolution, "--msgboxsize", boxsize, "--msgboxfontsize", boxfont, "-S", danmakufont, "--ignore-warnings"],
+                check=True, capture_output=True, text=True)
+            scan_log.debug(f"DanmakuFactory output: {result.stdout}")
+        except subprocess.CalledProcessError as e:
+            scan_log.error(f"Error: {e.stderr}")
         # Remove emojis from ass danmakus (the ffmpeg does not support emojis)
         remove_emojis(in_ass_path)
-        print(f"The {in_ass_path} has been processed.", flush=True)
+        scan_log.info(f"The emojis of {in_ass_path} has been removed.")
         return subtitle_font_size, subtitle_margin_v

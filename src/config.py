@@ -6,7 +6,7 @@ from datetime import datetime
 import configparser
 
 # ============================ Your configuration ============================
-GPU_EXIST=False
+GPU_EXIST=True
 # Can be pipeline, append, merge
 MODEL_TYPE = "append"
 Inference_Model = "small"
@@ -20,13 +20,10 @@ Your_API_KEY = ""
 # ============================ Basic configuration ============================
 SRC_DIR = str(Path(os.path.abspath(__file__)).parent)
 BILIVE_DIR = str(Path(SRC_DIR).parent)
+LOG_DIR = os.path.join(BILIVE_DIR, 'logs')
 VIDEOS_DIR = os.path.join(BILIVE_DIR, 'Videos')
 DanmakuFactory_bin = os.path.join('utils', 'DanmakuFactory')
 DanmakuFactory_PATH = os.path.join(SRC_DIR, DanmakuFactory_bin)
-
-WHISPER_LOG_PATH = os.path.join(BILIVE_DIR, 'logs', 'burningLog', f'whisper-{datetime.now().strftime("%Y%m-%d-%H%M%S")}.log')
-BURN_LOG_PATH = os.path.join(BILIVE_DIR, 'logs', 'burningLog', f'burn-{datetime.now().strftime("%Y%m-%d-%H%M%S")}.log')
-MERGE_LOG_PATH = os.path.join(BILIVE_DIR, 'logs', 'mergeLog', f'merge-{datetime.now().strftime("%Y%m-%d-%H%M%S")}.log')
 
 def get_model_path():
     SRC_DIR = str(Path(os.path.abspath(__file__)).parent)

@@ -16,7 +16,7 @@ def remove_emojis(danmaku_file):
 
         result = re.sub(regex, "", originalFile, 0, re.MULTILINE)
         if result:
-            print(f"The emojis of {danmaku_file} are removed.", flush=True)
+            # print(f"The emojis of {danmaku_file} are removed.", flush=True)
             with open(danmaku_file, 'w', encoding='utf-8') as output_file:
                 output_file.write(result)
     except FileNotFoundError:
