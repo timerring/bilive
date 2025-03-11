@@ -13,7 +13,7 @@ duration_limit = 1800
 out_dir = "./Videos"
 
 [logging]
-log_dir = "./logs/blrecLog"
+log_dir = "./logs/blrec"
 console_log_level = "INFO"
 backup_count = 30
 
