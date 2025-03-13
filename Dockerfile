@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install vim -y \
     && apt-get install -y ffmpeg \
     && apt-get install -y procps \
     && apt-get install lsof -y \
+    && apt-get install curl -y \
     && pip install -r requirements.txt
 
 ENV BILIVE_PATH=/app
