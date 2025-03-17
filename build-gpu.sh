@@ -17,7 +17,7 @@ fi
 echo "Detected CUDA version: $CUDA_VERSION"
 
 # build the docker image
-docker build \
+docker build -f Dockerfile-GPU \
   --build-arg CUDA_VERSION=$CUDA_VERSION \
   -t bilive-gpu:latest \
   .
