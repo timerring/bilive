@@ -8,12 +8,15 @@ COPY . /app
 
 COPY ./assets/msyh.ttf /usr/share/fonts/msyh.ttf
 
-RUN apt-get update && apt-get install vim -y \
-    && apt-get install -y ffmpeg \
-    && apt-get install -y procps \
-    && apt-get install lsof -y \
-    && apt-get install curl -y \
-    && pip install -r requirements.txt
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    procps \
+    lsof \
+    curl \
+    vim \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV BILIVE_PATH=/app
 ENV TZ="Asia/Shanghai"
