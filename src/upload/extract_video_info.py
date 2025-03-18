@@ -55,7 +55,12 @@ def generate_desc(video_path):
 def generate_tag(video_path):
     title, artist, date = get_video_info(video_path)
     artist_text = re.sub(r'\W+', '', artist)
+    
     tags = get_bilibili_suggestions(artist_text)
+    
+    if not tags:
+        tags = ["直播回放", "切片"]
+    
     return tags
 
 def generate_source(video_path):
