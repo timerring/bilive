@@ -1,0 +1,12 @@
+services:
+  bilive:
+    #build: . 
+    image: ghcr.io/timerring/bilive:latest
+    restart: always
+    container_name: bilive_docker
+    ports:
+      - "22333:2233"
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./app:/app
