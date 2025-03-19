@@ -204,19 +204,32 @@ logs # 日志文件夹
 
 ### Docker 运行
 
-也可以直接拉取 docker 镜像运行，默认 latest。守护进程是 upload，而 record 以及 scan 需要在配置后手动启动，相关配置以及启动流程从 3.2 开始即可，此版本 docker 镜像无 GPU 配置。
+也可以直接拉取 docker 镜像运行，默认 latest。守护进程是 upload，而 record 以及 scan 需要在配置后手动启动，相关配置以及启动流程从 3.2 开始即可。
 
 > [!IMPORTANT]
 > 如果不需要使用可视化页面可以忽略以下提醒：
 > - 不推荐在有公网 ip 的服务器上直接暴露 22333 端口访问管理页面，如果使用请自行限制端口入站 ip 规则或者采用 nginx 等反向代理配置密钥限制他人访问。
 > - 管理页面主要针对 record 模块，只有手动运行 record 后(步骤5)才能访问到管理页面。
 
+#### 无 GPU 版本
+
 ```bash
 sudo docker run \
     -itd \
     --name bilive_docker \
     -p 22333:2233 \
-    timerring/bilive:0.2.10
+    ghcr.io/timerring/bilive:0.2.10
+```
+
+#### 有 GPU 版本
+
+```bash
+sudo docker run \
+    -itd \
+    --gpus 'all,"capabilities=compute,utility,video"' \
+    --name bilive_docker_gpu \
+    -p 22333:2233 \
+    ghcr.io/timerring/bilive-gpu:0.2.10
 ```
 
 ## 特别感谢

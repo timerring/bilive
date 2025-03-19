@@ -6,7 +6,7 @@ from datetime import datetime
 import configparser
 
 # ============================ Your configuration ============================
-GPU_EXIST=False
+GPU_EXIST=True
 # Can be pipeline, append, merge
 MODEL_TYPE = "append"
 Inference_Model = "small"
