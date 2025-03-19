@@ -9,13 +9,11 @@ COPY ./assets/msyh.ttf /usr/share/fonts/msyh.ttf
 
 RUN apt-get update && apt-get install -y python3.10 python3-pip python3.10-venv ffmpeg gcc procps lsof curl vim fonts-noto-cjk \
     && apt clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# using python3.10 since numba is not compatible with higher python versions
-RUN ln -sf /usr/bin/python3.10 /usr/bin/python3 && \
-    ln -sf /usr/bin/python3 /usr/bin/python && \
-    python -m pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -sf /usr/bin/python3.10 /usr/bin/python3 \
+    && ln -sf /usr/bin/python3 /usr/bin/python \
+    && python -m pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 ENV BILIVE_PATH=/app
 ENV TZ="Asia/Shanghai"
