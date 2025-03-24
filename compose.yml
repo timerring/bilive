@@ -2,8 +2,8 @@ services:
   bilive:
     #build:
     #    context: .
-    #    dockerfile: Dockerfile #Dockerfile-GPU
-    image: ghcr.io/timerring/bilive:latest
+    #    dockerfile: Dockerfile # Dockerfile-GPU
+    image: ghcr.io/timerring/bilive:latest # ghcr.io/timerring/bilive-gpu:latest
     restart: always
     container_name: bilive_docker
     ports:

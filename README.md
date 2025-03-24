@@ -232,6 +232,27 @@ sudo docker run \
     ghcr.io/timerring/bilive-gpu:0.2.10
 ```
 
+### Docker Compose
+
+`compose.yml` 调整方法见 [Installation](https://bilive.timerring.com/installation.html)。
+
+#### 使用镜像
+
+默认 CPU latest version，如需使用 GPU 版本，请自行在 `compose.yml` 中调整。
+
+```bash
+docker compose up -d
+```
+
+#### 自行构建
+
+请先在 `compose.yml` 中调整相关配置，然后执行以下命令：
+
+```bash
+docker build
+docker compose up -d
+```
+
 ## 特别感谢
 
 - [biliup/biliup-rs](https://github.com/biliup/biliup-rs)

@@ -127,15 +127,25 @@ sudo docker run \
 
 ### Docker Compose
 
-使用 Latest image
+#### 使用镜像
 
+默认 CPU latest version，如需使用 GPU 版本，请将 `image: ghcr.io/timerring/bilive:latest` 修改为 `image: ghcr.io/timerring/bilive-gpu:latest`。
 ```bash
 docker compose up -d
 ```
 
-自行构建
+#### 自行构建
 
-删除image字段，取消注释build字段
+相关配置已经写好，请自行将 `compose.yml` 3-6 行替换为：
+
+```yaml
+    build:
+        context: .
+        dockerfile: Dockerfile # Dockerfile-GPU
+    # image: ghcr.io/timerring/bilive:latest # ghcr.io/timerring/bilive-gpu:latest
+```
+
+然后执行以下命令：
 
 ```bash
 docker build
