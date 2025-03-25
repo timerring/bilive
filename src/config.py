@@ -25,6 +25,8 @@ LOG_DIR = os.path.join(BILIVE_DIR, 'logs')
 VIDEOS_DIR = os.path.join(BILIVE_DIR, 'Videos')
 DanmakuFactory_bin = os.path.join('utils', 'DanmakuFactory')
 DanmakuFactory_PATH = os.path.join(SRC_DIR, DanmakuFactory_bin)
+# Prevent create a new BV number after streamer changes the streaming title in thesame day
+IGNORE_ROOM_TITLE = False
 
 
 if not os.path.exists(SRC_DIR + '/db/data.db'):
