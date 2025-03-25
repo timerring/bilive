@@ -14,3 +14,4 @@ zhconv==1.4.3
 bilitool
 zhipuai
 pysqlite3
+uuid
