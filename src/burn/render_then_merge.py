@@ -3,12 +3,15 @@
 import argparse
 import os
 import subprocess
-from src.config import GPU_EXIST, SRC_DIR
+from src.config import GPU_EXIST, SRC_DIR, VIDEOS_DIR
 from src.danmaku.generate_danmakus import get_resolution, process_danmakus
 from src.subtitle.generate_subtitles import generate_subtitles
 from src.burn.render_command import render_command
 from src.upload.extract_video_info import get_video_info
 from src.log.logger import scan_log
+from db.conn import insert_upload_queue
+from src.upload.generate_yaml import generate_yaml_template
+from uuid import uuid4
 
 def normalize_video_path(filepath):
     """Normalize the video path to upload
@@ -90,5 +93,10 @@ def render_then_merge(video_path_list):
     merge_command(output_video_path, title, artist, date, merge_list)
     subprocess.run(['rm', '-r', tmp])
 
-    with open(f"{SRC_DIR}/upload/uploadVideoQueue.txt", "a") as file:
-        file.write(f"{output_video_path}\n")
+    yaml_template = generate_yaml_template(output_video_path)
+    template_path = os.path.join(VIDEOS_DIR, f'upload_conf/{uuid4()}.yaml')
+    with open(template_path, 'w', encoding='utf-8') as f:
+        f.write(yaml_template)
+        
+    if not insert_upload_queue(output_video_path, template_path):
+        scan_log('插入待上传条目失败')

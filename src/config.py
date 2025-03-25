@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from datetime import datetime
 import configparser
+from db.conn import create_table
 
 # ============================ Your configuration ============================
 GPU_EXIST=True
@@ -24,6 +25,16 @@ LOG_DIR = os.path.join(BILIVE_DIR, 'logs')
 VIDEOS_DIR = os.path.join(BILIVE_DIR, 'Videos')
 DanmakuFactory_bin = os.path.join('utils', 'DanmakuFactory')
 DanmakuFactory_PATH = os.path.join(SRC_DIR, DanmakuFactory_bin)
+
+
+if not os.path.exists(SRC_DIR + '/db/data.db'):
+    print("初始化数据库")
+    create_table()
+
+if not os.path.exists(VIDEOS_DIR):
+    os.makedirs(VIDEOS_DIR)
+if not os.path.exists(VIDEOS_DIR + '/upload_conf'):
+    os.makedirs(VIDEOS_DIR + '/upload_conf')
 
 def get_model_path():
     SRC_DIR = str(Path(os.path.abspath(__file__)).parent)

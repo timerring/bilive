@@ -13,3 +13,4 @@ triton==3.1.0
 zhconv==1.4.3
 bilitool
 zhipuai
+pysqlite3
