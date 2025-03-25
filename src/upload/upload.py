@@ -10,6 +10,11 @@ from src.upload.extract_video_info import generate_title
 from src.log.logger import upload_log
 import time
 import fcntl
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from db.conn import get_single_upload_queue, delete_upload_queue, update_upload_queue_lock
+import threading
+
+read_lock = threading.Lock()
 
 def upload_video(upload_path, yaml_file_path):
     try:
@@ -32,12 +37,16 @@ def upload_video(upload_path, yaml_file_path):
         if result.returncode == 0:
             upload_log.info("Upload successfully, then delete the video")
             os.remove(upload_path)
+            os.remove(yaml_file_path)
+            delete_upload_queue(upload_path)
         else:
             upload_log.error("Fail to upload, the files will be reserved.")
+            update_upload_queue_lock(upload_path, 0)
             return False
     
     except subprocess.CalledProcessError as e:
         upload_log.error(f"The upload_video called failed, the files will be reserved. error: {e}")
+        update_upload_queue_lock(upload_path, 0)
         return False
 
 def find_bv_number(target_str, my_list):
@@ -48,57 +57,6 @@ def find_bv_number(target_str, my_list):
                 return parts[1].strip()
     return None
 
-def read_append_and_delete_lines(file_path):
-    try:
-        while True:
-            if os.path.getsize(file_path) == 0:
-                upload_log.info("Empty queue, wait 2 minutes and check again.")
-                time.sleep(120)
-                return
-
-            with open(file_path, "r+") as file:
-                fcntl.flock(file, fcntl.LOCK_EX)
-                lines = file.readlines()
-                upload_video_path = lines.pop(0).strip()
-                file.seek(0)
-                file.writelines(lines)
-                # Truncate the file to the current position
-                file.truncate()
-                # Release the lock
-                fcntl.flock(file, fcntl.LOCK_UN)
-
-            upload_log.info(f"deal with {upload_video_path}")
-            # check if the live is already uploaded
-            if upload_video_path.endswith('.flv'):
-                # upload slice video
-                yaml_template = generate_slice_yaml_template(upload_video_path)
-                yaml_file_path = SRC_DIR + "/upload/upload.yaml"
-                with open(yaml_file_path, 'w', encoding='utf-8') as file:
-                    file.write(yaml_template)
-                upload_video(upload_video_path, yaml_file_path)
-                return
-            else:
-                query = generate_title(upload_video_path)
-                result = subprocess.check_output("bilitool" + " list", shell=True)
-                # print(result.decode("utf-8"), flush=True)
-                upload_list = result.decode("utf-8").splitlines()
-                bv_result = find_bv_number(query, upload_list)
-                if bv_result:
-                    upload_log.info(f"The series of videos has already been uploaded, the BV number is: {bv_result}")
-                    append_upload(upload_video_path, bv_result)
-                else:
-                    upload_log.info("First upload this live")
-                    # generate the yaml template
-                    yaml_template = generate_yaml_template(upload_video_path)
-                    yaml_file_path = SRC_DIR + "/upload/upload.yaml"
-                    with open(yaml_file_path, 'w', encoding='utf-8') as file:
-                        file.write(yaml_template)
-                    upload_video(upload_video_path, yaml_file_path)
-                    return
-                
-    except subprocess.CalledProcessError as e:
-        upload_log.error(f"The read_append_and_delete_lines called failed, the files will be reserved. error: {e}")
-        return False
 
 def append_upload(upload_path, bv_result):
     try:
@@ -120,18 +78,65 @@ def append_upload(upload_path, bv_result):
         if result.returncode == 0:
             upload_log.info("Upload successfully, then delete the video")
             os.remove(upload_path)
+            delete_upload_queue(upload_path)
         else:
             upload_log.error("Fail to append, the files will be reserved.")
+            update_upload_queue_lock(upload_path, 0)
             return False
     
     except subprocess.CalledProcessError as e:
         upload_log.error(f"The append_upload called failed, the files will be reserved. error: {e}")
+        update_upload_queue_lock(upload_path, 0)
         return False
+    
+    
+def read_append_and_delete_lines():
+    while True:
+        upload_queue = None
+        # read the queue and update lock status to prevent other threads from reading the same data
+        with read_lock:
+            upload_queue = get_single_upload_queue()
+            # if there is a task in the queue, try to lock the task
+            if upload_queue:
+                video_path, config_path = upload_queue.values()
+                # lock the task by updating the locked status to 1
+                update_result = update_upload_queue_lock(video_path, 1)
+                # if failed to lock, log the error and let the next thread to handle the task
+                if not update_result:
+                    upload_log.error(f"Failed to lock task for {video_path}, possibly already locked by another thread or database error.")
+                    upload_queue = None
+                    continue
+            else:
+                upload_log.info("Empty queue, wait 2 minutes and check again.")
+                time.sleep(120)
+                continue
+          
+        if upload_queue:  
+            video_path, config_path = upload_queue.values()
+            upload_log.info(f"deal with {video_path}")
+            # check if the live is already uploaded
+            if video_path.endswith('.flv'):
+                # upload slice video
+                upload_video(video_path, config_path)
+                return
+            else:
+                query = generate_title(video_path)
+                result = subprocess.check_output("bilitool" + " list", shell=True)
+                # print(result.decode("utf-8"), flush=True)
+                upload_list = result.decode("utf-8").splitlines()
+                bv_result = find_bv_number(query, upload_list)
+                if bv_result:
+                    upload_log.info(f"The series of videos has already been uploaded, the BV number is: {bv_result}")
+                    append_upload(video_path, bv_result)
+                else:
+                    upload_log.info("First upload this live")
+                    upload_video(video_path, config_path)
+                    return
+        time.sleep(20)
+        
 
 if __name__ == "__main__":    
-    # read the queue and upload the video
-    queue_path = SRC_DIR + "/upload/uploadVideoQueue.txt"
-    while True:
-        read_append_and_delete_lines(queue_path)
-        upload_log.info("wait for 20 seconds")
-        time.sleep(20)
+    max_workers = os.getenv("MAX_WORKERS", 5)
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_upload = {executor.submit(read_append_and_delete_lines) for _ in range(max_workers)}
+        
