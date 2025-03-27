@@ -1,0 +1,3 @@
+[submodule "src/danmaku/DanmakuConvert"]
+	path = src/danmaku/DanmakuConvert
+	url = https://github.com/timerring/DanmakuConvert.git

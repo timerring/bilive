@@ -40,10 +40,10 @@ def render_video(video_path):
     jsonl_path = original_video_path[:-4] + '.jsonl'
 
     # Recoginze the resolution of video
-    video_resolution = get_resolution(original_video_path)
+    resolution_x, resolution_y = get_resolution(original_video_path)
     try:
         # Process the danmakus to ass and remove emojis
-        subtitle_font_size, subtitle_margin_v = process_danmakus(xml_path, video_resolution)
+        subtitle_font_size, subtitle_margin_v = process_danmakus(xml_path, resolution_x, resolution_y)
     except TypeError as e:
         scan_log.error(f"TypeError: {e} - Check the return value of process_danmakus")
     except FileNotFoundError as e:
