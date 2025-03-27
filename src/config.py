@@ -22,8 +22,6 @@ SRC_DIR = str(Path(os.path.abspath(__file__)).parent)
 BILIVE_DIR = str(Path(SRC_DIR).parent)
 LOG_DIR = os.path.join(BILIVE_DIR, 'logs')
 VIDEOS_DIR = os.path.join(BILIVE_DIR, 'Videos')
-DanmakuFactory_bin = os.path.join('utils', 'DanmakuFactory')
-DanmakuFactory_PATH = os.path.join(SRC_DIR, DanmakuFactory_bin)
 
 def get_model_path():
     SRC_DIR = str(Path(os.path.abspath(__file__)).parent)
