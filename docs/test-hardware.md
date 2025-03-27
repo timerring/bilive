@@ -18,7 +18,7 @@
 + OS: Ubuntu 20.04.4 LTS
 
 > [!WARNING]
-> 尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 DanmakuFactory 以及 biliup-rs 所需版本，若使用较早版本，请参考 [version `GLIBC_2.34‘ not found简单有效解决方法](https://blog.csdn.net/huazhang_001/article/details/128828999)。
+> 尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 biliup-rs 所需版本，若使用较早版本，请参考 [version `GLIBC_2.34‘ not found简单有效解决方法](https://blog.csdn.net/huazhang_001/article/details/128828999)。
 
 + CPU：Intel(R) Core(TM) i5-9300H CPU 8 核
 + GPU：NVIDIA GeForce GTX 1650 显存 4GB

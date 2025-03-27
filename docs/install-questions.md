@@ -12,7 +12,7 @@ Reference: https://github.com/timerring/bilive/issues/106
 
 Reference: https://blog.csdn.net/huazhang_001/article/details/128828999
 
-尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 DanmakuFactory 以及 biliup-rs 所需版本。
+尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 biliup-rs 所需版本。
 
 解决方案：手动更新版本，参照链接操作即可。
 

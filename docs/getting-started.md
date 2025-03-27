@@ -31,9 +31,9 @@ graph TD
         whisper[whisperASR模型] --生成字幕-->parameter[查询视频分辨率]
         subgraph 启动新进程
         parameter[查询分辨率] -->ifDanmaku{判断}
-        ifDanmaku -->|有弹幕| DanmakuFactory[DanmakuFactory]
+        ifDanmaku -->|有弹幕| DanmakuConvert[DanmakuConvert]
         ifDanmaku -->|无弹幕| ffmpeg1[ffmpeg]
-        DanmakuFactory[DanmakuFactory] --根据分辨率转换弹幕--> ffmpeg1[ffmpeg]
+        DanmakuConvert[DanmakuConvert] --根据分辨率转换弹幕--> ffmpeg1[ffmpeg]
         ffmpeg1[ffmpeg] --渲染弹幕及字幕 --> Video[视频文件]
         Video[视频文件] --计算弹幕密度并切片--> GLM[多模态视频理解模型]
         GLM[多模态视频理解模型] --生成切片信息--> slice[视频切片]

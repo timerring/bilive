@@ -50,9 +50,9 @@ graph TD
         whisper[whisperASR模型] --生成字幕-->parameter[查询视频分辨率]
         subgraph 启动新进程
         parameter[查询分辨率] -->ifDanmaku{判断}
-        ifDanmaku -->|有弹幕| DanmakuFactory[DanmakuFactory]
+        ifDanmaku -->|有弹幕| DanmakuConvert[DanmakuConvert]
         ifDanmaku -->|无弹幕| ffmpeg1[ffmpeg]
-        DanmakuFactory[DanmakuFactory] --根据分辨率转换弹幕--> ffmpeg1[ffmpeg]
+        DanmakuConvert[DanmakuConvert] --根据分辨率转换弹幕--> ffmpeg1[ffmpeg]
         ffmpeg1[ffmpeg] --渲染弹幕及字幕 --> Video[视频文件]
         Video[视频文件] --计算弹幕密度并切片--> GLM[多模态视频理解模型]
         GLM[多模态视频理解模型] --生成切片信息--> slice[视频切片]
@@ -69,7 +69,7 @@ graph TD
 ## 3. 测试硬件
 + OS: Ubuntu 22.04.4 LTS
 
-  >尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 DanmakuFactory 以及 biliup-rs 所需版本，若使用较早版本，请参考 [version `GLIBC_2.34‘ not found简单有效解决方法](https://blog.csdn.net/huazhang_001/article/details/128828999)。
+  >尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 biliup-rs 所需版本，若使用较早版本，请参考 [version `GLIBC_2.34‘ not found简单有效解决方法](https://blog.csdn.net/huazhang_001/article/details/128828999)。
 + CPU：2核 Intel(R) Xeon(R) Platinum 85
 + GPU：无
 + 内存：2G
