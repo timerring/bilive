@@ -212,9 +212,9 @@ logs # 日志文件夹
 2. 将 `MODEL_TYPE` 调整为 `merge` 或者 `append`。
 
 > [!TIP]
-> 上传默认参数如下，[]中内容全部自动替换。也可在 src/upload/extract_video_info.py 中自定义相关配置：
-> + 默认标题是"【弹幕+字幕】[XXX]直播回放-[日期]-[直播间标题]"。
-> + 默认描述是"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"
+> 上传默认参数如下，[]中内容全部自动替换。可以在 src/config.py 中自定义相关配置：
+> + 标题模板是"{artist}直播回放-{date}-{title}"，效果为"【弹幕+字幕】[XXX]直播回放-[日期]-[直播间标题]"，可自行修改。
+> + 描述模板是"{artist}直播，直播间地址：{source_link} 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"，效果为"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"，可自行修改。
 > + 默认标签是根据主播名字自动在 b 站搜索推荐中抓取的[热搜词]，详见[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/suggest.md)。
 
 ### Docker 运行
