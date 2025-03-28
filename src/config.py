@@ -12,7 +12,10 @@ MODEL_TYPE = "append"
 Inference_Model = "small"
 # ============================ The video slice configuration ==================
 AUTO_SLICE = False
-SLICE_DURATION = 30
+SLICE_DURATION = 60 # better not exceed 300 seconds
+SLICE_NUM = 2
+SLICE_OVERLAP = 30
+SLICE_STEP = 1
 # The minimum video size to be sliced (MB)
 MIN_VIDEO_SIZE = 200
 # Apply for your own GLM-4v-Plus API key at https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D
