@@ -349,7 +349,7 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,python,pycharm+all,macos,windows
 # Data&test
-Videos/
+Videos/*
 !Videos/.gitkeep
 test/
 .cache
