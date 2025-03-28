@@ -6,7 +6,6 @@ pnpm-lock.yaml
 **/__pycache__
 test/*
 Videos/*
-!Videos/.gitkeep
 settings-production.toml
 startRecord-production.sh
 src/utils/cookies.json
