@@ -6,7 +6,7 @@ import json
 import os
 from datetime import datetime
 from src.upload.query_search_suggestion import get_bilibili_suggestions
-from src.config import GPU_EXIST, IGNORE_ROOM_TITLE
+from src.config import GPU_EXIST
 
 def get_video_info(video_file_path):
     """get the title, artist and date of the video file via ffprobe
@@ -37,19 +37,10 @@ def get_video_info(video_file_path):
 
 def generate_title(video_path):
     title, artist, date = get_video_info(video_path)
-    data_tmp = datetime.strptime(date, '%Y%m%d')
-    year = data_tmp.strftime('%Y')
-    month = data_tmp.strftime('%m')
-    day = data_tmp.strftime('%d')
-    
-    human_readable_date = f"{year}年{month}月{day}日"
     if GPU_EXIST:
-        new_title = "【弹幕+字幕】" + artist + "直播回放-" + human_readable_date + "-" + title
+        new_title = "【弹幕+字幕】" + artist + "直播回放-" + date + "-" + title
     else:
-        new_title = "【弹幕】" + artist + "直播回放-" + human_readable_date + "-" + title
-    
-    if IGNORE_ROOM_TITLE:
-        new_title = new_title.replace('-'+title, "")
+        new_title = "【弹幕】" + artist + "直播回放-" + date + "-" + title
     return new_title
 
 def generate_desc(video_path):
