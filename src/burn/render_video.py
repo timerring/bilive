@@ -3,12 +3,13 @@
 import argparse
 import os
 import subprocess
-from src.config import GPU_EXIST, SRC_DIR, MODEL_TYPE, AUTO_SLICE, SLICE_DURATION, MIN_VIDEO_SIZE, VIDEOS_DIR
+from src.config import GPU_EXIST, SRC_DIR, MODEL_TYPE, AUTO_SLICE, SLICE_DURATION, MIN_VIDEO_SIZE, VIDEOS_DIR , SLICE_NUM, SLICE_OVERLAP, SLICE_STEP
 from src.danmaku.generate_danmakus import get_resolution, process_danmakus
 from src.subtitle.generate_subtitles import generate_subtitles
 from src.burn.render_command import render_command
-from src.autoslice.slice_video import slice_video, inject_metadata, zhipu_glm_4v_plus_generate_title
-from src.autoslice.calculate_density import extract_dialogues, calculate_density, format_time
+from autoslice import slice_video_by_danmaku
+from src.autoslice.inject_metadata import inject_metadata
+from src.autoslice.zhipu_sdk import zhipu_glm_4v_plus_generate_title
 from src.upload.extract_video_info import get_video_info
 from src.log.logger import scan_log
 from db.conn import insert_upload_queue
@@ -43,10 +44,10 @@ def render_video(video_path):
     jsonl_path = original_video_path[:-4] + '.jsonl'
 
     # Recoginze the resolution of video
-    video_resolution = get_resolution(original_video_path)
+    resolution_x, resolution_y = get_resolution(original_video_path)
     try:
         # Process the danmakus to ass and remove emojis
-        subtitle_font_size, subtitle_margin_v = process_danmakus(xml_path, video_resolution)
+        subtitle_font_size, subtitle_margin_v = process_danmakus(xml_path, resolution_x, resolution_y)
     except TypeError as e:
         scan_log.error(f"TypeError: {e} - Check the return value of process_danmakus")
     except FileNotFoundError as e:
@@ -64,16 +65,22 @@ def render_video(video_path):
     if AUTO_SLICE:
         if check_file_size(format_video_path) > MIN_VIDEO_SIZE:
             title, artist, date = get_video_info(format_video_path)
-            slice_video_path = format_video_path[:-4] + '_slice.mp4'
-            dialogues = extract_dialogues(ass_path)
-            max_start_time, max_density = calculate_density(dialogues)
-            formatted_time = format_time(max_start_time)
-            scan_log.info(f"The 30-second window with the highest density starts at {formatted_time} seconds with {max_density} danmakus.")
-            slice_video(format_video_path, max_start_time, slice_video_path)
-            glm_title = zhipu_glm_4v_plus_generate_title(slice_video_path, artist)
-            slice_video_flv_path = slice_video_path[:-4] + '.flv'
-            inject_metadata(slice_video_path, glm_title, slice_video_flv_path)
-            os.remove(slice_video_path)
+            slices_path = slice_video_by_danmaku(ass_path, format_video_path, SLICE_DURATION, SLICE_NUM, SLICE_OVERLAP, SLICE_STEP)
+            for slice_path in slices_path:
+                try:
+                    glm_title = zhipu_glm_4v_plus_generate_title(slice_path, artist)
+                    slice_video_flv_path = slice_path[:-4] + '.flv'
+                    inject_metadata(slice_path, glm_title, slice_video_flv_path)
+                    os.remove(slice_path)
+                    slice_yaml_template = generate_slice_yaml_template(slice_video_flv_path)
+                    slice_template_path = os.path.join(VIDEOS_DIR, f'upload_conf/{uuid4()}.yaml')
+                    with open(slice_template_path, 'w', encoding='utf-8') as f:
+                        f.write(slice_yaml_template)
+
+                    if not insert_upload_queue(slice_video_flv_path, slice_template_path):
+                        scan_log('插入待上传条目失败')
+                except Exception as e:
+                    scan_log.error(f"Error in {slice_path}: {e}")
 
     # Delete relative files
     for remove_path in [original_video_path, xml_path, ass_path, srt_path, jsonl_path]:
@@ -91,12 +98,3 @@ def render_video(video_path):
         
     if not insert_upload_queue(format_video_path, template_path):
         scan_log('插入待上传条目失败')
-        
-    if AUTO_SLICE:
-        slice_yaml_template = generate_slice_yaml_template(slice_video_flv_path)
-        slice_template_path = os.path.join(VIDEOS_DIR, f'upload_conf/{uuid4()}.yaml')
-        with open(slice_template_path, 'w', encoding='utf-8') as f:
-            f.write(slice_yaml_template)
-        
-        if not insert_upload_queue(slice_video_flv_path, slice_template_path):
-            scan_log('插入待上传条目失败')

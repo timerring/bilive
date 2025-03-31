@@ -2,6 +2,7 @@
 
 import argparse
 import xml.etree.ElementTree as ET
+from src.config import GIFT_PRICE_FILTER
 
 def update_danmaku_prices(file_path):
     """Adjust the price of sc and guard, see this:
@@ -41,7 +42,8 @@ def update_danmaku_prices(file_path):
     # Remove 'gift' elements with price less than 1000
     for gift in root.findall('gift'):
         price_gift = gift.get('price')
-        if int(price_gift) < 1000:
+        converted_price = int(GIFT_PRICE_FILTER * 1000) 
+        if int(price_gift) < converted_price:
             root.remove(gift)
 
     # Write the updated XML back to the file

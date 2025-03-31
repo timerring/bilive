@@ -1,0 +1,6 @@
+[submodule "src/danmaku/DanmakuConvert"]
+	path = src/danmaku/DanmakuConvert
+	url = https://github.com/timerring/DanmakuConvert.git
+[submodule "src/autoslice/auto_slice_video"]
+	path = src/autoslice/auto_slice_video
+	url = https://github.com/timerring/auto-slice-video.git

@@ -29,12 +29,14 @@
 - **速度快**：采用 `pipeline` 流水线处理视频，理想情况下录播与直播相差半小时以内，没下播就能上线录播，**目前已知 b 站录播最快版本**！
 - **多房间**：同时录制多个直播间内容视频以及弹幕文件（包含普通弹幕，付费弹幕以及礼物上舰等信息）。
 - **占用小**：自动删除本地已上传的视频，极致节省空间。
-- **模版化**：无需复杂配置，开箱即用，( :tada: NEW)通过 b 站搜索建议接口自动抓取相关热门标签。
+- **模版化**：无需复杂配置，开箱即用，通过 b 站搜索建议接口自动抓取相关热门标签。
 - **检测片段并合并**：对于网络问题或者直播连线导致的视频流分段，能够自动检测合并成为完整视频。
-- **自动渲染弹幕**：自动转换xml为ass弹幕文件并且渲染到视频中形成**有弹幕版视频**并自动上传。
+- **自动渲染弹幕**：自动转换xml为ass弹幕文件，该转换工具库已经开源 [DanmakuConvert](https://github.com/timerring/DanmakuConvert) 并且渲染到视频中形成**有弹幕版视频**并自动上传。
 - **硬件要求极低**：无需GPU，只需最基础的单核CPU搭配最低的运存即可完成录制，弹幕渲染，上传等等全部过程，无最低配置要求，10年前的电脑或服务器依然可以使用！
 - **( :tada: NEW)自动渲染字幕**(如需使用本功能，则需保证有 Nvidia 显卡)：采用 OpenAI 的开源模型 [`whisper`](https://github.com/openai/whisper)，自动识别视频内语音并转换为字幕渲染至视频中。
-- **( :tada: NEW)自动切片上传**：根据弹幕密度计算寻找高能片段并切片，结合多模态视频理解大模型 [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4) 自动生成有意思的切片标题及内容，并且自动上传。
+- **( :tada: NEW)自动切片上传**：根据弹幕密度计算寻找高能片段并切片，该自动切片工具库已开源 [auto-slice-video](https://github.com/timerring/auto-slice-video)
+ ，结合多模态视频理解大模型 [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4) 自动生成有意思的切片标题及内容，并且自动上传。
+- **( :tada: NEW)自动多平台循环直播推流**：该工具已经开源 [looplive](https://github.com/timerring/looplive) 是一个 7 x 24 小时全自动**循环多平台同时推流**直播工具。
 
 项目架构流程如下：
 
@@ -49,9 +51,9 @@ graph TD
         whisper[whisperASR模型] --生成字幕-->parameter[查询视频分辨率]
         subgraph 启动新进程
         parameter[查询分辨率] -->ifDanmaku{判断}
-        ifDanmaku -->|有弹幕| DanmakuFactory[DanmakuFactory]
+        ifDanmaku -->|有弹幕| DanmakuConvert[DanmakuConvert]
         ifDanmaku -->|无弹幕| ffmpeg1[ffmpeg]
-        DanmakuFactory[DanmakuFactory] --根据分辨率转换弹幕--> ffmpeg1[ffmpeg]
+        DanmakuConvert[DanmakuConvert] --根据分辨率转换弹幕--> ffmpeg1[ffmpeg]
         ffmpeg1[ffmpeg] --渲染弹幕及字幕 --> Video[视频文件]
         Video[视频文件] --计算弹幕密度并切片--> GLM[多模态视频理解模型]
         GLM[多模态视频理解模型] --生成切片信息--> slice[视频切片]
@@ -68,7 +70,7 @@ graph TD
 ## 3. 测试硬件
 + OS: Ubuntu 22.04.4 LTS
 
-  >尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 DanmakuFactory 以及 biliup-rs 所需版本，若使用较早版本，请参考 [version `GLIBC_2.34‘ not found简单有效解决方法](https://blog.csdn.net/huazhang_001/article/details/128828999)。
+  >尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 biliup-rs 所需版本，若使用较早版本，请参考 [version `GLIBC_2.34‘ not found简单有效解决方法](https://blog.csdn.net/huazhang_001/article/details/128828999)。
 + CPU：2核 Intel(R) Xeon(R) Platinum 85
 + GPU：无
 + 内存：2G
@@ -102,6 +104,20 @@ graph TD
 
 > [!TIP]
 > 如果你是 windows 用户，请使用 WSL 运行本项目。
+
+#### 0. clone 项目
+
+由于项目引入了我写的两个 submodule [DanmakuConvert](https://github.com/timerring/DanmakuConvert) 和 [auto-slice-video](https://github.com/timerring/auto-slice-video)，因此推荐 clone 项目时就更新 submodules。
+
+```bash
+git clone --recurse-submodules https://github.com/timerring/bilive.git
+```
+
+如果你没有采用上述方式 clone 项目，请更新 submodules：
+
+```bash
+git submodule update --init --recursive
+```
 
 #### 1. 安装依赖(推荐先 `conda` 创建虚拟环境)
 
@@ -197,9 +213,9 @@ logs # 日志文件夹
 2. 将 `MODEL_TYPE` 调整为 `merge` 或者 `append`。
 
 > [!TIP]
-> 上传默认参数如下，[]中内容全部自动替换。也可在 src/upload/extract_video_info.py 中自定义相关配置：
-> + 默认标题是"【弹幕+字幕】[XXX]直播回放-[日期]-[直播间标题]"。
-> + 默认描述是"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"
+> 上传默认参数如下，[]中内容全部自动替换。可以在 `src/config.py` 中自定义相关配置，映射关键词为 `{artist}`、`{date}`、`{title}`、`{source_link}`，可自行组合删减定制模板：
+> + 标题模板是`{artist}直播回放-{date}-{title}`，效果为"【弹幕+字幕】[XXX]直播回放-[日期]-[直播间标题]"，可自行修改。
+> + 简介模板是`{artist}直播，直播间地址：{source_link} 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。`，效果为"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"，可自行修改。
 > + 默认标签是根据主播名字自动在 b 站搜索推荐中抓取的[热搜词]，详见[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/suggest.md)。
 
 ### Docker 运行

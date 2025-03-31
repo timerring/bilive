@@ -6,7 +6,7 @@ import json
 import os
 from datetime import datetime
 from src.upload.query_search_suggestion import get_bilibili_suggestions
-from src.config import GPU_EXIST
+from src.config import GPU_EXIST, TITLE, DESC
 
 def get_video_info(video_file_path):
     """get the title, artist and date of the video file via ffprobe
@@ -37,19 +37,18 @@ def get_video_info(video_file_path):
 
 def generate_title(video_path):
     title, artist, date = get_video_info(video_path)
-    if GPU_EXIST:
-        new_title = "【弹幕+字幕】" + artist + "直播回放-" + date + "-" + title
-    else:
-        new_title = "【弹幕】" + artist + "直播回放-" + date + "-" + title
+    source_link = generate_source(video_path)
+    prefix = "【弹幕+字幕】" if GPU_EXIST else "【弹幕】"
+    formatted_title = TITLE.format(artist=artist, date=date, title=title, source_link=source_link)
+    new_title = f"{prefix}{formatted_title}"
     return new_title
 
 def generate_desc(video_path):
     title, artist, date = get_video_info(video_path)
     source_link = generate_source(video_path)
-    if GPU_EXIST:
-        new_desc = "【弹幕+字幕】" + artist + "直播，直播间地址：" + source_link + " 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"
-    else:
-        new_desc = "【弹幕】" + artist + "直播，直播间地址：" + source_link + " 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"
+    prefix = "【弹幕+字幕】" if GPU_EXIST else "【弹幕】"
+    formatted_desc = DESC.format(artist=artist, date=date, title=title, source_link=source_link)
+    new_desc = f"{prefix}{formatted_desc}"
     return new_desc
 
 def generate_tag(video_path):
