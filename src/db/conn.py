@@ -28,17 +28,26 @@ def create_table():
 def get_single_upload_queue():
     db = connect()
     cursor = db.cursor()
-    cursor.execute("select video_path, config_path from upload_queue where locked = 0 limit 1;")
+    cursor.execute("select video_path from upload_queue where locked = 0 limit 1;")
     row = cursor.fetchone()
-    result = {'video_path': row[0], 'config_path': row[1]} if row else None
+    result = {'video_path': row[0]} if row else None
     db.close()
     return result
 
-def insert_upload_queue(video_path: str, config_path: str):
+def get_all_upload_queue():
+    db = connect()
+    cursor = db.cursor()
+    cursor.execute("select video_path from upload_queue;")
+    rows = cursor.fetchall()
+    result = [{'video_path': row[0]} for row in rows]
+    db.close()
+    return result
+
+def insert_upload_queue(video_path: str):
     try:
         db = connect()
         cursor = db.cursor()
-        cursor.execute("insert into upload_queue (video_path, config_path) values (?, ?);", (video_path, config_path))
+        cursor.execute("insert into upload_queue (video_path) values (?);", (video_path,))
         db.commit()
         db.close()
         return True
@@ -76,12 +85,16 @@ if __name__ == "__main__":
     # Create Table
     create_table()
     # Insert Test Data
-    insert_upload_queue('test.mp4', 'config.yaml')
+    insert_upload_queue('')
     # Insert again to check the unique index
-    print(insert_upload_queue('test.mp4', 'config.yaml'))
-    # Get the single upload queue, shold be {'video_path': 'test.mp4', 'config_path': 'config.yaml'}
-    print(get_single_upload_queue())
+    # print(insert_upload_queue(''))
+    # Get the single upload queue, shold be {'video_path': 'test.mp4'}
+    # print(get_single_upload_queue())
+    # Get all upload queue
+    print(get_all_upload_queue())
+    # unlock the upload queue
+    update_upload_queue_lock('test.mp4', 0)
     # Delete the upload queue
-    delete_upload_queue('test.mp4')
+    delete_upload_queue('')
     # Get the single upload queue after delete, should be None
     print(get_single_upload_queue())

@@ -13,8 +13,6 @@ from src.autoslice.zhipu_sdk import zhipu_glm_4v_plus_generate_title
 from src.upload.extract_video_info import get_video_info
 from src.log.logger import scan_log
 from db.conn import insert_upload_queue
-from src.upload.generate_yaml import generate_yaml_template, generate_slice_yaml_template
-from uuid import uuid4
 
 def normalize_video_path(filepath):
     """Normalize the video path to upload
@@ -72,13 +70,8 @@ def render_video(video_path):
                     slice_video_flv_path = slice_path[:-4] + '.flv'
                     inject_metadata(slice_path, glm_title, slice_video_flv_path)
                     os.remove(slice_path)
-                    slice_yaml_template = generate_slice_yaml_template(slice_video_flv_path)
-                    slice_template_path = os.path.join(VIDEOS_DIR, f'upload_conf/{uuid4()}.yaml')
-                    with open(slice_template_path, 'w', encoding='utf-8') as f:
-                        f.write(slice_yaml_template)
-
-                    if not insert_upload_queue(slice_video_flv_path, slice_template_path):
-                        scan_log('插入待上传条目失败')
+                    if not insert_upload_queue(slice_video_flv_path):
+                        scan_log.error('Cannot insert the video to the upload queue')
                 except Exception as e:
                     scan_log.error(f"Error in {slice_path}: {e}")
 
@@ -91,10 +84,5 @@ def render_video(video_path):
     # test_path = original_video_path[:-4]
     # os.rename(original_video_path, test_path)
     
-    yaml_template = generate_yaml_template(format_video_path)
-    template_path = os.path.join(VIDEOS_DIR, f'upload_conf/{uuid4()}.yaml')
-    with open(template_path, 'w', encoding='utf-8') as f:
-        f.write(yaml_template)
-        
-    if not insert_upload_queue(format_video_path, template_path):
-        scan_log('插入待上传条目失败')
+    if not insert_upload_queue(format_video_path):
+        scan_log.error('Cannot insert the video to the upload queue')

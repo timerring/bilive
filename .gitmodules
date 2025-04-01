@@ -4,3 +4,6 @@
 [submodule "src/autoslice/auto_slice_video"]
 	path = src/autoslice/auto_slice_video
 	url = https://github.com/timerring/auto-slice-video.git
+[submodule "src/upload/bilitool"]
+	path = src/upload/bilitool
+	url = https://github.com/timerring/bilitool.git
