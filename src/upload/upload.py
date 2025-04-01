@@ -3,7 +3,7 @@
 import subprocess
 import os
 import sys
-from src.config import SRC_DIR, BILIVE_DIR
+from src.config import SRC_DIR, BILIVE_DIR, RESERVE_FOR_FIXING
 from datetime import datetime
 from src.upload.generate_upload_data import generate_video_data, generate_slice_data
 from src.upload.extract_video_info import generate_title
@@ -11,7 +11,7 @@ from src.log.logger import upload_log
 import time
 import fcntl
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from db.conn import get_single_upload_queue, delete_upload_queue, update_upload_queue_lock
+from db.conn import get_single_upload_queue, delete_upload_queue, update_upload_queue_lock, get_single_lock_queue
 import threading
 from .bilitool.bilitool import UploadController, FeedController, LoginController
 
@@ -39,15 +39,6 @@ def upload_video(upload_path):
         update_upload_queue_lock(upload_path, 0)
         return False
 
-def find_bv_number(target_str, my_list):
-    for element in my_list:
-        if target_str in element:
-            parts = element.split('|')
-            if len(parts) > 0:
-                return parts[1].strip()
-    return None
-
-
 def append_upload(upload_path, bv_result):
     try:
         result = UploadController().append_video_entry(upload_path, bv_result)
@@ -65,49 +56,72 @@ def append_upload(upload_path, bv_result):
         upload_log.error(f"The append_upload called failed, the files will be reserved. error: {e}")
         update_upload_queue_lock(upload_path, 0)
         return False
-    
-    
+
+def video_gate(video_path):
+    if video_path.endswith('.flv'): # slice video tag
+        # upload slice video
+        upload_video(video_path)
+    else:
+        # get the uploaded video list
+        upload_dict = FeedController().get_video_dict_info(20, "pubed,not_pubed,is_pubing")
+        query = generate_title(video_path)
+        bv_result = upload_dict.get(query) # query this title
+        if bv_result:
+            upload_log.info(f"The series of videos has already been uploaded, the BV number is: {bv_result}")
+            append_upload(video_path, bv_result)
+        else:
+            upload_log.info("First upload this live")
+            upload_video(video_path)
+    time.sleep(5) # avoid JIT read error
+
 def read_append_and_delete_lines():
     while True:
-        # upload_queue = None
-        # read the queue and update lock status to prevent other threads from reading the same data
         if LoginController().check_bilibili_login():
             pass
         else:
             file = BILIVE_DIR + "/cookie.json"
             LoginController().login_bilibili_with_cookie_file(file)
-            # LoginController().login_bilibili(export=False)
+            # LoginController().login_bilibili(export=False) # reserve for docker version
             continue
-        # with read_lock:
         upload_queue = get_single_upload_queue()
-        # if there is a task in the queue, try to lock the task
+        lock_queue = get_single_lock_queue()
         if upload_queue:  
             video_path = upload_queue['video_path']
-            time.sleep(3)
+            time.sleep(3) # avoid JIT read error
             query = generate_title(video_path)
-            if query is None:
+            if query is None: # JIT read error or MOOV crash error or interrupted error
                 if not os.path.exists(video_path):
-                    delete_upload_queue(video_path)
+                    # Interrupted error, the file has been uploaded. But record is not deleted.
+                    delete_upload_queue(video_path) # Directly delete the record
                     continue
                 else:
+                    # JIT read error or MOOV crash error
                     upload_log.error(f"Error occurred in ffprobe: {video_path}")
-                    update_upload_queue_lock(video_path, 1)
+                    update_upload_queue_lock(video_path, 1) # Lock first, wait for the lock execute round
                     continue
             upload_log.info(f"deal with {video_path}")
-            # check if the live is already uploaded
-            if video_path.endswith('.flv'):
-                # upload slice video
-                upload_video(video_path)
+            video_gate(video_path)
+        elif lock_queue:
+            # check the lock video
+            video_path = lock_queue['video_path']
+            if not os.path.exists(video_path):
+                # Interrupted error, the file has been uploaded. But record is not deleted.
+                delete_upload_queue(video_path) # Directly delete the record
+                continue
             else:
-                upload_dict = FeedController().get_video_dict_info(20, "pubed,not_pubed,is_pubing")
-                bv_result = upload_dict.get(query)
-                if bv_result:
-                    upload_log.info(f"The series of videos has already been uploaded, the BV number is: {bv_result}")
-                    append_upload(video_path, bv_result)
+                query = generate_title(video_path)
+                if query is None:
+                    if RESERVE_FOR_FIXING:
+                        # MOOV crash error
+                        upload_log.error(f"MOOV crash error, {video_path} is reserved for fixing")
+                        update_upload_queue_lock(video_path, 2) # Reserve for fixing
+                    else:
+                        # JIT read error
+                        delete_upload_queue(video_path) # Directly delete the record
+                        os.remove(video_path)
                 else:
-                    upload_log.info("First upload this live")
-                    upload_video(video_path)
-            time.sleep(20)
+                    upload_log.info(f"deal with {video_path} in lock queue")
+                    video_gate(video_path)
         else:
             upload_log.info("Empty queue, wait 2 minutes and check again.")
             time.sleep(120)

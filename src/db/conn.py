@@ -37,9 +37,9 @@ def get_single_upload_queue():
 def get_all_upload_queue():
     db = connect()
     cursor = db.cursor()
-    cursor.execute("select video_path from upload_queue;")
+    cursor.execute("select id, video_path, locked from upload_queue;")
     rows = cursor.fetchall()
-    result = [{'video_path': row[0]} for row in rows]
+    result = [{'id': row[0], 'video_path': row[1], 'locked': row[2]} for row in rows]
     db.close()
     return result
 
@@ -79,13 +79,29 @@ def update_upload_queue_lock(video_path: str, locked: int):
         print("Update Upload Queue failed.")
         return False
     
-    
-    
+def get_single_lock_queue():
+    db = connect()
+    cursor = db.cursor()
+    cursor.execute("select video_path from upload_queue where locked = 1 limit 1;")
+    row = cursor.fetchone()
+    result = {'video_path': row[0]} if row else None
+    db.close()
+    return result
+
+def get_all_reserve_for_fixing_queue():
+    db = connect()
+    cursor = db.cursor()
+    cursor.execute("select video_path from upload_queue where locked = 2;")
+    rows = cursor.fetchall()
+    result = [{'video_path': row[0]} for row in rows]
+    db.close()
+    return result
+
 if __name__ == "__main__":
     # Create Table
-    create_table()
+    # create_table()
     # Insert Test Data
-    insert_upload_queue('')
+    # insert_upload_queue('')
     # Insert again to check the unique index
     # print(insert_upload_queue(''))
     # Get the single upload queue, shold be {'video_path': 'test.mp4'}
@@ -93,8 +109,8 @@ if __name__ == "__main__":
     # Get all upload queue
     print(get_all_upload_queue())
     # unlock the upload queue
-    update_upload_queue_lock('test.mp4', 0)
+    # update_upload_queue_lock('test.mp4', 0)
     # Delete the upload queue
-    delete_upload_queue('')
+    # delete_upload_queue('')
     # Get the single upload queue after delete, should be None
     print(get_single_upload_queue())

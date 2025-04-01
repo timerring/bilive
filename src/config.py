@@ -18,6 +18,7 @@ TITLE = "{artist}直播回放-{date}-{title}"
 DESC = "{artist}直播回放，直播间地址：{source_link} 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"
 # You can change the description as you like.
 GIFT_PRICE_FILTER = 1 # The gift whose price is less than this value will be filtered, unit: RMB
+RESERVE_FOR_FIXING = False # If encounter MOOV crash error, delete the video or reserve for fixing
 # ============================ The video slice configuration ==================
 AUTO_SLICE = False
 SLICE_DURATION = 60 # better not exceed 300 seconds
