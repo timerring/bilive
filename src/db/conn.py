@@ -13,7 +13,7 @@ def create_table():
         db = connect()
         cursor = db.cursor()
         sql = [
-            "create table upload_queue (id integer primary key autoincrement, video_path text, config_path text, locked integer default 0);",
+            "create table upload_queue (id integer primary key autoincrement, video_path text, locked integer default 0);",
             "create unique index idx_video_path on upload_queue(video_path);",
         ]
         for s in sql:
