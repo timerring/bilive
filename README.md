@@ -155,7 +155,7 @@ pip install -r requirements.txt
 
 #### 4. bilitool 登录
 
-> 由于一般日志打印不出二维码效果（docker 版本的日志不确定是否能打印，等发布新 docker 时再试，docker 版本请先参考文档[bilive](https://bilive.timerring.com)，本 README 只针对源码部署），所以这步需要提前在机器上安装 [bilitool](https://github.com/timerring/bilitool):
+> 由于一般日志打印不出二维码效果（docker 的日志不确定是否能打印，等发布新image时再修改，docker 版本请先参考文档[bilive](https://bilive.timerring.com)，本 README 只针对源码部署），所以这步需要提前在机器上安装 [bilitool](https://github.com/timerring/bilitool):
 
 ```
 pip install bilitool
