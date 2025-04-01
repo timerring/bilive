@@ -381,6 +381,4 @@ cookies.json
 src/subtitle/models/base.pt
 src/subtitle/models/small.pt
 src/burn/mergevideo.txt
-src/upload/upload.yaml
-src/upload/uploadVideoQueue.txt
 src/db/data.db

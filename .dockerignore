@@ -8,4 +8,3 @@ test/*
 Videos/*
 settings-production.toml
 startRecord-production.sh
-src/utils/cookies.json

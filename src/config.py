@@ -36,7 +36,7 @@ VIDEOS_DIR = os.path.join(BILIVE_DIR, 'Videos')
 
 
 if not os.path.exists(SRC_DIR + '/db/data.db'):
-    print("初始化数据库")
+    print("Initialize the database")
     create_table()
 
 if not os.path.exists(VIDEOS_DIR):
