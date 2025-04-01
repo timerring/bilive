@@ -74,7 +74,9 @@ def read_append_and_delete_lines():
         if LoginController().check_bilibili_login():
             pass
         else:
-            LoginController().login_bilibili(export=False)
+            file = BILIVE_DIR + "/cookie.json"
+            LoginController().login_bilibili_with_cookie_file(file)
+            # LoginController().login_bilibili(export=False)
             continue
         # with read_lock:
         upload_queue = get_single_upload_queue()
@@ -98,9 +100,6 @@ def read_append_and_delete_lines():
                 upload_video(video_path)
             else:
                 upload_dict = FeedController().get_video_dict_info(20, "pubed,not_pubed,is_pubing")
-                # result = subprocess.check_output("bilitool" + " list", shell=True)
-                # # print(result.decode("utf-8"), flush=True)
-                # upload_list = result.decode("utf-8").splitlines()
                 bv_result = upload_dict.get(query)
                 if bv_result:
                     upload_log.info(f"The series of videos has already been uploaded, the BV number is: {bv_result}")

@@ -155,7 +155,16 @@ pip install -r requirements.txt
 
 #### 4. bilitool 登录
 
-首先按照 [bilitool](https://github.com/timerring/bilitool) 登录b站，通过 `bilitool login` 扫码登录。
+> 由于一般日志打印不出二维码效果（docker 版本的日志不确定是否能打印，等发布新 docker 时再试，docker 版本请先参考文档[bilive](https://bilive.timerring.com)，本 README 只针对源码部署），所以这步需要提前在机器上安装 [bilitool](https://github.com/timerring/bilitool):
+
+```
+pip install bilitool
+# 然后使用 app 端扫码登录
+# 会导出 cookie.json 文件
+bilitool login --export
+```
+
+将登录的 cookie.json 文件留在本项目根目录下，`./upload.sh` 启动后即可删除该文件。（持久化登录，该步只需执行一次）
 
 [常见问题收集](https://timerring.github.io/bilive/biliup.html)
 
@@ -270,7 +279,7 @@ docker compose up -d
 
 ## 特别感谢
 
-- [biliup/biliup-rs](https://github.com/biliup/biliup-rs)
-- [hihkm/DanmakuFactory](https://github.com/hihkm/DanmakuFactory)
 - [acgnhiki/blrec](https://github.com/acgnhiki/blrec)
 - [OpenAI/whisper](https://github.com/OpenAI/whisper)
+- [biliup/biliup-rs](https://github.com/biliup/biliup-rs)
+- [hihkm/DanmakuFactory](https://github.com/hihkm/DanmakuFactory)
