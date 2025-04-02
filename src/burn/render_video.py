@@ -9,7 +9,7 @@ from src.subtitle.generate_subtitles import generate_subtitles
 from src.burn.render_command import render_command
 from autoslice import slice_video_by_danmaku
 from src.autoslice.inject_metadata import inject_metadata
-from src.autoslice.zhipu_sdk import zhipu_glm_4v_plus_generate_title
+from src.autoslice.title_generator import generate_title
 from src.upload.extract_video_info import get_video_info
 from src.log.logger import scan_log
 from db.conn import insert_upload_queue
@@ -66,9 +66,9 @@ def render_video(video_path):
             slices_path = slice_video_by_danmaku(ass_path, format_video_path, SLICE_DURATION, SLICE_NUM, SLICE_OVERLAP, SLICE_STEP)
             for slice_path in slices_path:
                 try:
-                    glm_title = zhipu_glm_4v_plus_generate_title(slice_path, artist)
+                    slice_title = generate_title(slice_path, artist)
                     slice_video_flv_path = slice_path[:-4] + '.flv'
-                    inject_metadata(slice_path, glm_title, slice_video_flv_path)
+                    inject_metadata(slice_path, slice_title, slice_video_flv_path)
                     os.remove(slice_path)
                     if not insert_upload_queue(slice_video_flv_path):
                         scan_log.error('Cannot insert the video to the upload queue')
