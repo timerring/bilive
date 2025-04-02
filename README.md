@@ -36,9 +36,9 @@
 - **硬件要求极低**：无需GPU，只需最基础的单核CPU搭配最低的运存即可完成录制，弹幕渲染，上传等等全部过程，无最低配置要求，10年前的电脑或服务器依然可以使用！
 - **( :tada: NEW)自动渲染字幕**(如需使用本功能，则需保证有 Nvidia 显卡)：采用 OpenAI 的开源模型 [`whisper`](https://github.com/openai/whisper)，自动识别视频内语音并转换为字幕渲染至视频中。
 - **( :tada: NEW)自动切片上传**：根据弹幕密度计算寻找高能片段并切片，该自动切片工具库已开源 [auto-slice-video](https://github.com/timerring/auto-slice-video)，结合多模态视频理解大模型自动生成有意思的切片标题及内容，并且自动上传，目前已经支持的模型有：
-  - [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4)
-  - [`Gemini-2.0-flash`](https://deepmind.google/technologies/gemini/flash/)
-  - [`Qwen-2.5-72B-Instruct`](https://dashscope.aliyuncs.com/compatible-mode/v1)
+  - `GLM-4V-PLUS`
+  - `Gemini-2.0-flash`
+  - `Qwen-2.5-72B-Instruct`
 - **( :tada: NEW)持久化登录/下载/上传视频(支持多p投稿)**：[bilitool](https://github.com/timerring/bilitool)已经开源，实现持久化登录，下载视频及弹幕(含多p)/上传视频(可分p投稿)，查询投稿状态，查询详细信息等功能，一键pip安装，可以使用命令行 cli 操作，也可以作为api调用。
 - **( :tada: NEW)自动多平台循环直播推流**：该工具已经开源 [looplive](https://github.com/timerring/looplive) 是一个 7 x 24 小时全自动**循环多平台同时推流**直播工具。
 
@@ -73,8 +73,6 @@ graph TD
 
 ## 3. 测试硬件
 + OS: Ubuntu 22.04.4 LTS
-
-  >尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 biliup-rs 所需版本，若使用较早版本，请参考 [version `GLIBC_2.34‘ not found简单有效解决方法](https://blog.csdn.net/huazhang_001/article/details/128828999)。
 + CPU：2核 Intel(R) Xeon(R) Platinum 85
 + GPU：无
 + 内存：2G
