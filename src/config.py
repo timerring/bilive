@@ -31,7 +31,7 @@ MIN_VIDEO_SIZE = 200
 MLLM_MODEL = "gemini" # Please make sure you have the right API key for the LLM you choose
 # Apply for your own GLM-4v-Plus API key at https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D
 ZHIPU_API_KEY = ""
-# Apply for your own Gemini API key at https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/
+# Apply for your own Gemini API key at https://aistudio.google.com/app/apikey
 GEMINI_API_KEY = ""
 # ============================ Basic configuration ============================
 SRC_DIR = str(Path(os.path.abspath(__file__)).parent)
