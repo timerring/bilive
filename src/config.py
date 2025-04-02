@@ -27,12 +27,14 @@ SLICE_OVERLAP = 30
 SLICE_STEP = 1
 # The minimum video size to be sliced (MB)
 MIN_VIDEO_SIZE = 200
-# the multi-model LLMs, can be "gemini" or "zhipu"
+# the multi-model LLMs, can be "gemini" or "zhipu" or "qwen"
 MLLM_MODEL = "gemini" # Please make sure you have the right API key for the LLM you choose
 # Apply for your own GLM-4v-Plus API key at https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D
 ZHIPU_API_KEY = ""
 # Apply for your own Gemini API key at https://aistudio.google.com/app/apikey
 GEMINI_API_KEY = ""
+# Apply for your own Qwen API key at https://bailian.console.aliyun.com/?apiKey=1
+QWEN_API_KEY = ""
 # ============================ Basic configuration ============================
 SRC_DIR = str(Path(os.path.abspath(__file__)).parent)
 BILIVE_DIR = str(Path(SRC_DIR).parent)
