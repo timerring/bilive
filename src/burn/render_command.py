@@ -14,8 +14,9 @@ def render_command(in_video_path, out_video_path, in_subtitle_font_size, in_subt
         in_subtitle_margin_v: str, the bottom margin of subtitles
     """
     in_ass_path = in_video_path[:-4] + '.ass'
-    if GPU_EXIST:
-        in_srt_path = in_video_path[:-4] + '.srt'
+    in_srt_path = in_video_path[:-4] + '.srt'
+    
+    if GPU_EXIST and os.path.isfile(in_srt_path):
         if os.path.isfile(in_ass_path):
             scan_log.info("Current Mode: GPU with danmaku")
             command = [

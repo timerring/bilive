@@ -5,7 +5,7 @@ import os
 import subprocess
 from src.config import GPU_EXIST, SRC_DIR, MODEL_TYPE, AUTO_SLICE, SLICE_DURATION, MIN_VIDEO_SIZE, VIDEOS_DIR , SLICE_NUM, SLICE_OVERLAP, SLICE_STEP
 from src.danmaku.generate_danmakus import get_resolution, process_danmakus
-from src.subtitle.generate_subtitles import generate_subtitles
+from src.subtitle.subtitle_generator import generate_subtitle
 from src.burn.render_command import render_command
 from autoslice import slice_video_by_danmaku
 from src.autoslice.inject_metadata import inject_metadata
@@ -52,9 +52,8 @@ def render_video(video_path):
         scan_log.error(f"FileNotFoundError: {e} - Check if the file exists")
 
     # Generate the srt file via whisper model
-    if GPU_EXIST:
-        if MODEL_TYPE != "pipeline":
-            generate_subtitles(original_video_path)
+    if MODEL_TYPE != "pipeline":
+        generate_subtitle(original_video_path)
 
     # Burn danmaku or subtitles into the videos 
     render_command(original_video_path, format_video_path, subtitle_font_size, subtitle_margin_v)

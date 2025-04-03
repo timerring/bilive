@@ -10,7 +10,13 @@ from db.conn import create_table
 GPU_EXIST=True
 # Can be pipeline, append, merge
 MODEL_TYPE = "append"
-Inference_Model = "small"
+# =============== The auto speech recognition configuration ============================
+ASR_METHOD = "api" # can be "deploy" or "api" or "none"
+# If you choose "api", due to the limitation of free tier, you should keep every video less than 30 minutes(around)
+# Apply for your own API key at https://console.groq.com/keys
+WHISPER_API_KEY = ""
+Inference_Model = "small" # the model to be deployed
+# =============== The video configuration ============================
 TITLE = "{artist}直播回放-{date}-{title}" 
 # You can change the title as you like, eg.
 # f"{artist}直播回放-{date}-{title}" - Streamer直播回放-20250328-Live title

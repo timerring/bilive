@@ -5,7 +5,7 @@ import os
 import subprocess
 from src.config import GPU_EXIST, SRC_DIR, VIDEOS_DIR
 from src.danmaku.generate_danmakus import get_resolution, process_danmakus
-from src.subtitle.generate_subtitles import generate_subtitles
+from src.subtitle.subtitle_generator import generate_subtitle
 from src.burn.render_command import render_command
 from src.upload.extract_video_info import get_video_info
 from src.log.logger import scan_log
@@ -70,8 +70,7 @@ def render_then_merge(video_path_list):
             # Process the danmakus to ass and remove emojis
             subtitle_font_size, subtitle_margin_v = process_danmakus(xml_path, video_resolution)
             # Generate the srt file via whisper model
-            if GPU_EXIST:
-                generate_subtitles(original_video_path)
+            generate_subtitle(original_video_path)
             # Burn danmaku or subtitles into the videos 
             render_command(original_video_path, video_to_be_merged, subtitle_font_size, subtitle_margin_v)
             if not os.path.exists(merge_list):

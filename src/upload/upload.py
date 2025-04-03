@@ -21,6 +21,10 @@ def upload_video(upload_path):
     try:
         if upload_path.endswith('.flv'):
             copyright, title, tid, tag = generate_slice_data(upload_path)
+            if title is None:
+                upload_log.error("Fail to upload slice video, the files will be reserved.")
+                update_upload_queue_lock(upload_path, 0)
+                return False
         else:
             copyright, title, desc, tid, tag, source, cover, dynamic = generate_video_data(upload_path)
             yaml = ""
