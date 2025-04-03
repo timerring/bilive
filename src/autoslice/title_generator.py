@@ -15,7 +15,7 @@ def title_generator(model_type):
                 from .mllm_sdk.zhipu_sdk import zhipu_glm_4v_plus_generate_title
                 return zhipu_glm_4v_plus_generate_title(video_path, artist)
             elif model_type == "gemini":
-                from .mllm_sdk.gemini_sdk import gemini_generate_title
+                from .mllm_sdk.gemini_old_sdk import gemini_generate_title
                 return gemini_generate_title(video_path, artist)
             elif model_type == "qwen":
                 from .mllm_sdk.qwen_sdk import qwen_generate_title
