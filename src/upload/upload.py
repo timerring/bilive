@@ -9,18 +9,17 @@ from src.upload.generate_upload_data import generate_video_data, generate_slice_
 from src.upload.extract_video_info import generate_title
 from src.log.logger import upload_log
 import time
-import fcntl
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from db.conn import get_single_upload_queue, delete_upload_queue, update_upload_queue_lock, get_single_lock_queue
-import threading
 from .bilitool.bilitool import UploadController, FeedController, LoginController
+from src.log.retry import Retry
 
-# read_lock = threading.Lock()
-
+@Retry(max_retry = 3, interval = 5).decorator
 def upload_video(upload_path):
     try:
         if upload_path.endswith('.flv'):
             copyright, title, tid, tag = generate_slice_data(upload_path)
+            yaml, desc, source, cover, dynamic = ("",) * 5
             if title is None:
                 upload_log.error("Fail to upload slice video, the files will be reserved.")
                 update_upload_queue_lock(upload_path, 0)
@@ -33,6 +32,7 @@ def upload_video(upload_path):
             upload_log.info("Upload successfully, then delete the video")
             os.remove(upload_path)
             delete_upload_queue(upload_path)
+            return True
         else:
             upload_log.error("Fail to upload, the files will be reserved.")
             update_upload_queue_lock(upload_path, 0)
@@ -43,6 +43,7 @@ def upload_video(upload_path):
         update_upload_queue_lock(upload_path, 0)
         return False
 
+@Retry(max_retry = 3, interval = 5).decorator
 def append_upload(upload_path, bv_result):
     try:
         result = UploadController().append_video_entry(upload_path, bv_result, cdn=UPLOAD_LINE)
@@ -51,6 +52,7 @@ def append_upload(upload_path, bv_result):
             upload_log.info("Upload successfully, then delete the video")
             os.remove(upload_path)
             delete_upload_queue(upload_path)
+            return True
         else:
             upload_log.error("Fail to append, the files will be reserved.")
             update_upload_queue_lock(upload_path, 0)
@@ -92,19 +94,22 @@ def read_append_and_delete_lines():
         if upload_queue:  
             video_path = upload_queue['video_path']
             time.sleep(3) # avoid JIT read error
-            query = generate_title(video_path)
-            if query is None: # JIT read error or MOOV crash error or interrupted error
-                if not os.path.exists(video_path):
-                    # Interrupted error, the file has been uploaded. But record is not deleted.
-                    delete_upload_queue(video_path) # Directly delete the record
-                    continue
-                else:
-                    # JIT read error or MOOV crash error
-                    upload_log.error(f"Error occurred in ffprobe: {video_path}")
-                    update_upload_queue_lock(video_path, 1) # Lock first, wait for the lock execute round
-                    continue
-            upload_log.info(f"deal with {video_path}")
-            video_gate(video_path)
+            if video_path.endswith('.flv'):
+                video_gate(video_path)
+            else:
+                query = generate_title(video_path)
+                if query is None: # JIT read error or MOOV crash error or interrupted error
+                    if not os.path.exists(video_path):
+                        # Interrupted error, the file has been uploaded. But record is not deleted.
+                        delete_upload_queue(video_path) # Directly delete the record
+                        continue
+                    else:
+                        # JIT read error or MOOV crash error
+                        upload_log.error(f"Error occurred in ffprobe: {video_path}")
+                        update_upload_queue_lock(video_path, 1) # Lock first, wait for the lock execute round
+                        continue
+                upload_log.info(f"deal with {video_path}")
+                video_gate(video_path)
         elif lock_queue:
             # check the lock video
             video_path = lock_queue['video_path']

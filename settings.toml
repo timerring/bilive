@@ -27,11 +27,11 @@ reserve_for_fixing = false # If encounter MOOV crash error, delete the video or 
 upload_line = "auto" # The upload line to be used, default None is auto detect(recommended), if you want to specify, it can be "bldsa", "ws", "tx", "qn", "bda2".
 
 [slice]
-auto_slice = false # General control
+auto_slice = false # General control: true or false
 slice_duration = 60 # better not exceed 300 seconds
-slice_num = 2
-slice_overlap = 30
-slice_step = 1
+slice_num = 2 # the number of slices
+slice_overlap = 30 # the overlap of slices(seconds) see my package https://github.com/timerring/auto-slice-video for more details
+slice_step = 1 # the step of slices(seconds)
 min_video_size = 200 # The minimum video size to be sliced (MB)
 mllm_model = "gemini" # the multi-model LLMs, can be "gemini" or "zhipu" or "qwen"
 zhipu_api_key = "" # Apply for your own GLM-4v-Plus API key at https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D

@@ -1,7 +1,6 @@
 import sqlite3
 import os
 
-# DATA_BASE_FILE ='./data.db'
 DATA_BASE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.db')
 
 def connect():
@@ -122,4 +121,4 @@ if __name__ == "__main__":
     # Get the single upload queue after delete, should be None
     # print(get_single_upload_queue())
     # Delete all queue
-    delete_all_queue()
+    # delete_all_queue()
