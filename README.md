@@ -20,6 +20,7 @@
   <img src="assets/minimax-text.svg" alt="Minimax" width="60" height="60" />
   <img src="assets/siliconcloud-color.svg" alt="SiliconFlow" width="15" height="60" />
   <img src="assets/siliconcloud-text.svg" alt="SiliconFlow" width="100" height="60" />
+  <img src="assets/hunyuan-color.svg" alt="Tencent Hunyuan" width="60" height="60" />
 </div>
 
 ##  1. Introduction
@@ -47,6 +48,7 @@
 - **( :tada: NEW)自动生成风格变换的视频封面**：采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面。
   - `Minimax image-01`
   - `Kwai Kolors`
+  - `Tencent Hunyuan`
 
 项目架构流程如下：
 
@@ -191,17 +193,27 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 
 在项目的自动切片功能需要使用到 Qwen-2.5-72B-Instruct 模型，请自行[注册账号](https://bailian.console.aliyun.com/?apiKey=1)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `QWEN_API_KEY` 中。
 
-##### 3.2.4 Minimax 模型
+#### 3.3 Image Generation Model
 
-> 如需使用 Minimax 模型，请将 `bilive.toml` 文件中 `generate_cover` 参数设置为 `true`，并将 `IMAGE_GEN_MODEL` 参数设置为 `minimax`。
+采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面，如需使用本功能，请将 `bilive.toml` 文件中 `generate_cover` 参数设置为 `true`。
+
+##### 3.3.1 Minimax 模型
+
+> 如需使用 Minimax 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `minimax`。
 
 在项目的自动切片功能需要使用到 Minimax 模型，请自行[注册账号](https://www.minimax.chat/)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `MINIMAX_API_KEY` 中。
 
-##### 3.2.5 Kwai Kolors 模型
+##### 3.3.2 Kwai Kolors 模型
 
-> 如需使用 Kwai Kolors 模型，请将 `bilive.toml` 文件中 `generate_cover` 参数设置为 `true`，并将 `IMAGE_GEN_MODEL` 参数设置为 `siliconflow`，采用 siliconflow 部署的 Kolors 模型。
+> 如需使用 Kwai Kolors 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `siliconflow`，采用 siliconflow 部署的 Kolors 模型。
 
 请自行[注册账号](https://cloud.siliconflow.cn/i/3Szr5BVg)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `SILICONFLOW_API_KEY` 中。
+
+##### 3.3.3 Tencent Hunyuan 模型
+
+> 如需使用 Tencent Hunyuan 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `tencent`。
+
+请自行[注册账号](https://console.cloud.tencent.com/cam/capi)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `TENCENT_SECRET_ID` 和 `TENCENT_SECRET_KEY` 中。
 
 #### 4. bilitool 登录
 
