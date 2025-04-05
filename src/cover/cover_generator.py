@@ -42,6 +42,9 @@ def cover_generator(model_type):
             if model_type == "minimax":
                 from .image_model_sdk.minimax_sdk import minimax_generate_cover
                 return minimax_generate_cover(cover_path)
+            elif model_type == "siliconflow":
+                from .image_model_sdk.kolors_sdk import kolors_generate_cover
+                return kolors_generate_cover(cover_path)
             else:
                 upload_log.error(f"Unsupported model type: {model_type}")
                 return None

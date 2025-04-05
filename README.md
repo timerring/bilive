@@ -18,7 +18,7 @@
   <img src="assets/qwen-color.svg" alt="Qwen-2.5-72B-Instruct" width="60" height="60" />
   <img src="assets/minimax-color.svg" alt="Minimax" width="20" height="60" />
   <img src="assets/minimax-text.svg" alt="Minimax" width="60" height="60" />
-
+  <img src="assets/siliconflow-color.svg" alt="SiliconFlow" width="60" height="60" />
 </div>
 
 ##  1. Introduction
@@ -45,6 +45,7 @@
 - **( :tada: NEW)自动多平台循环直播推流**：该工具已经开源 [looplive](https://github.com/timerring/looplive) 是一个 7 x 24 小时全自动**循环多平台同时推流**直播工具。
 - **( :tada: NEW)自动生成风格变换的视频封面**：采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面。
   - `Minimax image-01`
+  - `Kwai Kolors`
 
 项目架构流程如下：
 
@@ -194,6 +195,12 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 > 如需使用 Minimax 模型，请将 `bilive.toml` 文件中 `generate_cover` 参数设置为 `true`，并将 `IMAGE_GEN_MODEL` 参数设置为 `minimax`。
 
 在项目的自动切片功能需要使用到 Minimax 模型，请自行[注册账号](https://www.minimax.chat/)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `MINIMAX_API_KEY` 中。
+
+##### 3.2.5 Kwai Kolors 模型
+
+> 如需使用 Kwai Kolors 模型，请将 `bilive.toml` 文件中 `generate_cover` 参数设置为 `true`，并将 `IMAGE_GEN_MODEL` 参数设置为 `siliconflow`，采用 siliconflow 部署的 Kolors 模型。
+
+请自行[注册账号](https://cloud.siliconflow.cn/i/3Szr5BVg)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `SILICONFLOW_API_KEY` 中。
 
 #### 4. bilitool 登录
 

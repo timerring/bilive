@@ -37,5 +37,6 @@ qwen_api_key = "" # Apply for your own Qwen API key at https://bailian.console.a
 
 [cover]
 generate_cover = false # whether to generate cover
-image_gen_model = "minimax" # the image generation model, can be "minimax"
+image_gen_model = "minimax" # the image generation model, can be "minimax" or "siliconflow"
 minimax_api_key = "" # Apply for your own Minimax API key at https://platform.minimaxi.com/user-center/basic-information/interface-key
+siliconflow_api_key = "" # Apply for your own SiliconFlow API key at https://cloud.siliconflow.cn/i/3Szr5BVg
