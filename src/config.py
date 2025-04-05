@@ -71,3 +71,7 @@ MLLM_MODEL = config.get('slice', {}).get('mllm_model')
 ZHIPU_API_KEY = config.get('slice', {}).get('zhipu_api_key')
 GEMINI_API_KEY = config.get('slice', {}).get('gemini_api_key')
 QWEN_API_KEY = config.get('slice', {}).get('qwen_api_key')
+
+GENERATE_COVER = config.get('cover', {}).get('generate_cover')
+IMAGE_GEN_MODEL = config.get('cover', {}).get('image_gen_model')
+MINIMAX_API_KEY = config.get('cover', {}).get('minimax_api_key')

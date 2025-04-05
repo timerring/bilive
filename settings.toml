@@ -38,6 +38,11 @@ zhipu_api_key = "" # Apply for your own GLM-4v-Plus API key at https://www.bigmo
 gemini_api_key = "" # Apply for your own Gemini API key at https://aistudio.google.com/app/apikey
 qwen_api_key = "" # Apply for your own Qwen API key at https://bailian.console.aliyun.com/?apiKey=1
 
+[cover]
+generate_cover = false # whether to generate cover
+image_gen_model = "minimax" # the image generation model, can be "minimax"
+minimax_api_key = ""
+
 # blrec Settings
 [[tasks]]
 room_id = 173551

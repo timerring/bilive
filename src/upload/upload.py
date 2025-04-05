@@ -3,26 +3,31 @@
 import subprocess
 import os
 import sys
-from src.config import SRC_DIR, BILIVE_DIR, RESERVE_FOR_FIXING, UPLOAD_LINE
+from src.config import SRC_DIR, BILIVE_DIR, RESERVE_FOR_FIXING, UPLOAD_LINE, GENERATE_COVER
 from datetime import datetime
 from src.upload.generate_upload_data import generate_video_data, generate_slice_data
 from src.upload.extract_video_info import generate_title
-from src.log.logger import upload_log
+from src.log.logger import upload_log, scan_log
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from db.conn import get_single_upload_queue, delete_upload_queue, update_upload_queue_lock, get_single_lock_queue
 from .bilitool.bilitool import UploadController, FeedController, LoginController
 from src.log.retry import Retry
+from src.cover.cover_generator import generate_cover
 
 @Retry(max_retry = 3, interval = 5).decorator
 def upload_video(upload_path):
     try:
         if upload_path.endswith('.flv'):
             copyright, title, tid, tag = generate_slice_data(upload_path)
-            yaml, desc, source, cover, dynamic = ("",) * 5
+            if GENERATE_COVER:
+                cover = generate_cover(upload_path)
+            else:
+                cover = ""
+            yaml, desc, source, dynamic = ("",) * 4
             if title is None:
-                upload_log.error("Fail to upload slice video, the files will be reserved.")
-                update_upload_queue_lock(upload_path, 0)
+                upload_log.error("Fail to upload slice video, the files will be locked.")
+                update_upload_queue_lock(upload_path, 1)
                 return False
         else:
             copyright, title, desc, tid, tag, source, cover, dynamic = generate_video_data(upload_path)
@@ -31,16 +36,17 @@ def upload_video(upload_path):
         if result == True:
             upload_log.info("Upload successfully, then delete the video")
             os.remove(upload_path)
+            if cover:
+                os.remove(cover)
             delete_upload_queue(upload_path)
             return True
         else:
-            upload_log.error("Fail to upload, the files will be reserved.")
-            update_upload_queue_lock(upload_path, 0)
+            upload_log.error("Fail to upload, the files will be locked.")
+            update_upload_queue_lock(upload_path, 1)
             return False
-    
-    except subprocess.CalledProcessError as e:
-        upload_log.error(f"The upload_video called failed, the files will be reserved. error: {e}")
-        update_upload_queue_lock(upload_path, 0)
+    except Exception as e:
+        upload_log.error(f"The upload_video called failed, the files will be converted to locked. error: {e}")
+        update_upload_queue_lock(upload_path, 1)
         return False
 
 @Retry(max_retry = 3, interval = 5).decorator
@@ -54,13 +60,13 @@ def append_upload(upload_path, bv_result):
             delete_upload_queue(upload_path)
             return True
         else:
-            upload_log.error("Fail to append, the files will be reserved.")
-            update_upload_queue_lock(upload_path, 0)
+            upload_log.error("Fail to append, the files will be locked.")
+            update_upload_queue_lock(upload_path, 1)
             return False
     
-    except subprocess.CalledProcessError as e:
-        upload_log.error(f"The append_upload called failed, the files will be reserved. error: {e}")
-        update_upload_queue_lock(upload_path, 0)
+    except Exception as e:
+        upload_log.error(f"The append_upload called failed, the files will be locked. error: {e}")
+        update_upload_queue_lock(upload_path, 1)
         return False
 
 def video_gate(video_path):

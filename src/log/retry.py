@@ -29,7 +29,7 @@ class Retry:
                     status = (True,return_value)
                     break
             except Exception as e:
-                scan_log.error(f"Exceptions in trial {i+1}/{self.max_retry} : {e}")
+                scan_log.error(f"Exceptions in function {func.__name__} trial {i+1}/{self.max_retry} : {e}")
                 sleep(self.interval)
 
         return status
