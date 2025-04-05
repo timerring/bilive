@@ -16,6 +16,7 @@
   <img src="assets/zhipu-color.svg" alt="Zhipu GLM-4V-PLUS" width="60" height="60" />
   <img src="assets/gemini-brand-color.svg" alt="Google Gemini 1.5 Pro" width="60" height="60" />
   <img src="assets/qwen-color.svg" alt="Qwen-2.5-72B-Instruct" width="60" height="60" />
+  <img src="assets/minimax-color.svg" alt="Minimax" width="60" height="60" />
 
 </div>
 
@@ -41,6 +42,8 @@
   - `Qwen-2.5-72B-Instruct`
 - **( :tada: NEW)持久化登录/下载/上传视频(支持多p投稿)**：[bilitool](https://github.com/timerring/bilitool) 已经开源，实现持久化登录，下载视频及弹幕(含多p)/上传视频(可分p投稿)，查询投稿状态，查询详细信息等功能，一键pip安装，可以使用命令行 cli 操作，也可以作为api调用。
 - **( :tada: NEW)自动多平台循环直播推流**：该工具已经开源 [looplive](https://github.com/timerring/looplive) 是一个 7 x 24 小时全自动**循环多平台同时推流**直播工具。
+- **( :tada: NEW)自动生成风格变换的视频封面**：采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面。
+  - `Minimax image-01`
 
 项目架构流程如下：
 
@@ -144,11 +147,11 @@ pip install -r requirements.txt
 
 ##### 3.1.1 采用 api 方式
 
-将 `src/config.py` 文件中的 `ASR_METHOD` 参数设置为 `api`，然后填写 `WHISPER_API_KEY` 参数为你的 [API Key](https://console.groq.com/keys)。本项目采用 groq 提供 free tier 的 `whisper-large-v3-turbo` 模型，上传限制为 40 MB（约半小时），因此如需采用 api 识别的方式，请将视频录制分段调整为 30 分钟。此外，free tier 请求限制为 7200秒/20次/小时，28800秒/2000次/天。如果有更多需求，也欢迎升级到 dev tier，更多信息见[groq 官网](https://console.groq.com/docs/rate-limits)。
+将 `settings.toml` 文件中的 `ASR_METHOD` 参数设置为 `api`，然后填写 `WHISPER_API_KEY` 参数为你的 [API Key](https://console.groq.com/keys)。本项目采用 groq 提供 free tier 的 `whisper-large-v3-turbo` 模型，上传限制为 40 MB（约半小时），因此如需采用 api 识别的方式，请将视频录制分段调整为 30 分钟。此外，free tier 请求限制为 7200秒/20次/小时，28800秒/2000次/天。如果有更多需求，也欢迎升级到 dev tier，更多信息见[groq 官网](https://console.groq.com/docs/rate-limits)。
 
 ##### 3.1.2 采用本地部署方式(需保证有 NVIDIA 显卡)
 
-将 `src/config.py` 文件中的 `ASR_METHOD` 参数设置为 `deploy`，然后下载所需模型文件，并放置在 `src/subtitle/models` 文件夹中。
+将 `settings.toml` 文件中的 `ASR_METHOD` 参数设置为 `deploy`，然后下载所需模型文件，并放置在 `src/subtitle/models` 文件夹中。
 
 项目默认采用 [`small`](https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt) 模型，请点击下载所需文件，并放置在 `src/subtitle/models` 文件夹中。
 
@@ -160,7 +163,7 @@ pip install -r requirements.txt
 
 ##### 3.2 MLLM 模型
 
-MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关闭，如果需要打开请将 `src/config.py` 文件中的 `AUTO_SLICE` 参数设置为 `True`。其他配置分别有：
+MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关闭，如果需要打开请将 `settings.toml` 文件中的 `AUTO_SLICE` 参数设置为 `True`。其他配置分别有：
 - `SLICE_DURATION` 以秒为单位设置切片时长（不建议超过 60 秒）。
 - `SLICE_NUM` 设置切片数量。
 - `SLICE_OVERLAP` 设置切片重叠时长。切片采用滑动窗口法处理，细节内容请见 [auto-slice-video](https://github.com/timerring/auto-slice-video)
@@ -169,21 +172,27 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 
 ##### 3.2.1 GLM-4V-PLUS 模型
 
-> 如需使用 GLM-4V-PLUS 模型，请将 `src/config.py` 文件中的 `MLLM_MODEL` 参数设置为 `zhipu`
+> 如需使用 GLM-4V-PLUS 模型，请将 `settings.toml` 文件中的 `MLLM_MODEL` 参数设置为 `zhipu`
 
-在项目的自动切片功能需要使用到智谱的 [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4) 模型，请自行[注册账号](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D)并申请 API Key，填写到 `src/config.py` 文件中对应的 `ZHIPU_API_KEY` 中。
+在项目的自动切片功能需要使用到智谱的 [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4) 模型，请自行[注册账号](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D)并申请 API Key，填写到 `settings.toml` 文件中对应的 `ZHIPU_API_KEY` 中。
 
 ##### 3.2.2 Gemini 模型
 
-> 如需使用 Gemini-2.0-flash 模型，请将 `src/config.py` 文件中的 `MLLM_MODEL` 参数设置为 `gemini`
+> 如需使用 Gemini-2.0-flash 模型，请将 `settings.toml` 文件中的 `MLLM_MODEL` 参数设置为 `gemini`
 
-在项目的自动切片功能需要使用到 Gemini-2.0-flash 模型，请自行[注册账号](https://aistudio.google.com/app/apikey)并申请 API Key，填写到 `src/config.py` 文件中对应的 `GEMINI_API_KEY` 中。
+在项目的自动切片功能需要使用到 Gemini-2.0-flash 模型，请自行[注册账号](https://aistudio.google.com/app/apikey)并申请 API Key，填写到 `settings.toml` 文件中对应的 `GEMINI_API_KEY` 中。
 
 ##### 3.2.3 Qwen 模型
 
-> 如需使用 Qwen-2.5-72B-Instruct 模型，请将 `src/config.py` 文件中的 `MLLM_MODEL` 参数设置为 `qwen`
+> 如需使用 Qwen-2.5-72B-Instruct 模型，请将 `settings.toml` 文件中的 `MLLM_MODEL` 参数设置为 `qwen`
 
-在项目的自动切片功能需要使用到 Qwen-2.5-72B-Instruct 模型，请自行[注册账号](https://bailian.console.aliyun.com/?apiKey=1)并申请 API Key，填写到 `src/config.py` 文件中对应的 `QWEN_API_KEY` 中。
+在项目的自动切片功能需要使用到 Qwen-2.5-72B-Instruct 模型，请自行[注册账号](https://bailian.console.aliyun.com/?apiKey=1)并申请 API Key，填写到 `settings.toml` 文件中对应的 `QWEN_API_KEY` 中。
+
+##### 3.2.4 Minimax 模型
+
+> 如需使用 Minimax 模型，请将 `settings.toml` 文件中 `generate_cover` 参数设置为 `true`，并将 `IMAGE_GEN_MODEL` 参数设置为 `minimax`。
+
+在项目的自动切片功能需要使用到 Minimax 模型，请自行[注册账号](https://www.minimax.chat/)并申请 API Key，填写到 `settings.toml` 文件中对应的 `MINIMAX_API_KEY` 中。
 
 #### 4. bilitool 登录
 
@@ -248,7 +257,7 @@ logs # 日志文件夹
 #### 8. 配置上传参数
 
 > [!TIP]
-> 上传默认参数如下，[]中内容全部自动替换。可以在 `src/config.py` 中自定义相关配置，映射关键词为 `{artist}`、`{date}`、`{title}`、`{source_link}`，可自行组合删减定制模板：
+> 上传默认参数如下，[]中内容全部自动替换。可以在 `settings.toml` 中自定义相关配置，映射关键词为 `{artist}`、`{date}`、`{title}`、`{source_link}`，可自行组合删减定制模板：
 > + 标题模板是`{artist}直播回放-{date}-{title}`，效果为"【弹幕+字幕】[XXX]直播回放-[日期]-[直播间标题]"，可自行修改。
 > + 简介模板是`{artist}直播，直播间地址：{source_link} 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。`，效果为"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"，可自行修改。
 > + 默认标签是根据主播名字自动在 b 站搜索推荐中抓取的热搜词。

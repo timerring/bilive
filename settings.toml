@@ -41,7 +41,7 @@ qwen_api_key = "" # Apply for your own Qwen API key at https://bailian.console.a
 [cover]
 generate_cover = false # whether to generate cover
 image_gen_model = "minimax" # the image generation model, can be "minimax"
-minimax_api_key = ""
+minimax_api_key = "" # Apply for your own Minimax API key at https://platform.minimaxi.com/user-center/basic-information/interface-key
 
 # blrec Settings
 [[tasks]]
