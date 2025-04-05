@@ -18,7 +18,8 @@
   <img src="assets/qwen-color.svg" alt="Qwen-2.5-72B-Instruct" width="60" height="60" />
   <img src="assets/minimax-color.svg" alt="Minimax" width="20" height="60" />
   <img src="assets/minimax-text.svg" alt="Minimax" width="60" height="60" />
-  <img src="assets/siliconcloud-color.svg" alt="SiliconFlow" width="60" height="60" />
+  <img src="assets/siliconcloud-color.svg" alt="SiliconFlow" width="20" height="60" />
+  <img src="assets/siliconcloud-text.svg" alt="SiliconFlow" width="60" height="60" />
 </div>
 
 ##  1. Introduction
