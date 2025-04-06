@@ -9,6 +9,7 @@ from lumaai import LumaAI
 from src.upload.bilitool.bilitool.model.model import Model
 from src.config import LUMA_API_KEY
 
+
 def cover_up(img: str):
     """Upload the cover image
     Parameters
@@ -57,7 +58,14 @@ def cover_up(img: str):
     print(res["data"]["url"], flush=True)
     return res["data"]["url"]
 
+
 def luma_generate_cover(your_file_path):
+    """Generate cover for video using Luma Photon
+    Args:
+        your_file_path: str, path to the video file
+    Returns:
+        str: generated cover
+    """
     try:
         cover_url = cover_up(your_file_path)
         client = LumaAI(
@@ -65,22 +73,17 @@ def luma_generate_cover(your_file_path):
         )
         generation = client.generations.image.create(
             prompt="This is a video screenshot, please generate a cover in the style of a manga",
-            image_ref=[
-            {
-                "url": cover_url,
-                "weight": 0.85
-            }
-            ]
+            image_ref=[{"url": cover_url, "weight": 0.85}],
         )
         completed = False
         while not completed:
-        generation = client.generations.get(id=generation.id)
-        if generation.state == "completed":
-            completed = True
-        elif generation.state == "failed":
-            raise RuntimeError(f"Generation failed: {generation.failure_reason}")
-        print("Dreaming")
-        time.sleep(2)
+            generation = client.generations.get(id=generation.id)
+            if generation.state == "completed":
+                completed = True
+            elif generation.state == "failed":
+                raise RuntimeError(f"Generation failed: {generation.failure_reason}")
+            print("Dreaming")
+            time.sleep(2)
 
         image_url = generation.assets.image
 
@@ -94,6 +97,7 @@ def luma_generate_cover(your_file_path):
     except Exception as e:
         print(e, flush=True)
         return None
+
 
 if __name__ == "__main__":
     print(luma_generate_cover(""))
