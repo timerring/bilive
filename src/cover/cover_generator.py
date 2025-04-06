@@ -68,7 +68,9 @@ def cover_generator(model_type):
 
                 return baidu_generate_cover(cover_path)
             elif model_type == "stability":
-                from .image_model_sdk.stability_sdk import stable_diffusion_generate_cover
+                from .image_model_sdk.stability_sdk import (
+                    stable_diffusion_generate_cover,
+                )
 
                 return stable_diffusion_generate_cover(cover_path)
             else:

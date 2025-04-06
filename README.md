@@ -22,7 +22,7 @@
   <img src="assets/siliconcloud-color.svg" alt="SiliconFlow" width="15" height="60" />
   <img src="assets/siliconcloud-text.svg" alt="SiliconFlow" width="100" height="60" />
   <img src="assets/wenxin-color.svg" alt="Baidu ERNIE" width="60" height="60" />
-  <img src="assets/stability-brand-color.svg" alt="Stability AI" width="60" height="60" />
+  <img src="assets/stability-brand-color.svg" alt="Stability AI" width="80" height="60" />
 </div>
 
 ##  1. Introduction
