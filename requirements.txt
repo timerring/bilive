@@ -20,3 +20,4 @@ zhipuai
 openai
 toml
 groq
+lumaai

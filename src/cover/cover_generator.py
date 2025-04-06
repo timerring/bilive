@@ -73,6 +73,10 @@ def cover_generator(model_type):
                 )
 
                 return stable_diffusion_generate_cover(cover_path)
+            elif model_type == "luma":
+                from .image_model_sdk.luma_sdk import luma_generate_cover
+
+                return luma_generate_cover(cover_path)
             else:
                 upload_log.error(f"Unsupported model type: {model_type}")
                 return None
