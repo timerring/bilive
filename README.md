@@ -21,6 +21,7 @@
   <img src="assets/minimax-text.svg" alt="Minimax" width="60" height="60" />
   <img src="assets/siliconcloud-color.svg" alt="SiliconFlow" width="15" height="60" />
   <img src="assets/siliconcloud-text.svg" alt="SiliconFlow" width="100" height="60" />
+  <img src="assets/wenxin-color.svg" alt="Baidu ERNIE" width="60" height="60" />
 </div>
 
 ##  1. Introduction
@@ -49,7 +50,7 @@
   - `Minimax image-01`
   - `Kwai Kolors`
   - `Tencent Hunyuan`
-
+  - `Baidu ERNIE`
 项目架构流程如下：
 
 ```mermaid
@@ -214,6 +215,12 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 > 如需使用 Tencent Hunyuan 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `tencent`。
 
 请自行[注册账号](https://console.cloud.tencent.com/cam/capi)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `TENCENT_SECRET_ID` 和 `TENCENT_SECRET_KEY` 中。
+
+##### 3.3.4 Baidu ERNIE 模型
+
+> 如需使用 Baidu ERNIE 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `baidu`。
+
+请自行[注册账号](https://console.bce.baidu.com/iam/key/list)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `BAIDU_API_KEY` 中。
 
 #### 4. bilitool 登录
 
