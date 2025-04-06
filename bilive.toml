@@ -43,4 +43,4 @@ siliconflow_api_key = "" # Apply for your own SiliconFlow API key at https://clo
 tencent_secret_id = "" # Apply for your own Tencent Cloud API key at https://console.cloud.tencent.com/cam/capi
 tencent_secret_key = "" # Apply for your own Tencent Cloud secret key as above
 baidu_api_key = "" # Apply for your own Baidu API key at https://console.bce.baidu.com/iam/key/list
-stability_api_key = "" # Apply for your own Stability API key at https://platform.stability.ai/api-keys
+stability_api_key = "" # Apply for your own Stability API key at https://platform.stability.ai/account/keys
