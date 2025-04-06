@@ -51,6 +51,7 @@
   - `Kwai Kolors`
   - `Tencent Hunyuan`
   - `Baidu ERNIE`
+
 项目架构流程如下：
 
 ```mermaid
