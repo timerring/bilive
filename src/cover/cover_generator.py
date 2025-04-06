@@ -77,6 +77,10 @@ def cover_generator(model_type):
                 from .image_model_sdk.luma_sdk import luma_generate_cover
 
                 return luma_generate_cover(cover_path)
+            elif model_type == "ideogram":
+                from .image_model_sdk.ideogram_sdk import ideogram_generate_cover
+
+                return ideogram_generate_cover(cover_path)
             else:
                 upload_log.error(f"Unsupported model type: {model_type}")
                 return None

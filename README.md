@@ -25,6 +25,7 @@
   <img src="assets/stability-brand-color.svg" alt="Stability AI" width="80" height="60" />
   <img src="assets/luma-color.svg" alt="Luma Photon" width="20" height="60" />
   <img src="assets/luma-text.svg" alt="Luma Photon" width="60" height="60" />
+  <img src="assets/ideogram.svg" alt="Ideogram V_2" width="60" height="60" />
 </div>
 
 ##  1. Introduction
@@ -56,6 +57,9 @@
   - `Baidu ERNIE irag-1.0`
   - `Stable Diffusion 3.5 large turbo`
   - `Luma Photon`
+  - `Ideogram V_2`
+
+
 项目架构流程如下：
 
 ```mermaid
@@ -238,6 +242,12 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 > 如需使用 Luma Photon 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `luma`。
 
 请自行[注册账号](https://lumalabs.ai/api/keys)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `LUMA_API_KEY` 中。
+
+##### 3.3.7 Ideogram V_2 模型
+
+> 如需使用 Ideogram V_2 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `ideogram`。
+
+请自行[注册账号](https://ideogram.ai/manage-api)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `IDEOGRAM_API_KEY` 中。
 
 #### 4. bilitool 登录
 
