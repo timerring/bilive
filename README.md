@@ -25,7 +25,7 @@
   <img src="assets/stability-brand-color.svg" alt="Stability AI" width="80" height="60" />
   <img src="assets/luma-color.svg" alt="Luma Photon" width="20" height="60" />
   <img src="assets/luma-text.svg" alt="Luma Photon" width="60" height="60" />
-  <img src="assets/ideogram.svg" alt="Ideogram V_2" width="60" height="60" />
+  <img src="assets/ideogram.svg" alt="Ideogram V_2" width="50" height="60" />
 </div>
 
 ##  1. Introduction
