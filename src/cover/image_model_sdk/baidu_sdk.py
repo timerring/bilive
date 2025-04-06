@@ -56,6 +56,12 @@ def cover_up(img: str):
     return res["data"]["url"]
 
 def baidu_generate_cover(your_file_path):
+    """Generater cover image using baidu api
+    Args:
+        your_file_path: str, path to the image file
+    Returns:
+        str, local download path of the generated cover image file
+    """
     try:
         cover_url = cover_up(your_file_path)
 
