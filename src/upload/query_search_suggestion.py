@@ -24,10 +24,11 @@ def get_bilibili_suggestions(term):
             result = ",".join(values_list)
             return result
         upload_log.error(f"Request get_bilibili_suggestions failed with status code: {response.status_code}")
-        return None
+        # fallback to default tags
+        return ["直播回放", "切片"]
     except requests.RequestException as e:
         upload_log.error(f"Request get_bilibili_suggestions failed with exception: {e}")
-        return None
+        return ["直播回放", "切片"]
 
 if __name__ == "__main__":
     suggestions = get_bilibili_suggestions("bilive")

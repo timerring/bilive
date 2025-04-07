@@ -160,19 +160,23 @@ pip install -r requirements.txt
 ./setPath.sh && source ~/.bashrc
 ```
 
-#### 3. 配置 whisper 模型及 MLLM 模型
+#### 3. 配置参数
 
-##### 3.1 whisper 语音识别
+##### 3.1 whisper 语音识别（渲染字幕功能）
 
-`ASR_METHOD` 默认为 none, 即不进行语音字幕识别。
+> [!TIP]
+> - 有关语音识别的配置在 `bilive.toml` 文件的 `[asr]` 部分。
+> - `asr_method` 默认为 none, 即不进行语音字幕识别。
 
 ##### 3.1.1 采用 api 方式
 
-将 `bilive.toml` 文件中的 `ASR_METHOD` 参数设置为 `api`，然后填写 `WHISPER_API_KEY` 参数为你的 [API Key](https://console.groq.com/keys)。本项目采用 groq 提供 free tier 的 `whisper-large-v3-turbo` 模型，上传限制为 40 MB（约半小时），因此如需采用 api 识别的方式，请将视频录制分段调整为 30 分钟。此外，free tier 请求限制为 7200秒/20次/小时，28800秒/2000次/天。如果有更多需求，也欢迎升级到 dev tier，更多信息见[groq 官网](https://console.groq.com/docs/rate-limits)。
+将 `bilive.toml` 文件中的 `asr_method` 参数设置为 `api`，然后填写 `WHISPER_API_KEY` 参数为你的 [API Key](https://console.groq.com/keys)。
+
+本项目采用 groq 提供 free tier 的 `whisper-large-v3-turbo` 模型，上传限制为 40 MB（约半小时），因此如需采用 api 识别的方式，请将视频录制分段调整为 30 分钟（默认即 30 分钟）。此外，free tier 请求限制为 7200秒/20次/小时，28800秒/2000次/天。如果有更多需求，也欢迎升级到 dev tier，更多信息见[groq 官网](https://console.groq.com/docs/rate-limits)。
 
 ##### 3.1.2 采用本地部署方式(需保证有 NVIDIA 显卡)
 
-将 `bilive.toml` 文件中的 `ASR_METHOD` 参数设置为 `deploy`，然后下载所需模型文件，并放置在 `src/subtitle/models` 文件夹中。
+将 `bilive.toml` 文件中的 `asr_method` 参数设置为 `deploy`，然后下载所需模型文件，并放置在 `src/subtitle/models` 文件夹中。
 
 项目默认采用 [`small`](https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt) 模型，请点击下载所需文件，并放置在 `src/subtitle/models` 文件夹中。
 
@@ -182,107 +186,86 @@ pip install -r requirements.txt
 > + 更多模型请参考 [whisper 参数模型](https://timerring.github.io/bilive/models.html) 部分。
 > + 更换模型方法请参考 [更换模型方法](https://timerring.github.io/bilive/models.html#更换模型方法) 部分。
 
-##### 3.2 MLLM 模型
+##### 3.2 MLLM 模型（自动切片功能）
 
-MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关闭，如果需要打开请将 `bilive.toml` 文件中的 `AUTO_SLICE` 参数设置为 `True`。其他配置分别有：
-- `SLICE_DURATION` 以秒为单位设置切片时长（不建议超过 60 秒）。
-- `SLICE_NUM` 设置切片数量。
-- `SLICE_OVERLAP` 设置切片重叠时长。切片采用滑动窗口法处理，细节内容请见 [auto-slice-video](https://github.com/timerring/auto-slice-video)
-- `SLICE_STEP` 设置切片步长。
-- `MIN_VIDEO_SIZE` 设置切片最小视频大小。防止对一些连线或者网络波动原因造成的短片段再切片。
+> [!TIP]
+> - 有关自动切片的配置在 `bilive.toml` 文件的 `[slice]` 部分。
+> - `auto_slice` 默认为 false, 即不进行自动切片。
 
-##### 3.2.1 GLM-4V-PLUS 模型
+MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关闭，如果需要打开请将 `auto_slice` 参数设置为 `true`。其他配置分别有：
+- `slice_duration` 以秒为单位设置切片时长（不建议超过 180 秒）。
+- `slice_num` 设置切片数量。
+- `slice_overlap` 设置切片重叠时长。切片采用滑动窗口法处理，细节内容请见 [auto-slice-video](https://github.com/timerring/auto-slice-video)
+- `slice_step` 设置切片步长。
+- `min_video_size` 设置最小被切片视频大小，防止对一些连线或者网络波动原因造成的短片段再切片。
 
-> 如需使用 GLM-4V-PLUS 模型，请将 `bilive.toml` 文件中的 `MLLM_MODEL` 参数设置为 `zhipu`
+接下来配置模型有关的 `mllm_model` 参数即对应的 api-key，请自行根据链接注册账号并且申请对应 api key，填写在对应的参数中，请注意以下模型只有你在 `mllm_model` 参数中设置的那个模型会生效。
 
-在项目的自动切片功能需要使用到智谱的 [`GLM-4V-PLUS`](https://bigmodel.cn/dev/api/normal-model/glm-4) 模型，请自行[注册账号](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `ZHIPU_API_KEY` 中。
+| Company   |       Google        |    智谱        | 阿里云           |
+|----------------|-------------------|------------------|-----------------------|
+| Name   | Gemini-2.0-flash       | GLM-4V-PLUS | Qwen-2.5-72B-Instruct |
+| `mllm_model`   | `gemini`| `zhipu` | `qwen`  |
+| `API key`   | [gemini_api_key](https://aistudio.google.com/app/apikey) | [zhipu_api_key](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D) | [qwen_api_key](https://bailian.console.aliyun.com/?apiKey=1) |
 
-##### 3.2.2 Gemini 模型
 
-> 如需使用 Gemini-2.0-flash 模型，请将 `bilive.toml` 文件中的 `MLLM_MODEL` 参数设置为 `gemini`
+#### 3.3 Image Generation Model（自动生成视频封面）
 
-在项目的自动切片功能需要使用到 Gemini-2.0-flash 模型，请自行[注册账号](https://aistudio.google.com/app/apikey)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `GEMINI_API_KEY` 中。
+> [!TIP]
+> - 有关自动生成视频封面的配置在 `bilive.toml` 文件的 `[cover]` 部分。
+> - `generate_cover` 默认为 false, 即不进行自动生成视频封面。
 
-##### 3.2.3 Qwen 模型
+采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面，如需使用本功能，请将 `generate_cover` 参数设置为 `true`。接下来需要配置的参数有 image_gen_model 和对应的 api key，请自行根据链接注册账号并且申请对应 api key，填写在对应的参数中，请注意以下模型只有你在 `image_gen_model` 参数中设置的那个模型会生效。
 
-> 如需使用 Qwen-2.5-72B-Instruct 模型，请将 `bilive.toml` 文件中的 `MLLM_MODEL` 参数设置为 `qwen`
 
-在项目的自动切片功能需要使用到 Qwen-2.5-72B-Instruct 模型，请自行[注册账号](https://bailian.console.aliyun.com/?apiKey=1)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `QWEN_API_KEY` 中。
+| Company     | Model Name                        | `image_gen_model`   | `API Key`                                                                  |
+|--------------|--------------------------------|-------------------|---------------------------------------------------------------------------------|
+| Minimax      | image-01                       | `minimax`         | [minimax_api_key](https://www.minimax.chat/)                                    |
+| Kwai  | Kolors                    | `siliconflow`       | [siliconflow_api_key](https://cloud.siliconflow.cn/i/3Szr5BVg)                  |
+| Tencent      | Hunyuan                | `tencent`           | [tencent_secret_id and tencent_secret_key](https://console.cloud.tencent.com/cam/capi)                   |
+| Baidu        | ERNIE irag-1.0                   | `baidu`             | [baidu_api_key](https://console.bce.baidu.com/iam/key/list)                     |
+| Stability AI | Stable Diffusion 3.5 large turbo   | `stability`         | [stability_api_key](https://platform.stability.ai/account/keys)                 |
+| Luma Labs    | Photon                    | `luma`              | [luma_api_key](https://lumalabs.ai/api/keys)                               |
+| Ideogram     | Ideogram V_2                   | `ideogram`          | [ideogram_api_key](https://ideogram.ai/manage-api)                              |
+| Recraft      | Recraft V3                       | `recraft`           | [recraft_api_key](https://www.recraft.ai/profile/api)                           |
+| Amazon       | Titan Image Generator V2                        | `amazon`            | [aws_access_key_id and aws_secret_access_key](https://aws.amazon.com/console/)                               |
 
-#### 3.3 Image Generation Model
+#### 4. 配置上传参数
 
-采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面，如需使用本功能，请将 `bilive.toml` 文件中 `generate_cover` 参数设置为 `true`。
+上传默认参数如下，[]中内容全部自动替换。可以在 `bilive.toml` 中自定义相关配置，映射关键词为 `{artist}`、`{date}`、`{title}`、`{source_link}`，可自行组合删减定制模板：
 
-##### 3.3.1 Minimax 模型
+- `title` 标题模板是`{artist}直播回放-{date}-{title}`，效果为"【弹幕+字幕】[XXX]直播回放-[日期]-[直播间标题]"，可自行修改。
+- `description` 简介模板是`{artist}直播，直播间地址：{source_link} 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。`，效果为"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"，可自行修改。
+- `gift_price_filter = 1` 表示过滤价格低于 1 元的礼物。
+- `reserve_for_fixing = false` 表示如果视频出现错误，重试失败后不保留视频用于修复，推荐硬盘空间有限的用户设置 false。
+- `upload_line = "auto"` 表示自动探测上传线路并上传，如果需要指定固定的线路，可以设置为 `bldsa`、`ws`、`tx`、`qn`、`bda2`。
 
-> 如需使用 Minimax 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `minimax`。
+#### 5. bilitool 登录（持久化登录，该步只需执行一次）
 
-在项目的自动切片功能需要使用到 Minimax 模型，请自行[注册账号](https://www.minimax.chat/)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `MINIMAX_API_KEY` 中。
+> 对于 docker 部署，可以忽略这一步，因为 `docker logs` 在控制台中可以打印出二维码，直接扫码即可登录，以下内容针对源码部署。
 
-##### 3.3.2 Kwai Kolors 模型
-
-> 如需使用 Kwai Kolors 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `siliconflow`，采用 siliconflow 部署的 Kolors 模型。
-
-请自行[注册账号](https://cloud.siliconflow.cn/i/3Szr5BVg)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `SILICONFLOW_API_KEY` 中。
-
-##### 3.3.3 Tencent Hunyuan 模型
-
-> 如需使用 Tencent Hunyuan 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `tencent`。
-
-请自行[注册账号](https://console.cloud.tencent.com/cam/capi)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `TENCENT_SECRET_ID` 和 `TENCENT_SECRET_KEY` 中。
-
-##### 3.3.4 Baidu ERNIE 模型
-
-> 如需使用 Baidu ERNIE 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `baidu`。
-
-请自行[注册账号](https://console.bce.baidu.com/iam/key/list)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `BAIDU_API_KEY` 中。
-
-##### 3.3.5 Stability SD 3.5 large turbo 模型
-
-> 如需使用 Stability SD 3.5 large turbo  模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `stability`。
-
-请自行[注册账号](https://platform.stability.ai/account/keys)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `STABILITY_API_KEY` 中。
-
-##### 3.3.6 Luma Photon 模型
-
-> 如需使用 Luma Photon 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `luma`。
-
-请自行[注册账号](https://lumalabs.ai/api/keys)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `LUMA_API_KEY` 中。
-
-##### 3.3.7 Ideogram V_2 模型
-
-> 如需使用 Ideogram V_2 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `ideogram`。
-
-请自行[注册账号](https://ideogram.ai/manage-api)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `IDEOGRAM_API_KEY` 中。
-
-##### 3.3.8 Recraft 模型
-
-> 如需使用 Recraft 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `recraft`。
-
-请自行[注册账号](https://www.recraft.ai/profile/api)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `RECRAFT_API_KEY` 中。
-
-##### 3.3.9 Amazon 模型
-
-> 如需使用 Amazon 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `amazon`。
-
-请自行[注册账号](https://aws.amazon.com/console/)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `AWS_ACCESS_KEY_ID` 和 `AWS_SECRET_ACCESS_KEY` 中。
-
-#### 4. bilitool 登录
-
-> 由于一般日志打印不出二维码效果（docker 的日志不确定是否能打印，等发布新image时再修改，docker 版本请先参考文档 [bilive](https://bilive.timerring.com)，本 README 只针对源码部署），所以这步需要提前在机器上安装 [bilitool](https://github.com/timerring/bilitool):
+##### 5.1 方式一 通过 cookie 登录
+一般日志文件打印不出二维码效果，所以这步需要提前在机器上安装 [bilitool](https://github.com/timerring/bilitool):
 
 ```
 pip install bilitool
-# 然后使用 app 端扫码登录
-# 会导出 cookie.json 文件
 bilitool login --export
+# 然后使用 app 端扫码登录，会自动导出 cookie.json 文件
 ```
+将登录的 cookie.json 文件留在本项目根目录下，`./upload.sh` 启动后即可删除该文件。
 
-将登录的 cookie.json 文件留在本项目根目录下，`./upload.sh` 启动后即可删除该文件。（持久化登录，该步只需执行一次）
+##### 5.2 方式二 通过 submodule 登录
+
+或者在 submodule 中登录也可以，方式如下：
+
+```
+cd src/upload/bilitool
+python -m bilitool.cli login
+# 然后使用 app 端扫码即可登录
+```
 
 [常见问题收集](https://timerring.github.io/bilive/biliup.html)
 
-#### 5. 启动自动录制
+#### 6. 启动自动录制
 
 ```bash
 ./record.sh
@@ -290,11 +273,11 @@ bilitool login --export
 
 [常见问题收集](https://timerring.github.io/bilive/record.html)
 
-#### 6. 启动自动上传
+#### 7. 启动自动上传
 
-请先确保你已经完成`步骤 3`，正确下载并放置了模型文件。
+> 如果你使用 deploy 的方式进行语音识别，请先确保你已经正确下载并放置了对应的模型文件。
 
-##### 6.1 启动扫描渲染进程
+##### 7.1 启动扫描渲染进程
 
 输入以下指令即可检测已录制的视频并且自动合并分段，自动进行弹幕转换，字幕识别与渲染的过程：
 
@@ -304,7 +287,7 @@ bilitool login --export
 
 [常见问题收集](https://timerring.github.io/bilive/scan.html)
 
-##### 6.2 启动自动上传进程
+##### 7.2 启动自动上传进程
 
 ```bash
 ./upload.sh
@@ -313,29 +296,21 @@ bilitool login --export
 [常见问题收集](https://timerring.github.io/bilive/upload.html)
 
 
-#### 7. 查看执行日志
+#### 日志信息
 
-相应的执行日志请在 `logs` 文件夹中查看，如果有问题欢迎在 [`issue`](https://github.com/timerring/bilive/issues/new/choose) 中提出。
+相应的执行日志请在 `logs` 文件夹中查看，如果有问题欢迎在 [`issue`](https://github.com/timerring/bilive/issues/new/choose) 中提出，有异常请优先提供 [debug] 级别的日志。
+
 ```
 logs # 日志文件夹
 ├── blrec # blrec 录制日志
 │   └── ...
-├── scan # scan 处理日志
+├── scan # scan 处理日志 [debug]级别
 │   └── ...
-├── upload # upload 上传日志
+├── upload # upload 上传日志 [debug]级别
 │   └── ...
-└── runtime # 每次执行的日志
+└── runtime # 每次执行的日志 [info]级别
     └── ...
 ```
-#### 8. 配置上传参数
-
-> [!TIP]
-> 上传默认参数如下，[]中内容全部自动替换。可以在 `bilive.toml` 中自定义相关配置，映射关键词为 `{artist}`、`{date}`、`{title}`、`{source_link}`，可自行组合删减定制模板：
-> + 标题模板是`{artist}直播回放-{date}-{title}`，效果为"【弹幕+字幕】[XXX]直播回放-[日期]-[直播间标题]"，可自行修改。
-> + 简介模板是`{artist}直播，直播间地址：{source_link} 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。`，效果为"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"，可自行修改。
-> + 默认标签是根据主播名字自动在 b 站搜索推荐中抓取的热搜词。
-> + `GIFT_PRICE_FILTER = 1` 表示过滤价格低于 1 元的礼物。
-> + `RESERVE_FOR_FIXING = False` 表示如果视频出现错误，重试失败后不保留视频用于修复，推荐硬盘空间有限的用户设置 False。
 
 ### Docker 运行
 
@@ -348,15 +323,19 @@ logs # 日志文件夹
 
 #### 无 GPU 版本
 
+如果你能看到这行字，说明 0.3.0 版本还没有发布，会在两天内测试完发布，请耐心等待。可以尝试源码部署。
+
 ```bash
 sudo docker run \
     -itd \
     --name bilive_docker \
     -p 22333:2233 \
-    ghcr.io/timerring/bilive:0.2.10
+    ghcr.io/timerring/bilive:0.3.0
 ```
 
 #### 有 GPU 版本
+
+如果你能看到这行字，说明 0.3.0 版本还没有发布，会在两天内测试完发布，请耐心等待。可以尝试源码部署。
 
 ```bash
 sudo docker run \
@@ -364,7 +343,7 @@ sudo docker run \
     --gpus 'all,"capabilities=compute,utility,video"' \
     --name bilive_docker_gpu \
     -p 22333:2233 \
-    ghcr.io/timerring/bilive-gpu:0.2.10
+    ghcr.io/timerring/bilive-gpu:0.3.0
 ```
 
 ### Docker Compose
