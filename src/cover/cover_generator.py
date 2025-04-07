@@ -81,6 +81,10 @@ def cover_generator(model_type):
                 from .image_model_sdk.ideogram_sdk import ideogram_generate_cover
 
                 return ideogram_generate_cover(cover_path)
+            elif model_type == "recraft":
+                from .image_model_sdk.recraft_sdk import recraft_generate_cover
+
+                return recraft_generate_cover(cover_path)
             else:
                 upload_log.error(f"Unsupported model type: {model_type}")
                 return None
