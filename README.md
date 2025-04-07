@@ -12,10 +12,13 @@
 
 支持模型
 
+<div>
   <img src="assets/openai.svg" alt="OpenAI whisper" width="60" height="60" />
   <img src="assets/zhipu-color.svg" alt="Zhipu GLM-4V-PLUS" width="60" height="60" />
   <img src="assets/gemini-brand-color.svg" alt="Google Gemini 1.5 Pro" width="60" height="60" />
   <img src="assets/qwen-color.svg" alt="Qwen-2.5-72B-Instruct" width="60" height="60" />
+</div>
+
   <img src="assets/hunyuan-color.svg" alt="Tencent Hunyuan" width="50" height="60" />
   <img src="assets/minimax-color.svg" alt="Minimax" width="20" height="60" />
   <img src="assets/minimax-text.svg" alt="Minimax" width="60" height="60" />
