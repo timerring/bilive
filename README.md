@@ -30,7 +30,7 @@
   <img src="assets/luma-text.svg" alt="Luma Photon" width="60" height="60" />
   <img src="assets/ideogram.svg" alt="Ideogram V_2" width="50" height="60" />
   <img src="assets/recraft.svg" alt="Recraft" width="50" height="60" />
-  <img src="assets/amazon-color.svg" alt="Amazon" width="50" height="60" />
+  <img src="assets/aws-color.svg" alt="Amazon" width="50" height="60" />
 </div>
 
 ##  1. Introduction
