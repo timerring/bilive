@@ -37,7 +37,7 @@ qwen_api_key = "" # Apply for your own Qwen API key at https://bailian.console.a
 
 [cover]
 generate_cover = false # whether to generate cover
-image_gen_model = "minimax" # the image generation model, can be "minimax" or "siliconflow" or "tencent" or "baidu" or "stability" or "luma" or "ideogram" or "recraft"
+image_gen_model = "minimax" # the image generation model, can be "minimax" or "siliconflow" or "tencent" or "baidu" or "stability" or "luma" or "ideogram" or "recraft" or "amazon"
 minimax_api_key = "" # Apply for your own Minimax API key at https://platform.minimaxi.com/user-center/basic-information/interface-key
 siliconflow_api_key = "" # Apply for your own SiliconFlow API key at https://cloud.siliconflow.cn/i/3Szr5BVg
 tencent_secret_id = "" # Apply for your own Tencent Cloud API key at https://console.cloud.tencent.com/cam/capi
@@ -47,3 +47,5 @@ stability_api_key = "" # Apply for your own Stability API key at https://platfor
 luma_api_key = "" # Apply for your own Luma API key at https://lumalabs.ai/api/keys
 ideogram_api_key = "" # Apply for your own Ideogram API key at https://ideogram.ai/manage-api
 recraft_api_key = "" # Apply for your own Recraft API key at https://www.recraft.ai/profile/api
+aws_access_key_id = "" # Apply for your own AWS access key id at https://aws.amazon.com/console/
+aws_secret_access_key = "" # Apply for your own AWS secret access key as above

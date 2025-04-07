@@ -30,6 +30,7 @@
   <img src="assets/luma-text.svg" alt="Luma Photon" width="60" height="60" />
   <img src="assets/ideogram.svg" alt="Ideogram V_2" width="50" height="60" />
   <img src="assets/recraft.svg" alt="Recraft" width="50" height="60" />
+  <img src="assets/amazon-color.svg" alt="Amazon" width="50" height="60" />
 </div>
 
 ##  1. Introduction
@@ -63,7 +64,7 @@
   - `Luma Photon`
   - `Ideogram V_2`
   - `Recraft`
-
+  - `Amazon Titan Image Generator V2`
 
 项目架构流程如下：
 
@@ -259,6 +260,12 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 > 如需使用 Recraft 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `recraft`。
 
 请自行[注册账号](https://www.recraft.ai/profile/api)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `RECRAFT_API_KEY` 中。
+
+##### 3.3.9 Amazon 模型
+
+> 如需使用 Amazon 模型，请将 `IMAGE_GEN_MODEL` 参数设置为 `amazon`。
+
+请自行[注册账号](https://aws.amazon.com/console/)并申请 API Key，填写到 `bilive.toml` 文件中对应的 `AWS_ACCESS_KEY_ID` 和 `AWS_SECRET_ACCESS_KEY` 中。
 
 #### 4. bilitool 登录
 

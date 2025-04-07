@@ -21,3 +21,4 @@ openai
 toml
 groq
 lumaai
+boto3
