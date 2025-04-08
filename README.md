@@ -37,7 +37,7 @@
 
 > 如果您觉得项目不错，欢迎 :star: 也欢迎 PR 合作，如果有任何疑问，欢迎提 issue 交流。
 
-自动监听并录制B站直播和弹幕（含付费留言、礼物等），根据分辨率转换弹幕、语音识别字幕并渲染进视频，根据弹幕密度切分精彩片段并通过视频理解大模型生成有趣的标题，自动投稿视频和切片至B站，兼容无GPU版本，兼容超低配置服务器与主机。
+自动监听并录制B站直播和弹幕（含付费留言、礼物等），根据分辨率转换弹幕、语音识别字幕并渲染进视频，根据弹幕密度切分精彩片段并通过视频理解大模型生成有趣的标题，根据图像生成模型自动生成视频封面，自动投稿视频和切片至B站，兼容无GPU版本，兼容超低配置服务器与主机。
 
 ## 2. Major features
 
@@ -108,7 +108,7 @@ graph TD
 | Bandwidth | 3Mbps | 100Mbps | 100Mbps |
 | Python Version | 3.10 | 3.10 | 3.10 |
 
-> 个人经验：若想尽可能快地更新视频，主要取决于上传速度而非渲染速度，因此建议网络带宽越大越好。由于 [aarch64 版本 PyPI 没有 release](https://github.com/triton-lang/triton/issues/5561) 的 [triton 库](https://pypi.org/project/triton/#history)，因此 aarch64 版本暂时不支持本地部署 whisper，pip 时请自行注释 requirement 中的 triton 环境，其余配置均测试可用。
+> 个人经验：若想尽可能快地更新视频，主要取决于上传速度而非渲染速度，因此建议网络带宽越大越好。由于 [aarch64 版本 PyPI 没有 release](https://github.com/triton-lang/triton/issues/5561) 的 [triton 库](https://pypi.org/project/triton/#history)，因此 aarch64 版本暂时不支持本地部署 whisper，pip 时请自行注释 requirement 中的 triton 环境，配置均测试可用。
 
 ## 4. Quick start
 
@@ -287,7 +287,7 @@ python -m bilitool.cli login
 
 #### 7. 启动自动上传
 
-> 如果你使用 deploy 的方式进行语音识别，请先确保你已经正确下载并放置了对应的模型文件。
+> 如果你使用 deploy 的方式本地部署 whisper，请先确保你已经正确下载并放置了对应的模型文件，并确保 CUDA 可用。
 
 ```bash
 ./upload.sh
