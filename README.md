@@ -108,7 +108,7 @@ graph TD
 | Bandwidth | 3Mbps | 100Mbps | 100Mbps |
 | Python Version | 3.10 | 3.10 | 3.10 |
 
-> 个人经验：若想尽可能快地更新视频，主要取决于上传速度而非弹幕渲染速度，因此建议网络带宽越大越好。
+> 个人经验：若想尽可能快地更新视频，主要取决于上传速度而非渲染速度，因此建议网络带宽越大越好。由于 [aarch64 版本 PyPI 没有 release](https://github.com/triton-lang/triton/issues/5561) 的 [triton 库](https://pypi.org/project/triton/#history)，因此 aarch64 版本暂时不支持本地部署 whisper，pip 时请自行注释 requirement 中的 triton 环境，其余配置均测试可用。
 
 ## 4. Quick start
 
@@ -277,7 +277,7 @@ python -m bilitool.cli login
 
 #### 6. 启动自动录制
 
-默认密码为 `bilive2233`, 如果要将录制页面向公网开放，请务必在 `record.sh` 的 `--api-key` 后重新设置密码！如需使用 https，可以考虑 openssl 自签名证书并添加参数 `--key-file path/to/key-file --cert-file path/to/cert-file`。
+默认密码为 `bilive2233`, 如果要将录制页面向公网开放，请务必在 `record.sh` 的 `--api-key` 后**重新设置密码**(最短 8 最长 80)！如需使用 https，可以考虑 openssl 自签名证书并添加参数 `--key-file path/to/key-file --cert-file path/to/cert-file`。
 
 ```bash
 ./record.sh
@@ -313,12 +313,13 @@ logs # 日志文件夹
 
 ### Docker 运行
 
-也可以直接拉取 docker 镜像运行，默认 latest。守护进程是 upload，而 record 以及 scan 需要在配置后手动启动，相关配置以及启动流程从 3.2 开始即可。
-
 > [!IMPORTANT]
-> 如果不需要使用可视化页面可以忽略以下提醒：
-> - 不推荐在有公网 ip 的服务器上直接暴露 22333 端口访问管理页面，如果使用请自行限制端口入站 ip 规则或者采用 nginx 等反向代理配置密钥限制他人访问。
-> - 管理页面主要针对 record 模块，只有手动运行 record 后(步骤5)才能访问到管理页面。
+> 在有公网 ip 的服务器上使用默认密码并暴露端口号有潜在的暴露 cookie 风险，因此**不推荐**在有公网 ip 的服务器映射端口号。
+> 如果需要在有公网 ip 的服务器上访问管理页面：
+> - 请务必在 `record.sh` 的 `--api-key` 后**重新设置密码**(最短 8 最长 80)！！！
+> - 如需使用 https，可以考虑 openssl 自签名证书并添加参数 `--key-file path/to/key-file --cert-file path/to/cert-file`。
+> - 最好再自行限制服务器端口入站 ip 规则或者采用 nginx 等反向代理配置限制他人访问。
+> - 管理页面主要针对 record 模块，record 模块启动后才能访问到可视化管理页面。
 
 #### 无 GPU 版本
 
