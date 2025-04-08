@@ -154,27 +154,21 @@ pip install -r requirements.txt
 
 [常见问题收集](https://timerring.github.io/bilive/install-questions.html)
 
-#### 2. 设置环境变量用于保存项目根目录
+#### 2. 配置参数
 
-```
-./setPath.sh && source ~/.bashrc
-```
-
-#### 3. 配置参数
-
-##### 3.1 whisper 语音识别（渲染字幕功能）
+##### 2.1 whisper 语音识别（渲染字幕功能）
 
 > [!TIP]
 > - 有关语音识别的配置在 `bilive.toml` 文件的 `[asr]` 部分。
 > - `asr_method` 默认为 none, 即不进行语音字幕识别。
 
-##### 3.1.1 采用 api 方式
+##### 2.1.1 采用 api 方式
 
 将 `bilive.toml` 文件中的 `asr_method` 参数设置为 `api`，然后填写 `WHISPER_API_KEY` 参数为你的 [API Key](https://console.groq.com/keys)。
 
 本项目采用 groq 提供 free tier 的 `whisper-large-v3-turbo` 模型，上传限制为 40 MB（约半小时），因此如需采用 api 识别的方式，请将视频录制分段调整为 30 分钟（默认即 30 分钟）。此外，free tier 请求限制为 7200秒/20次/小时，28800秒/2000次/天。如果有更多需求，也欢迎升级到 dev tier，更多信息见[groq 官网](https://console.groq.com/docs/rate-limits)。
 
-##### 3.1.2 采用本地部署方式(需保证有 NVIDIA 显卡)
+##### 2.1.2 采用本地部署方式(需保证有 NVIDIA 显卡)
 
 将 `bilive.toml` 文件中的 `asr_method` 参数设置为 `deploy`，然后下载所需模型文件，并放置在 `src/subtitle/models` 文件夹中。
 
@@ -186,7 +180,7 @@ pip install -r requirements.txt
 > + 更多模型请参考 [whisper 参数模型](https://timerring.github.io/bilive/models.html) 部分。
 > + 更换模型方法请参考 [更换模型方法](https://timerring.github.io/bilive/models.html#更换模型方法) 部分。
 
-##### 3.2 MLLM 模型（自动切片功能）
+##### 2.2 MLLM 模型（自动切片功能）
 
 > [!TIP]
 > - 有关自动切片的配置在 `bilive.toml` 文件的 `[slice]` 部分。
@@ -208,7 +202,7 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 | `API key`   | [gemini_api_key](https://aistudio.google.com/app/apikey) | [zhipu_api_key](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D) | [qwen_api_key](https://bailian.console.aliyun.com/?apiKey=1) |
 
 
-#### 3.3 Image Generation Model（自动生成视频封面）
+#### 2.3 Image Generation Model（自动生成视频封面）
 
 > [!TIP]
 > - 有关自动生成视频封面的配置在 `bilive.toml` 文件的 `[cover]` 部分。
@@ -229,7 +223,7 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 | Recraft      | Recraft V3                       | `recraft`           | [recraft_api_key](https://www.recraft.ai/profile/api)                           |
 | Amazon       | Titan Image Generator V2                        | `amazon`            | [aws_access_key_id and aws_secret_access_key](https://aws.amazon.com/console/)                               |
 
-#### 4. 配置上传参数
+#### 3. 配置上传参数
 
 上传默认参数如下，[]中内容全部自动替换。可以在 `bilive.toml` 中自定义相关配置，映射关键词为 `{artist}`、`{date}`、`{title}`、`{source_link}`，可自行组合删减定制模板：
 
@@ -238,6 +232,17 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 - `gift_price_filter = 1` 表示过滤价格低于 1 元的礼物。
 - `reserve_for_fixing = false` 表示如果视频出现错误，重试失败后不保留视频用于修复，推荐硬盘空间有限的用户设置 false。
 - `upload_line = "auto"` 表示自动探测上传线路并上传，如果需要指定固定的线路，可以设置为 `bldsa`、`ws`、`tx`、`qn`、`bda2`。
+
+#### 4. 配置录制参数
+
+> [!IMPORTANT]
+> 请不要修改任何有关路径的任何配置，否则会导致上传模块不可用
+
+> 录制的 blrec 参数配置在 `settings.toml` 文件，也可以直接在录制启动后在对应的端口可视化页面配置。Quick start 只介绍关键配置，其他配置可自行在页面中对照配置项理解，支持热修改。
+
+- 房间的添加按照文件中 `[[tasks]]` 对应的格式即可。
+- 录制模块不登录状态下默认的录制质量为超清。如果需要登录，请将 cookie.json 文件（获取方式见步骤 5）中的 `SESSDATA` 参数值填写到 `[header]` 的 cookie 部分，形式`cookie = "SESSDATA=XXXXXXXXXXX"`，登录后即可录制更高质量画质。(推荐不登录)
+- `duration_limit` 表示录制时长，如果采用 whisper api 识别语音，请将分段控制在 1800 秒以内，其他情况没有限制。
 
 #### 5. bilitool 登录（持久化登录，该步只需执行一次）
 
@@ -277,24 +282,11 @@ python -m bilitool.cli login
 
 > 如果你使用 deploy 的方式进行语音识别，请先确保你已经正确下载并放置了对应的模型文件。
 
-##### 7.1 启动扫描渲染进程
-
-输入以下指令即可检测已录制的视频并且自动合并分段，自动进行弹幕转换，字幕识别与渲染的过程：
-
-```bash
-./scan.sh
-```
-
-[常见问题收集](https://timerring.github.io/bilive/scan.html)
-
-##### 7.2 启动自动上传进程
-
 ```bash
 ./upload.sh
 ```
 
 [常见问题收集](https://timerring.github.io/bilive/upload.html)
-
 
 #### 日志信息
 
