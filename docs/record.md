@@ -1,72 +1,73 @@
-# record 常见问题
+# record common issues
 
-> 如果没有找到遇到的问题，请及时在 [issues](https://github.com/timerring/bilive/issues/new/choose) 中提出。
+> If you don't find the problem you encountered, please submit it in [issues](https://github.com/timerring/bilive/issues/new/choose).
 
-## 录制 cookies 用处是什么
+## What is the purpose of recording cookies?
 
-主要用于录制时验证账号，B 站默认未登录状态下最高画质参数为 250 (超清)，如果想要录制更高参数的画质视频，需要登录账号，请在配置文件中指定账号的 cookies。 
+This is used to verify the account when recording, and the default maximum quality parameter for Bilibili when not logged in is 250 (super-clear), if you want to record a higher quality video, you need to log in to the account, please specify the account's cookies in the configuration file. 
 
-获取 cookies 的方法可以参考：https://zmtblog.xdkd.ltd/2021/10/06/Get_bilibili_cookie/
-
-可以在项目目录下的 `settings.toml` 文件中指定 cookies，也可以在录制面板的 `http://localhost:2233/settings` （默认启动端口 2233，可以自行修改）中的 settings 填写 cookies。
+You can specify cookies in the `settings.toml` file in the project directory, or fill in cookies in the settings of the recording panel `http://localhost:2233/settings` (the default port is 2233, you can modify it yourself).
 ```
 [header]
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
 cookie = "xxxx"
 ```
 
-重启 record 后，选择更高画质录制即可。
+After restarting record, select a higher quality recording.
 
 > [!TIP]
-> 不建议使用 cookies 登录 blrec 录制，因为 B 站官方有时会风控，导致录制全部失败。此外，cookies 登录后，录制效果不太稳定，可能会出现抓取不到对应流的情况。
+> It is not recommended to use cookies to login to blrec recording, because Bilibili's official sometimes blocks the recording, causing the recording to fail. In addition, after logging in with cookies, the recording effect is not stable, and there may be a situation where the corresponding stream is not captured.
 > 
-> 因此个人更推荐 **不使用 cookies 的默认录制 250 超清画质**，目前没有获取流的问题。
+> Therefore, I personally recommend **not using cookies for default recording of 250 super-clear quality**, currently there is no problem with getting the stream.
 
-## 如果端口已经占用
-如果端口冲突，请在 `record.sh`启动脚本中重新设置端口 `port`并重启（默认端口号 2233）。
+## If the port is already occupied
+If the port is conflicted, please reset the port `port` in the `record.sh` startup script and restart (the default port is 2233).
 
-## 如何调整目录
-录制部分采用的是 `blrec`，在 `settings.toml` 中设置视频存放目录、日志目录，也可启动后在 blrec 前端界面即`http://localhost:port` 中进行设置。详见 [blrec](https://github.com/acgnhiki/blrec)。
+## How to adjust the directory
+The recording part uses `blrec`, set the video storage directory and log directory in `settings.toml`, or set it in the blrec frontend interface即`http://localhost:port` after starting. For details, see [blrec](https://github.com/acgnhiki/blrec).
 
 > [!TIP]
-> 如果要调整目录，请相应调整 `src/config.py` 中的值。
+> Don't recommend adjust the directory, which will cause the upload module to be unavailable.
 
-## 完全无法获取直播流信息
+## The stream information cannot be obtained
 
 ```
 [2023-06-15 13:07:09,375] [DEBUG] [parse] [xxxxxxxx] Error occurred while parsing stream: ValueError('12 is not a valid CodecID')
 Traceback (most recent call last):
 ```
 
-通常这种情况发生在录制主播在海外的情况，由于海外直播流编码是 HEVC，但是只支持处理 AVC 编码，因此无法获取直播流信息。
-参考 issue：https://github.com/BililiveRecorder/BililiveRecorder/issues/470
+This usually happens when the recording host is overseas, because the overseas live stream encoding is HEVC, but it only supports processing AVC encoding, so it cannot obtain the live stream information.
+Reference issue: https://github.com/BililiveRecorder/BililiveRecorder/issues/470
 
-解决方法：切换录制编码，选择 hls 编码，然后重新录制。
+Solution: Switch the recording encoding, select hls encoding, and then re-record.
 
-## 添加房间失败
+## Failed to add room
 
 ```
 [2024-11-22 14:29:04,304] [ERROR] [task_manager] Failed to add task xxxxxxxxx due to: KeyError('sex')
 [2024-11-22 14:29:04,305] [CRITICAL] [exception_handler] KeyError
 ```
 
-通常是短时间内添加该房间次数过多，api 请求限制了，可以等几分钟再添加该房间，也可以打开 port 对应面板后在面板里手动添加。
+This usually happens when the recording host is overseas, because the overseas live stream encoding is HEVC, but it only supports processing AVC encoding, so it cannot obtain the live stream information.
+Reference issue: https://github.com/BililiveRecorder/BililiveRecorder/issues/470
 
-## 已经在录制状态,重启项目又无法正常工作
+Solution: Switch the recording encoding, select hls encoding, and then re-record.
 
-重启需要等约半分钟，因为它添加房间并且验证启动弹幕服务器需要一点时间，可以尝试关闭该房间录制，再打开。
+## The project is already in the recording state, but it cannot work after restarting
 
-## 录制的弹幕 xml 以及 jsonl 为空
+Restarting requires waiting for about half a minute, because it adds a room and verifies the start of the danmaku server, so it can try to close the room recording and then open it again.
+
+## The danmaku xml and jsonl are empty
 
 From [issue 123](https://github.com/timerring/bilive/issues/123)
 
-请填写超过 7 位数的 roomid，84074 是 b 站方便推广的一个短链接，用户跳转是直接映射到真实roomid 去的，真正的 roomid 是申请开播权限时分配的，应该是 7～9 位数字。
+Please fill in a roomid with more than 7 digits, 84074 is a short link for Bilibili to promote, the user jumps directly to the real roomid, the real roomid is assigned when applying for broadcast permission, which should be 7～9 digits.
 
-**弹幕服务器是无法通过短链接获取弹幕的。因为短链接只起到映射跳转作用**。
+**The danmaku server cannot obtain the danmaku through the short link. Because the short link only plays a mapping jump role.**
 
-解决方法：在移动端分享里面`图片分享`方式分享直播，然后 b 站移动端会自动生成一个带有真正 roomid 的图片。填写该 roomid 即可。
+Solution: Share the live broadcast in the `图片分享` way in the mobile share, and then Bilibili mobile will automatically generate an image with the real roomid. Fill in this roomid.
 
-## 添加直播间出错 `aiohttp.client_exceptions.ClientResponseError: 412 `
+## Failed to add room `aiohttp.client_exceptions.ClientResponseError: 412 `
 
 From [issue 148](https://github.com/timerring/bilive/issues/148)
 
@@ -74,12 +75,10 @@ From [issue 148](https://github.com/timerring/bilive/issues/148)
 aiohttp.client_exceptions.ClientResponseError: 412, message='Precondition Failed',
 ```
 
-录制部分我采用的是 [blrec](https://github.com/acgnhiki/blrec)，根据 [相应的issue](https://github.com/acgnhiki/blrec/pull/264) 情况疑似被风控了。这是请求的[B站 api 报错 412 情况](https://github.com/SocialSisterYi/bilibili-API-collect/issues/872)。
+The recording part I use [blrec](https://github.com/acgnhiki/blrec), according to the [corresponding issue](https://github.com/acgnhiki/blrec/pull/264) it seems to be blocked by risk control. This is the [Bilibili API error 412 situation](https://github.com/SocialSisterYi/bilibili-API-collect/issues/872).
 
-解决方法：我建议添加或者更换 UA，还可以考虑添加 cookies，等待几分钟执行 `./record.sh` 重试。或者用 docker 单独部署 blrec 也可以。
+Solution: I recommend adding or replacing UA, you can also consider adding cookies, wait a few minutes to execute `./record.sh` to retry. Or use docker to deploy blrec separately.
 
-## `http://localhost:2233/settings` 网页无法访问
+## `http://localhost:2233/settings` webpage cannot be accessed
 
-管理页面主要针对 record 模块，而 docker run 时默认守护进程是 upload，并且只是映射了端口，实际 2233 端口没有程序在运行，因为 record 进程并没有启动。
-
-解决方法：进入 docker 后手动运行 record (步骤5)后访问管理页面。
+The record process is not working, please check the log.

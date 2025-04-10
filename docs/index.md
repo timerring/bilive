@@ -5,31 +5,31 @@ layout: home
 hero:
   name: "bilive"
   text: "Official documentation"
-  tagline: 7 x 24 小时无人监守录制、渲染弹幕、识别字幕、自动切片、自动上传、兼容超低配机器，启动项目，人人都是录播员。
+  tagline: 7 x 24 hours unattended recording, rendering danmaku, recognizing subtitles, automatic slicing, automatic uploading, compatible with low-configuration machines, start the project, then everyone can be a recorder.
   actions:
     - theme: brand
-      text: 现在开始
+      text: Start now
       link: /getting-started
     - theme: alt
-      text: 在 GitHub 上查看
+      text: View on GitHub
       link: https://github.com/timerring/bilive
 
 features:
-  - title: 速度快
-    details: 采用 pipeline 流水线处理视频，理想情况下录播与直播相差半小时以内，没有下播前就上传录播!
-  - title: 占用小
-    details: 同时录制多个直播间直播以及弹幕（包含普通弹幕，付费弹幕以及礼物上舰等信息），极小的空间也能运行。
-  - title: 模版化
-    details: 无需复杂配置，开箱即用，(🎉NEW) 通过 b 站搜索建议接口自动抓取相关热门标签。
-  - title: (🎉NEW) 自动切片上传
-    details: 根据弹幕密度计算寻找高能片段并切片，结合多模态视频理解大模型 GLM-4V-PLUS 自动生成有意思的切片标题及内容，并且自动上传。
-  - title: 多模式
-    details: 除了 pipeline 模式，还支持 append 以及 merge 模式，对于网络问题或者直播连线导致的视频流分段，能够自动检测合并成为完整视频。
-  - title: fine tune 渲染弹幕
-    details: 自动转换 xml 为 ass 弹幕文件并且渲染到视频中形成有弹幕版视频并自动上传。根据不同分辨率的视频有 fine tune 的渲染参数。
-  - title: 硬件要求低
-    details: 即使无 GPU ，只用最基础的单核 CPU 搭配最低的运存即可完成录制，弹幕渲染，上传等等全部过程，无最低配置要求，10 年前的电脑或服务器依然可以使用！
-  - title: (🎉NEW) 自动渲染字幕(需要Nvidia 显卡)
-    details: 采用 OpenAI 的开源模型 whisper ，自动识别视频内语音并转换为字幕渲染至视频中。
+  - title: Fast
+    details: Using pipeline to process videos, the recording and live broadcast difference is half an hour, and the recording can be uploaded before the broadcast ends!
+  - title: Small Occupancy
+    details: Simultaneously record multiple live broadcasts and danmaku (including normal danmaku, paid danmaku, and gift ship information), and run in a small space.
+  - title: Template
+    details: No complex configuration, ready to use, (🎉NEW) automatically fetch related popular tags through the bilibili search suggestion interface.
+  - title: (🎉NEW) Automatic slicing upload
+    details: Calculate the bullet density to find high-energy fragments and slice them, combine the multi-modal video understanding model GLM-4V-PLUS to automatically generate interesting slice titles and content, and upload them.
+  - title: Multi-mode
+    details: In addition to the pipeline mode, it also supports append and merge modes, and can automatically detect and merge video streams that are segmented due to network issues or live connection issues.
+  - title: Fine-tune rendering danmaku
+    details: Automatically convert xml to ass danmaku file and render it to the video to form a video with danmaku, and upload it automatically. There are fine-tune rendering parameters for different video resolutions.
+  - title: Low hardware requirements
+    details: Even without a GPU, you can complete the recording, danmaku rendering, and uploading process with the most basic single-core CPU and the lowest memory, and there is no minimum configuration requirement. 10-year-old computers or servers can still be used!
+  - title: (🎉NEW) Automatic rendering subtitles (requires Nvidia GPU)
+    details: Use the open-source model whisper from OpenAI to automatically recognize the audio in the video and convert it to subtitles and render it to the video.
 ---
 

@@ -1,15 +1,18 @@
-# upload 常见问题
+# upload common issues
 
-> 如果没有找到遇到的问题，请及时在 [issues](https://github.com/timerring/bilive/issues/new/choose) 中提出。
+> If you don't find the problem you encountered, please submit it in [issues](https://github.com/timerring/bilive/issues/new/choose).
 
-## 上传默认参数
+## Upload default parameters
 
-上传默认参数如下，[]中内容全部自动替换。上传会根据以上模版生成上传视频对应的 `yaml` 配置文件， 可以在 `src/config.py` 中自定义相关配置，映射关键词为 `{artist}`、`{date}`、`{title}`、`{source_link}`，可自行组合删减定制模板：
-+ 标题模板是`{artist}直播回放-{date}-{title}`，效果为"【弹幕+字幕】[XXX]直播回放-[日期]-[直播间标题]"，可自行修改。
-+ 简介模板是`{artist}直播，直播间地址：{source_link} 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。`，效果为"【弹幕+字幕】[XXX]直播，直播间地址：[https://live.bilibili.com/XXX] 内容仅供娱乐，直播中主播的言论、观点和行为均由主播本人负责，不代表录播员的观点或立场。"，可自行修改。
-+ 默认标签是根据主播名字自动在 b 站搜索推荐中抓取的[热搜词]，详见[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/suggest.md)。
+Customize the relevant configuration in `bilive.toml`, map the keywords to `{artist}`、`{date}`、`{title}`、`{source_link}`, please customize the template by combining and deleting:
 
-## 投稿过于频繁
+- `title` title template.
+- `description` description template.
+- `gift_price_filter = 1` means filtering gifts with a price lower than 1 yuan.
+- `reserve_for_fixing = false` means if the video is uploaded with an error, it will not be reserved for fixing, it is recommended to set false for users with limited hard disk space.
+- `upload_line = "auto"` means automatically detecting the upload line and uploading, if you need to specify a fixed line, you can set it to `bldsa`、`ws`、`tx`、`qn`、`bda2`.
+
+## Overly frequent upload
 
 ```
 Error: ResponseData { code: 137022, data: None, message: "投稿过于频繁，请稍后再试", ttl: Some(1) }
@@ -30,8 +33,8 @@ Error: ResponseData { code: 137022, data: None, message: "投稿过于频繁，�
 2024-12-14 23:32:51
 2024-12-14 23:40:56
 2024-12-14 23:51:25
-2024-12-15 00:10:02 触发 Error
+2024-12-15 00:10:02 Error
 ```
-此类报错常出现在短时间内连续投稿，因此个人建议最小分段不要少于半小时，否则会触发此类错误。同时，如果存在录制多位的情况，推荐将权重低的直播间分段间隔调整大，尽量减少投稿频率，而给较为重要的直播间设置较短的间隔。
+This error often occurs when uploading frequently in a short period of time, so I personally recommend that the minimum segment should not be less than half an hour, otherwise it will trigger this error. At the same time, if there is a situation where multiple hosts are recorded, it is recommended to adjust the segment interval of the host with lower weight to a larger value, and try to reduce the upload frequency, while setting a shorter interval for the host with higher weight.
 
-解决方案：找官方客服解除短时间内的账号投稿限制。
+Solution: Find the official customer service to lift the account upload restriction within a short period of time.

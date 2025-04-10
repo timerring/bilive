@@ -1,12 +1,12 @@
-# whisper 参数模型
+# whisper model parameters
 
-本项目采用 [OpenAI 开源的 whisper 模型](https://github.com/openai/whisper)进行 Automatic Speech Recognition (ASR) 任务。
+This project uses the [OpenAI's open source whisper model](https://github.com/openai/whisper) for Automatic Speech Recognition (ASR) tasks.
 
-## 模型信息
-模型基本参数参数及链接如下，注意 GPU 显存必须大于所需 VRAM：
+## Model information
+The basic parameters and links of the model are as follows, note that the GPU VRAM must be greater than the required VRAM:
 
 > [!TIP]
-> 如果追求识别准确率，推荐使用参数量 `small` 及以上的模型。
+> If you pursue recognition accuracy, it is recommended to use models with parameters `small` or above.
 
 |  Size  | Parameters | Multilingual model | Required VRAM |
 |:------:|:----------:|:------------------:|:-------------:|
@@ -17,20 +17,21 @@
 | large  |   1550 M   |      [`large`](https://openaipublic.azureedge.net/main/whisper/models/81f7c96c852ee8fc832187b0132e569d6c3065a3252ed18e56effd0b6a73e524/large-v2.pt)       |    ~10 GB     |
 
 
-## 计算 VRAM 需求
+## Calculate VRAM requirements
 
-用 Nvidia 显卡加速 ffmpeg 渲染过程，每个任务所需的 VRAM 约为 180 MB。`whisper` 模型运行所需显存如上表所示。
-因此可以大约计算所需显存。
+Use Nvidia GPU to accelerate the rendering process of ffmpeg, each task requires approximately 180 MB of VRAM. The VRAM required for the `whisper` model is as shown in the table above.
 
-以 `small` 模型为例:
-+ 如果采用 `pipeline` 模式，由于并行运行，则运行至少需要 180 + 2620 = 2800 MB 显存。
-+ 如果采用 `append` 或者 `merge` 模式，则运行至少需要 2620 MB 显存。
+Therefore, you can roughly calculate the required VRAM.
+
+For example, using the `small` model:
++ If using the `pipeline` mode, since it runs in parallel, at least 180 + 2620 = 2800 MB of VRAM is required.
++ If using the `append` or `merge` mode, at least 2620 MB of VRAM is required.
 
 > [!WARNING]
-> 请一定保证 GPU 显存大于计算结果，否则会爆显存，`RuntimeError: CUDA out of memory.`。
+> Please ensure that the GPU VRAM is greater than the calculated result, otherwise the VRAM will be exhausted, resulting in `RuntimeError: CUDA out of memory.`
 
-## 更换模型方法
+## Change model method
 
-1. 请将 `src/config.py` 文件中的 `Inference_Model` 参数设置为模型对应Size名称，如 `tiny`，`base`，`small`，`medium`，`large`。
-2. 将对应的模型文件下载，并放置在 src/subtitle/models 文件夹中。
-3. 重新运行 `./scan.sh` 脚本。
+1. Please set the `Inference_Model` parameter in the `bilive.toml` file to the corresponding model size name, such as `tiny`, `base`, `small`, `medium`, `large`.
+2. Download the corresponding model file and place it in the `src/subtitle/models` folder.
+3. Re-run the `./scan.sh` script.

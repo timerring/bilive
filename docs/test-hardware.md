@@ -1,28 +1,35 @@
 # Test hardware
 
-## 测试硬件环境 1 (极低配置服务器)
-+ OS: Ubuntu 22.04.4 LTS
-+ CPU：2核 Intel(R) Xeon(R) Platinum 85
-+ GPU：无
-+ 内存：2G
-+ 硬盘：40G
-+ 带宽: 3Mbps
-+ Python 版本: 3.10
-
 > [!TIP]
-> 个人经验：若想尽可能快地更新视频，主要取决于上传速度而非弹幕渲染速度，因此建议网络带宽越大越好。
+> Personal experience: If you want to update the video as quickly as possible, the upload speed is more important than the speed of rendering the bullet screen. Therefore, it is recommended to have as large a network bandwidth as possible.
 
+## Test hardware 1 (the alicloud server)
++ OS: Ubuntu 22.04.4 LTS
++ Architecture: x86_64
++ CPU: 2-core Intel(R) Xeon(R) Platinum 85
++ GPU: None
++ Memory: 2G
++ Disk: 40G
++ Bandwidth: 3Mbps
++ Python version: 3.10
 
-## 测试硬件环境 2 (低配置显卡电脑)
+## Test hardware 2 (the oracle cloud server)
++ OS: Ubuntu 22.04.4 LTS
++ Architecture: aarch64
++ CPU: 1-core Neoverse-N1
++ GPU: None
++ Memory: 2G
++ Disk: 30G
++ Bandwidth: 100Mbps
++ Python version: 3.10
+
+## Test hardware 3 (the low-configuration GPU server)
 
 + OS: Ubuntu 20.04.4 LTS
-
-> [!WARNING]
-> 尽量使用 22.04+ 的版本，更早版本的 ubuntu 自带 gcc 版本无法更新至 biliup-rs 所需版本，若使用较早版本，请参考 [version `GLIBC_2.34‘ not found简单有效解决方法](https://blog.csdn.net/huazhang_001/article/details/128828999)。
-
-+ CPU：Intel(R) Core(TM) i5-9300H CPU 8 核
-+ GPU：NVIDIA GeForce GTX 1650 显存 4GB
-+ 内存：24G
-+ 硬盘：100G
-+ 带宽: 50Mbps
-+ Python 版本: 3.10
++ Architecture: x86_64
++ CPU: 8-core Intel(R) Core(TM) i5-9300H CPU
++ GPU: NVIDIA GeForce GTX 1650 VRAM 4GB
++ Memory: 24G
++ Disk: 100G
++ Bandwidth: 50Mbps
++ Python version: 3.10

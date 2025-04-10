@@ -21,7 +21,6 @@ let config = defineConfig({
           { text: 'Installation & Usage', link: '/installation' },
           { text: 'Models', link: '/models' },
           { text: 'Questions', link: '/install-questions' },
-          { text: 'Biliup', link: '/biliup' },
           { text: 'Record', link: '/record' },
           { text: 'Upload', link: '/upload' },
           { text: 'Scan', link: '/scan' },

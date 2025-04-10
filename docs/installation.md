@@ -1,151 +1,259 @@
 
 # Quick start
-## Mode
-首先介绍本项目三种不同的处理模式：
-1. `pipeline` 模式(默认): 目前最快的模式，需要 GPU 支持，最好在 `blrec` 设置片段为半小时以内，asr 识别和渲染并行执行，分 p 上传视频片段。
+
+> [!NOTE]
+> If you are a windows user, please use WSL to run this project.
+
+### Mode
+
+First, introduce the three different processing modes of this project: (The following description is based on the asr_method="deploy" situation, if you fill in "none" or "api", it does not involve GPU, and you can ignore the description of GPU.)
+1. `pipeline` mode (default): The fastest mode, requires GPU support, it is recommended to set the segment in `blrec` to half an hour or less, asr recognition and rendering are executed in parallel, and the video segments are uploaded in p.
 ![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2024-12-11-17-33-15.png)
-2. `append` 模式: 基本同上，但 asr 识别与渲染过程串行执行，比 pipeline 慢预计 25% 左右，对 GPU 显存要求较低，兼顾硬件性能与处理上传效率。
+2. `append` mode: Basically the same as above, but the asr recognition and rendering process are executed serially, which is expected to be 25% slower than the pipeline, with lower GPU memory requirements, and a balance between hardware performance and processing upload efficiency.
 ![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2024-12-11-19-07-12.png)
-3. `merge` 模式: 等待所有录制完成，再进行识别渲染合并过程，上传均为完整版录播（非分 P 投稿），等待时间较长，效率较慢，适合需要上传完整录播的场景。
+3. `merge` mode: Wait for all recordings to complete, then perform the recognition and rendering merging process, the uploads are all complete versions of the recordings (non-P submissions), the waiting time is longer, the efficiency is slower, and it is suitable for scenarios that need to upload complete recordings.
 ![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2024-12-11-19-08-58.png)
 
 > [!IMPORTANT]
-> 凡是用到 GPU 均需保证 GPU 显存大于运行程序所需 VRAM，具体计算 VRAM 方法可以参考[该部分](./models.md#计算-vram-需求)。
+> All GPU usage requires that the GPU memory be greater than the VRAM required to run the program, the specific calculation method of VRAM can be referred to [this part](https://timerring.github.io/bilive/models.html#计算-vram-需求)。
 
-## Installation(有 GPU 版本)
+### Installation
 
-> 是否有 GPU 以 `nvidia-smi` 显示 nvidia GPU 驱动以及 `nvcc -V` 显示 `CUDA` 版本号为准。如果未配置显卡驱动或未安装 `CUDA`，即使有 GPU 也无法使用，而会使用 CPU 推理（不推荐，可根据自身硬件条件判断是否尝试 CPU 推理）。
+> [!TIP]
+> If you are a windows user, please use WSL to run this project.
 
-> [!NOTE]
-> 如果你是 windows 用户，请使用 WSL 运行本项目。
+#### 0. clone project
 
-### 1. 安装依赖(推荐先 `conda` 创建虚拟环境)
+Since the project introduces my submodule [DanmakuConvert](https://github.com/timerring/DanmakuConvert), [bilitool](https://github.com/timerring/bilitool) and [auto-slice-video](https://github.com/timerring/auto-slice-video), it is recommended to clone the project and update the submodules.
+
+```bash
+git clone --recurse-submodules https://github.com/timerring/bilive.git
+```
+
+If you do not clone the project using the above method, please update the submodules:
+
+```bash
+git submodule update --init --recursive
+```
+
+#### 1. Install dependencies (recommended to create a virtual environment)
 
 ```
 cd bilive
 pip install -r requirements.txt
 ```
 
-此外请根据各自的系统类型安装对应的 [`ffmpeg`](https://www.ffmpeg.org/download.html)，例如 [ubuntu 安装 ffmpeg](https://gcore.com/learning/how-to-install-ffmpeg-on-ubuntu/)。
+Please install the corresponding [`ffmpeg`](https://www.ffmpeg.org/download.html) according to your system type, for example, [install ffmpeg on ubuntu](https://gcore.com/learning/how-to-install-ffmpeg-on-ubuntu/).
 
-[常见问题收集](./install-questions)
+[Common issues collection](https://timerring.github.io/bilive/install-questions.html)
 
-### 2. 设置环境变量用于保存项目根目录
+#### 2. Configure parameters
 
-```
-./setPath.sh && source ~/.bashrc
-```
-
-### 3. 配置 whisper 模型
-
-项目默认采用 [`small`](https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt) 模型，请点击下载所需文件，并放置在 `src/subtitle/models` 文件夹中。
+##### 2.1 whisper speech recognition (rendering subtitle function)
 
 > [!TIP]
-> 使用该参数模型至少需要保证有显存大于 2.7GB 的 GPU，否则请使用其他参数量的模型。
-> + 更多模型请参考 [whisper 参数模型](./models) 部分。
-> + 更换模型方法请参考 [更换模型方法](./models.md#更换模型方法) 部分。
+> - The configuration related to speech recognition is in the `[asr]` section of the `bilive.toml` file.
+> - `asr_method` defaults to none, meaning no speech subtitle recognition.
+
+##### 2.1.1 Use api method
+
+Set the `asr_method` parameter in the `bilive.toml` file to `api`, then fill in the `WHISPER_API_KEY` parameter with your [API Key](https://console.groq.com/keys).
+
+This project uses the `whisper-large-v3-turbo` model provided by groq for free tier, with an upload limit of 40 MB (approximately half an hour), so if you need to use the api recognition method, please adjust the video recording segment to 30 minutes (the default is 30 minutes). In addition, the free tier request limit is 7200 seconds/20 times/hour, 28800 seconds/2000 times/day. If you have more needs, welcome to upgrade to the dev tier, more information can be found on the [groq official website](https://console.groq.com/docs/rate-limits).
+
+##### 2.1.2 Deploy locally (requires NVIDIA GPU)
+
+Set the `asr_method` parameter in the `bilive.toml` file to `deploy`, then download the required model files and place them in the `src/subtitle/models` folder.
+
+The project defaults to using the [`small`](https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt) model, please click to download the required files and place them in the `src/subtitle/models` folder.
+
+> [!TIP]
+> + Please ensure that the NVIDIA GPU driver is installed correctly `nvidia-smi` `nvcc -V`, and the CUDA core can be called `print(torch.cuda.is_available())` to return `True`. If the GPU driver is not configured or `CUDA` is not installed, even if there is a GPU, it will not be used, and the CPU will be used for inference, which consumes a lot of CPU computing resources, not recommended, if the CPU hardware conditions are good, you can try.
+> + The model with this parameter requires at least 2.7GB of GPU memory, otherwise please use other parameter models.
+> + More models can be found in the [whisper parameter model](https://timerring.github.io/bilive/models.html) section.
+> + The method of changing models can be found in the [changing model method](https://timerring.github.io/bilive/models.html#changing-model-method) section.
+
+##### 2.2 MLLM(auto slice title generation)
+
+> [!TIP]
+> - The configuration related to automatic slicing is in the `[slice]` section of the `bilive.toml` file.
+> - `auto_slice` defaults to false, meaning automatic slicing is not performed.
+
+MLLM is mainly used for automatic slice title generation after slicing, this feature is default closed, if you need to open it, please set the `auto_slice` parameter to `true` and write your own prompt, other configurations are as follows:
+- `slice_duration` set the slice duration in seconds (not recommended to exceed 180 seconds).
+- `slice_num` set the number of slices.
+- `slice_overlap` set the slice overlap duration. The slice is processed using the sliding window method, details can be found in [auto-slice-video](https://github.com/timerring/auto-slice-video)
+- `slice_step` set the slice step.
+- `min_video_size` set the minimum video size to be sliced, to prevent slicing short fragments due to connection issues or network波动.
+
+Next, configure the `mllm_model` parameter related to the model and the corresponding api-key, please register an account and apply for the corresponding api key by yourself, fill in the corresponding parameters, please note that only the model set in the `mllm_model` parameter will take effect.
+
+| Company   |    Alicloud           |       zhipu        |    Google        |
+|----------------|-----------------------|------------------|-------------------|
+| Name   | Qwen-2.5-72B-Instruct | GLM-4V-PLUS | Gemini-2.0-flash       |
+| `mllm_model`   | `qwen`  | `zhipu` | `gemini` |
+| `API key`   | [qwen_api_key](https://bailian.console.aliyun.com/?apiKey=1) | [zhipu_api_key](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D) | [gemini_api_key](https://aistudio.google.com/app/apikey) |
 
 
-### 4. biliup-rs 登录
+#### 2.3 Image Generation Model(auto generate video cover)
 
-首先按照 [biliup-rs](https://github.com/biliup/biliup-rs) 登录b站，登录脚本在 `src/utils/biliup` ，登录产生的`cookies.json`保留在该文件夹下即可。
+> [!TIP]
+> - The configuration related to automatic video cover generation is in the `[cover]` section of the `bilive.toml` file.
+> - `generate_cover` defaults to false, meaning automatic video cover generation is not performed.
 
-然后同样通过 `bilitool login` 扫码登录（biliup 的 list 对应 api 已经失效，因此我写了 [`bilitool`](https://github.com/timerring/bilitool) 工具作为替换）。
+Use the image-to-image multimodal model to automatically obtain the video screenshot and upload the video cover after style transformation, if you need to use this feature, please set the `generate_cover` parameter to `true` and write your own prompt, note that some models only support English, the following parameters need to be configured: image_gen_model and the corresponding api key, please register an account and apply for the corresponding api key by yourself, fill in the corresponding parameters, please note that only the model set in the `image_gen_model` parameter will take effect.
 
-[常见问题收集](./biliup)
+| Company     | Model Name                        | `image_gen_model`   | `API Key`                                                                  |
+|--------------|--------------------------------|-------------------|---------------------------------------------------------------------------------|
+| Minimax      | image-01                       | `minimax`         | [minimax_api_key](https://platform.minimaxi.com/user-center/basic-information/interface-key)                                    |
+| Kwai  | Kolors                    | `siliconflow`       | [siliconflow_api_key](https://cloud.siliconflow.cn/i/3Szr5BVg)                  |
+| Tencent      | Hunyuan                | `tencent`           | [tencent_secret_id and tencent_secret_key](https://console.cloud.tencent.com/cam/capi)                   |
+| Baidu        | ERNIE irag-1.0                   | `baidu`             | [baidu_api_key](https://console.bce.baidu.com/iam/key/list)                     |
+| Stability AI | Stable Diffusion 3.5 large turbo   | `stability`         | [stability_api_key](https://platform.stability.ai/account/keys)                 |
+| Luma Labs    | Photon                    | `luma`              | [luma_api_key](https://lumalabs.ai/api/keys)                               |
+| Ideogram     | Ideogram V_2                   | `ideogram`          | [ideogram_api_key](https://ideogram.ai/manage-api)                              |
+| Recraft      | Recraft V3                       | `recraft`           | [recraft_api_key](https://www.recraft.ai/profile/api)                           |
+| Amazon       | Titan Image Generator V2                        | `amazon`            | [aws_access_key_id and aws_secret_access_key](https://aws.amazon.com/console/)                               |
 
-### 5. 启动自动录制
+#### 3. Configure upload parameters
+
+Customize the relevant configuration in the `bilive.toml` file, map the keywords to `{artist}`、`{date}`、`{title}`、`{source_link}`, please combine and customize the template by yourself:
+
+- `title` title template.
+- `description` description template.
+- `gift_price_filter = 1` means filtering gifts priced below 1 yuan.
+- `reserve_for_fixing = false` means that if the video appears to be incorrect, the video will not be retained for repair after the retry fails, it is recommended to set false for users with limited hard disk space.
+- `upload_line = "auto"` means automatically detecting the upload line and uploading, if you need to specify a fixed line, you can set it to `bldsa`、`ws`、`tx`、`qn`、`bda2`.
+
+#### 4. Configure recording parameters
+
+> [!IMPORTANT]
+> Please do not modify any configuration related to paths, otherwise the upload module will be unavailable.
+
+> The recording module uses the third-party package `blrec`, the parameter configuration is in the `settings.toml` file, and you can also configure it in the corresponding port visualization page after the recording starts. Quick start only introduces the key configuration, other configurations can be understood by referring to the configuration items in the page, and support hot modification.
+
+- The addition of rooms follows the format corresponding to `[[tasks]]` in the file.
+- The default recording quality of the recording module is super-high quality without login. If you need to login, please fill in the `SESSDATA` parameter value from the `cookie.json` file (see step 5) to the `cookie` part of `[header]`, the format is `cookie = "SESSDATA=XXXXXXXXXXX"`, after logging in, you can record higher quality video. (Recommended not to login)
+- `duration_limit` means the recording duration, if you use the whisper api recognition, please control the segmentation within 1800 seconds, otherwise there is no limit.
+
+#### 5. bilitool login (persistent login, this step only needs to be executed once)
+
+> For docker deployment, this step can be ignored, because `docker logs` can print the QR code in the console, and you can scan the QR code to login directly, the following content is for source code deployment.
+
+##### 5.1 Method 1: Login via cookie
+
+Generally, the log file does not print the QR code effect, so this step needs to be installed in advance on the machine:
+
+```
+pip install bilitool
+bilitool login --export
+# Then use the app to scan the QR code to login, the cookie.json file will be automatically exported
+```
+Leave the login cookie.json file in the root directory of this project, and it will be deleted after the `./upload.sh` starts.
+
+##### 5.2 Method 2: Login via submodule
+
+Or you can login in the submodule, the way is as follows:
+
+```
+cd src/upload/bilitool
+python -m bilitool.cli login
+# Then use the app to scan the QR code to login
+```
+
+[Common issues collection](https://timerring.github.io/bilive/biliup.html)
+
+#### 6. Start automatic recording
+
+> [!IMPORTANT]
+> Using the default password and exposing the port on a server with a public IP has a potential risk of exposing the cookie, so **not recommended** to map the port on a server with a public IP.
+> - If you need to use https, you can consider using an openssl self-signed certificate and adding the parameters `--key-file path/to/key-file --cert-file path/to/cert-file` in `record.sh`.
+> - You can limit the inbound IP rules of the server port or use nginx etc. to restrict access.
+
+Before starting, please set the password for the recording front-end page, and save it in the `RECORD_KEY` environment variable, `your_password` consists of letters and numbers, and is at least 8 digits, at most 80 digits.
+- Temporary setting password `export RECORD_KEY=your_password`。(Recommended)
+- Persistent setting password `echo "export RECORD_KEY=your_password" >> ~/.bashrc && source ~/.bashrc`，where `~/.bashrc` can be modified according to the shell you are using.
 
 ```bash
 ./record.sh
 ```
 
-[常见问题收集](./record)
+[Common issues collection](https://timerring.github.io/bilive/record.html)
 
-### 6. 启动自动上传
+#### 7. Start automatic upload
 
-请先确保你已经完成`步骤 3`，正确下载并放置了模型文件。
-
-#### 6.1 启动扫描渲染进程
-
-输入以下指令即可检测已录制的视频并且自动合并分段，自动进行弹幕转换，字幕识别与渲染的过程：
-
-```bash
-./scan.sh
-```
-
-[常见问题收集](./scan)
-
-#### 6.2 启动自动上传进程
+> If you use the deploy method to locally deploy whisper, please ensure that you have correctly downloaded and placed the corresponding model files, and ensure that CUDA is available.
 
 ```bash
 ./upload.sh
 ```
 
-[常见问题收集](./upload)
+[Common issues collection](https://timerring.github.io/bilive/upload.html)
 
+#### Log information
 
-### 7. 查看执行日志
+The corresponding execution logs can be viewed in the `logs` folder, if there are any issues, please submit them in [`issue`](https://github.com/timerring/bilive/issues/new/choose), and provide [debug] level logs if there are any exceptions.
 
-相应的执行日志请在 `logs` 文件夹中查看，如果有问题欢迎在 [`issue`](https://github.com/timerring/bilive/issues/new/choose) 中提出。
 ```
-logs # 日志文件夹
-├── blrec # blrec 录制日志
+logs # Log folder
+├── record # blrec recording log
 │   └── ...
-├── scan # scan 处理日志
+├── scan # scan processing log [debug] level
 │   └── ...
-├── upload # upload 上传日志
+├── upload # upload log [debug] level
 │   └── ...
-└── runtime # 每次执行的日志
+└── runtime # runtime log [info] level
     └── ...
 ```
 
+### Docker running
 
-## Installation(无 GPU 版本)
-无 GPU 版本过程基本同上，可以跳过步骤 3，需要注意在执行步骤 5 **之前**完成以下设置将确保完全用 CPU 渲染视频弹幕。
+The configuration reference is the same as above, the login method is more concise, after starting, the login QR code will be printed in the log, scan the QR code to login.
 
-1. 请将 `src/config.py` 文件中的 `GPU_EXIST` 参数设置为 `False`。（若不置为 `False` 且则会使用 CPU 推理，不推荐，可自行根据硬件条件进行尝试。）
-2. 将 `MODEL_TYPE` 调整为 `merge` 或者 `append`。
+#### No GPU version
 
-## Docker 运行
+amd64 and arm64 versions have been built, and the architecture will be automatically selected.
 
-也可以直接拉取 docker 镜像运行，默认 latest。守护进程是 upload，而 record 以及 scan 需要在配置后手动启动，相关配置以及启动流程从 3.2 开始即可，此版本 docker 镜像无 GPU 配置。
+`your_record_password` is the password for the recording page, please set it yourself, the shortest is 8, the longest is 80.
 
-> [!IMPORTANT]
-> 如果不需要使用可视化页面可以忽略以下提醒：
-> - 不推荐在有公网 ip 的服务器上直接暴露 22333 端口访问管理页面，如果使用请自行限制端口入站 ip 规则或者采用 nginx 等反向代理配置密钥限制他人访问。
-> - 管理页面主要针对 record 模块，只有手动运行 record 后(步骤5)才能访问到管理页面。
+```bash
+docker run -itd \
+    -v your/path/to/bilive.toml:/app/bilive.toml \
+    -v your/path/to/settings.toml:/app/settings.toml \
+    -v your/path/to/Videos:/app/Videos \
+    -v your/path/to/logs:/app/logs \
+    --name bilive_docker \
+    -e RECORD_KEY=your_record_password \
+    -p 22333:2233 \
+    ghcr.io/timerring/bilive:0.3.0
+```
 
-### Docker
+#### GPU version
+
 ```bash
 sudo docker run \
     -itd \
-    --name bilive_docker \
+    --gpus 'all,"capabilities=compute,utility,video"' \
+    --name bilive_docker_gpu \
     -p 22333:2233 \
-    timerring/bilive:0.2.10
+    ghcr.io/timerring/bilive-gpu:0.3.0
 ```
 
 ### Docker Compose
 
-#### 使用镜像
+See [Installation](https://bilive.timerring.com/installation.html) for the adjustment method of `compose.yml`.
 
-默认 CPU latest version，如需使用 GPU 版本，请将 `image: ghcr.io/timerring/bilive:latest` 修改为 `image: ghcr.io/timerring/bilive-gpu:latest`。
+#### Use image
+
+Default CPU latest version, if you need to use the GPU version, please adjust it in `compose.yml` yourself.
+
 ```bash
 docker compose up -d
 ```
 
-#### 自行构建
+#### Self-build
 
-相关配置已经写好，请自行将 `compose.yml` 3-6 行替换为：
-
-```yaml
-    build:
-        context: .
-        dockerfile: Dockerfile # Dockerfile-GPU
-    # image: ghcr.io/timerring/bilive:latest # ghcr.io/timerring/bilive-gpu:latest
-```
-
-然后执行以下命令：
+Please adjust the relevant configuration in `compose.yml`, then execute the following command:
 
 ```bash
 docker build

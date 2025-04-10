@@ -37,7 +37,7 @@
 
 > 如果您觉得项目不错，欢迎 :star: 也欢迎 PR 合作，如果有任何疑问，欢迎提 issue 交流。
 > 
-> 敬告：本项目仅供学习交流使用，请在征得对方许可的情况下录制，请勿未经授权私自将内容用于商业用途，请勿用于大规模录制，违者会被官方封禁，法律后果自负。
+> **敬告：本项目仅供学习交流使用，请在征得对方许可的情况下录制，请勿未经授权私自将内容用于商业用途，请勿用于大规模录制，违者会被官方封禁，法律后果自负。**
 
 自动监听并录制B站直播和弹幕（含付费留言、礼物等），根据分辨率转换弹幕、语音识别字幕并渲染进视频，根据弹幕密度切分精彩片段并通过视频理解大模型生成有趣的标题，根据图像生成模型自动生成视频封面，自动投稿视频和切片至B站，兼容无GPU版本，兼容超低配置服务器与主机。
 
@@ -79,11 +79,11 @@
 |--------|---------|---------|---------|
 | OS | Ubuntu 22.04.4 LTS | debian 6.1.0 | Ubuntu 22.04.4 LTS |
 | Architecture | x64 | aarch64 | x64 |
-| CPU | 2-core Intel(R) Xeon(R) Platinum 85 | 1-core Neoverse-N1 | Intel(R) Core(TM) i5-9300H CPU |
+| CPU | 2-core Intel(R) Xeon(R) Platinum 85 | 1-core Neoverse-N1 | 8-core Intel(R) Core(TM) i5-9300H CPU |
 | GPU | None | None | Nvidia GeForce GTX 1650 |
 | Memory | 2G | 4G | 24G |
-| Disk | 40G | 30G | 512G |
-| Bandwidth | 3Mbps | 100Mbps | 100Mbps |
+| Disk | 40G | 30G | 100G |
+| Bandwidth | 3Mbps | 100Mbps | 50Mbps |
 | Python Version | 3.10 | 3.10 | 3.10 |
 
 > 个人经验：若想尽可能快地更新视频，主要取决于上传速度而非渲染速度，因此建议网络带宽越大越好。由于 [aarch64 版本 PyPI 没有 release](https://github.com/triton-lang/triton/issues/5561) 的 [triton 库](https://pypi.org/project/triton/#history)，因此 aarch64 版本暂时不支持本地部署 whisper，pip 时请自行注释 requirement 中的 triton 环境，配置均测试可用。
@@ -105,7 +105,7 @@
 ![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2024-12-11-19-08-58.png)
 
 > [!IMPORTANT]
-> 凡是用到 GPU 均需保证 GPU 显存大于运行程序所需 VRAM，具体计算 VRAM 方法可以参考[该部分](https://timerring.github.io/bilive/models.html#计算-vram-需求)。
+> 凡是用到 GPU 均需保证 GPU 显存大于运行程序所需 VRAM，具体计算 VRAM 方法可以参考[该部分](https://timerring.github.io/bilive/models.html#calculate-vram-requirements)。
 
 ### Installation
 
@@ -161,7 +161,7 @@ pip install -r requirements.txt
 > + 请保证 NVIDIA 显卡驱动安装正确 `nvidia-smi` `nvcc -V`，并能够调用 CUDA 核心 `print(torch.cuda.is_available())` 返回 `True`。如果未配置显卡驱动或未安装 `CUDA`，即使有 GPU 也无法使用，而会使用 CPU 推理，非常消耗 CPU 计算资源，不推荐，如果 CPU 硬件条件好可以尝试。
 > + 使用该参数模型至少需要保证有显存大于 2.7GB 的 GPU，否则请使用其他参数量的模型。
 > + 更多模型请参考 [whisper 参数模型](https://timerring.github.io/bilive/models.html) 部分。
-> + 更换模型方法请参考 [更换模型方法](https://timerring.github.io/bilive/models.html#更换模型方法) 部分。
+> + 更换模型方法请参考 [更换模型方法](https://timerring.github.io/bilive/models.html#change-model-method) 部分。
 
 ##### 2.2 MLLM 模型（自动切片功能）
 
