@@ -316,18 +316,22 @@ logs # 日志文件夹
 > [!IMPORTANT]
 > 在有公网 ip 的服务器上使用默认密码并暴露端口号有潜在的暴露 cookie 风险，因此**不推荐**在有公网 ip 的服务器映射端口号。
 > 如果需要在有公网 ip 的服务器上访问管理页面：
-> - 请务必在 `record.sh` 的 `--api-key` 后**重新设置密码**(最短 8 最长 80)！！！
+> - 请务必在 `record.sh` 的 `--api-key` 后**重新设置密码**(最短 8 最长 80)！
 > - 如需使用 https，可以考虑 openssl 自签名证书并添加参数 `--key-file path/to/key-file --cert-file path/to/cert-file`。
-> - 最好再自行限制服务器端口入站 ip 规则或者采用 nginx 等反向代理配置限制他人访问。
-> - 管理页面主要针对 record 模块，record 模块启动后才能访问到可视化管理页面。
+> - 可以自行限制服务器端口入站 ip 规则或者采用 nginx 等反向代理配置限制他人访问。
+
+Docker 版本的配置参考同上，登录方式更加简洁，启动后直接 `docker logs bilive_docker` 在日志中会打印登录二维码，扫码登录即可。
 
 #### 无 GPU 版本
 
-如果你能看到这行字，说明 0.3.0 版本还没有发布，会在两天内测试完发布，请耐心等待。可以尝试源码部署。注意：0.2.x 版本和 0.3.0 版本不兼容，如需采用 0.2.x 版本，请参考项目文档而不是本 README。
+已构建 amd64 及 arm64 版本，会自动根据架构选择。
 
 ```bash
-sudo docker run \
-    -itd \
+docker run -itd \
+    -v your/path/to/bilive.toml:/app/bilive.toml \
+    -v your/path/to/settings.toml:/app/settings.toml \
+    -v your/path/to/Videos:/app/Videos \
+    -v your/path/to/logs:/app/logs \
     --name bilive_docker \
     -p 22333:2233 \
     ghcr.io/timerring/bilive:0.3.0
