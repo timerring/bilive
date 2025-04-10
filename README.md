@@ -68,32 +68,7 @@
 
 项目架构流程如下：
 
-```mermaid
-graph TD
-        User((用户))--record-->startRecord(启动录制)
-        startRecord(启动录制)--保存视频和字幕文件-->videoFolder[(Video 文件夹)]
-
-        User((用户))--scan-->startScan(启动扫描 Video 文件夹)
-        videoFolder[(Video 文件夹)]<--间隔两分钟扫描一次-->startScan(启动扫描 Video 文件夹)
-        startScan <--视频文件--> whisper[whisperASR模型]
-        whisper[whisperASR模型] --生成字幕-->parameter[查询视频分辨率]
-        subgraph 启动新进程
-        parameter[查询分辨率] -->ifDanmaku{判断}
-        ifDanmaku -->|有弹幕| DanmakuConvert[DanmakuConvert]
-        ifDanmaku -->|无弹幕| ffmpeg1[ffmpeg]
-        DanmakuConvert[DanmakuConvert] --根据分辨率转换弹幕--> ffmpeg1[ffmpeg]
-        ffmpeg1[ffmpeg] --渲染弹幕及字幕 --> Video[视频文件]
-        Video[视频文件] --计算弹幕密度并切片--> GLM[多模态视频理解模型]
-        GLM[多模态视频理解模型] --生成切片信息--> slice[视频切片]
-        end
-        
-        slice[视频切片] --> uploadQueue[(上传队列)]
-        Video[视频文件] --> uploadQueue[(上传队列)]
-
-        User((用户))--upload-->startUpload(启动视频上传进程)
-        startUpload(启动视频上传进程) <--扫描队列并上传视频--> uploadQueue[(上传队列)]
-```
-
+![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-10-17-08-35.png)
 
 ## 3. 测试硬件
 
