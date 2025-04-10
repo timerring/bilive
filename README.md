@@ -218,7 +218,7 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 
 | Company     | Model Name                        | `image_gen_model`   | `API Key`                                                                  |
 |--------------|--------------------------------|-------------------|---------------------------------------------------------------------------------|
-| Minimax      | image-01                       | `minimax`         | [minimax_api_key](https://www.minimax.chat/)                                    |
+| Minimax      | image-01                       | `minimax`         | [minimax_api_key](https://platform.minimaxi.com/user-center/basic-information/interface-key)                                    |
 | Kwai  | Kolors                    | `siliconflow`       | [siliconflow_api_key](https://cloud.siliconflow.cn/i/3Szr5BVg)                  |
 | Tencent      | Hunyuan                | `tencent`           | [tencent_secret_id and tencent_secret_key](https://console.cloud.tencent.com/cam/capi)                   |
 | Baidu        | ERNIE irag-1.0                   | `baidu`             | [baidu_api_key](https://console.bce.baidu.com/iam/key/list)                     |
@@ -301,7 +301,7 @@ python -m bilitool.cli login
 
 ```
 logs # 日志文件夹
-├── blrec # blrec 录制日志
+├── record # blrec 录制日志
 │   └── ...
 ├── scan # scan 处理日志 [debug]级别
 │   └── ...

@@ -370,10 +370,6 @@ logs/*/*
 node_modules/
 pnpm-lock.yaml
 
-# Ignore the production
-startRecord-production.sh
-settings-production.toml
-
 # Ignore the cookies.json
 cookies.json
 

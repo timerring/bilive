@@ -14,12 +14,13 @@ RUN apt-get update && apt-get install -y \
     lsof \
     curl \
     vim \
+    gcc \
     && pip install --no-cache-dir -r requirements.txt \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV TZ="Asia/Shanghai"
-
 EXPOSE 2233
 
-CMD ["python", "-m", "src.upload.upload"]
+ENV TZ="Asia/Shanghai"
+
+CMD ["./start.sh"]

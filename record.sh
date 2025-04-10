@@ -9,7 +9,7 @@ host=0.0.0.0
 port=2233
 
 kill -9 $(ps aux | grep '[b]lrec' | awk '{print $2}')
-nohup blrec -c $config --open --host $host --port $port --api-key bilive2233 > ./logs/runtime/blrec-$(date +%Y%m%d-%H%M%S).log 2>&1 &
+nohup blrec -c $config --open --host $host --port $port --api-key bilive2233 > ./logs/record/blrec-$(date +%Y%m%d-%H%M%S).log 2>&1 &
 if [ $? -eq 0 ]; then
     echo "success"
 else
