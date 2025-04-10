@@ -277,7 +277,14 @@ python -m bilitool.cli login
 
 #### 6. 启动自动录制
 
-默认密码为 `bilive2233`, 如果要将录制页面向公网开放，请务必在 `record.sh` 的 `--api-key` 后**重新设置密码**(最短 8 最长 80)！如需使用 https，可以考虑 openssl 自签名证书并添加参数 `--key-file path/to/key-file --cert-file path/to/cert-file`。
+> [!IMPORTANT]
+> 在有公网 ip 的服务器上使用默认密码并暴露端口号有潜在的暴露 cookie 风险，因此**不推荐**在有公网 ip 的服务器映射端口号。
+> - 如需使用 https，可以考虑 openssl 自签名证书并在 `record.sh` 中添加参数 `--key-file path/to/key-file --cert-file path/to/cert-file`。
+> - 可以自行限制服务器端口入站 ip 规则或者采用 nginx 等反向代理配置限制他人访问。
+
+启动前请先设置录制前端页面的密码，并保存在 `RECORD_KEY` 环境变量中, `your_password` 由字母数字组成，最少 8 位，最多 80 位。
+- 临时设置密码 `export RECORD_KEY=your_password`。(推荐)
+- 持久化设置密码 `echo "export RECORD_KEY=your_password" >> ~/.bashrc && source ~/.bashrc`，其中 `~/.bashrc` 根据你所用的 shell 自行修改即可。
 
 ```bash
 ./record.sh
@@ -313,18 +320,13 @@ logs # 日志文件夹
 
 ### Docker 运行
 
-> [!IMPORTANT]
-> 在有公网 ip 的服务器上使用默认密码并暴露端口号有潜在的暴露 cookie 风险，因此**不推荐**在有公网 ip 的服务器映射端口号。
-> 如果需要在有公网 ip 的服务器上访问管理页面：
-> - 请务必在 `record.sh` 的 `--api-key` 后**重新设置密码**(最短 8 最长 80)！
-> - 如需使用 https，可以考虑 openssl 自签名证书并添加参数 `--key-file path/to/key-file --cert-file path/to/cert-file`。
-> - 可以自行限制服务器端口入站 ip 规则或者采用 nginx 等反向代理配置限制他人访问。
-
 Docker 版本的配置参考同上，登录方式更加简洁，启动后直接 `docker logs bilive_docker` 在日志中会打印登录二维码，扫码登录即可。
 
 #### 无 GPU 版本
 
 已构建 amd64 及 arm64 版本，会自动根据架构选择。
+
+`your_record_password` 为录制页面的密码，请自行设置，最短 8 最长 80。
 
 ```bash
 docker run -itd \
@@ -333,6 +335,7 @@ docker run -itd \
     -v your/path/to/Videos:/app/Videos \
     -v your/path/to/logs:/app/logs \
     --name bilive_docker \
+    -e RECORD_KEY=your_record_password \
     -p 22333:2233 \
     ghcr.io/timerring/bilive:0.3.0
 ```
