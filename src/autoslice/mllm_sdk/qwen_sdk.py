@@ -4,9 +4,11 @@ from openai import OpenAI
 import os
 import base64
 
+
 def encode_video(video_path):
     with open(video_path, "rb") as video_file:
         return base64.b64encode(video_file.read()).decode("utf-8")
+
 
 def qwen_generate_title(video_path, artist):
     client = OpenAI(
@@ -20,7 +22,8 @@ def qwen_generate_title(video_path, artist):
         messages=[
             {
                 "role": "system",
-                "content": [{"type":"text","text": "你是一个视频切片员"}]},
+                "content": [{"type": "text", "text": "你是一个视频切片员"}],
+            },
             {
                 "role": "user",
                 "content": [
@@ -30,7 +33,7 @@ def qwen_generate_title(video_path, artist):
                     },
                     {"type": "text", "text": SLICE_PROMPT},
                 ],
-            }
+            },
         ],
     )
     scan_log.info("使用 Qwen-2.5-72B-Instruct 生成切片标题")

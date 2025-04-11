@@ -8,23 +8,23 @@ import time
 def recraft_generate_cover(your_file_path):
     try:
         client = OpenAI(
-            base_url='https://external.api.recraft.ai/v1',
+            base_url="https://external.api.recraft.ai/v1",
             api_key=RECRAFT_API_KEY,
         )
 
         response = client.post(
-            path='/images/imageToImage',
+            path="/images/imageToImage",
             cast_to=object,
-            options={'headers': {'Content-Type': 'multipart/form-data'}},
+            options={"headers": {"Content-Type": "multipart/form-data"}},
             files={
-                'image': open(your_file_path, 'rb'),
+                "image": open(your_file_path, "rb"),
             },
             body={
-                'prompt': COVER_PROMPT,
-                'strength': 0.75,
+                "prompt": COVER_PROMPT,
+                "strength": 0.75,
             },
         )
-        image_url = response['data'][0]['url']
+        image_url = response["data"][0]["url"]
         img_data = requests.get(image_url).content
         cover_name = time.strftime("%Y%m%d%H%M%S") + ".png"
         temp_cover_path = os.path.join(os.path.dirname(your_file_path), cover_name)

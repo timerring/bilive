@@ -14,17 +14,23 @@ def subtitle_generator(asr_method):
     Returns:
         function: wrapped subtitle generation function
     """
+
     def decorator(func):
         def wrapper(video_path):
             if asr_method == "api":
                 from .api.whisper_sdk import generate_srt
+
                 scan_log.info(f"Generate subtitles via whisper api")
                 return generate_srt(video_path)
             elif asr_method == "deploy":
                 try:
                     subprocess.run(
-                        ['python', os.path.join(SRC_DIR, 'subtitle', 'generate.py'), video_path],
-                        stdout=subprocess.DEVNULL
+                        [
+                            "python",
+                            os.path.join(SRC_DIR, "subtitle", "generate.py"),
+                            video_path,
+                        ],
+                        stdout=subprocess.DEVNULL,
                     )
                     scan_log.info(f"Generate subtitles via whisper deploy")
                     return video_path[:-4] + ".srt"
@@ -36,8 +42,11 @@ def subtitle_generator(asr_method):
             else:
                 scan_log.error(f"Unsupported asr method: {asr_method}")
                 return None
+
         return wrapper
+
     return decorator
+
 
 # Generate the srt file via whisper model
 @subtitle_generator(ASR_METHOD)
@@ -47,5 +56,3 @@ def generate_subtitle(in_video_path):
         in_video_path: str, the path of video
     """
     pass
-
-

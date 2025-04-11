@@ -6,6 +6,7 @@ from src.subtitle.subtitle_generator import generate_subtitle
 from src.burn.render_video import render_video
 from src.log.logger import scan_log
 
+
 class VideoRenderQueue:
     def __init__(self):
         self.render_queue = queue.Queue()

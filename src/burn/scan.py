@@ -10,9 +10,10 @@ from src.burn.render_video import render_video
 from src.burn.render_then_merge import render_then_merge
 from src.log.logger import scan_log
 
+
 def process_folder_merge(folder_path):
     # Don't process the recording folder
-    flv_files = list(Path(folder_path).glob('*.flv'))
+    flv_files = list(Path(folder_path).glob("*.flv"))
     if flv_files:
         scan_log.info(f"Found flv files in {folder_path}. Skipping.")
         return
@@ -20,9 +21,13 @@ def process_folder_merge(folder_path):
     files_by_date = {}
 
     # process the recorded files
-    mp4_files = [mp4_file for mp4_file in Path(folder_path).glob('*.mp4') if not mp4_file.name.endswith('-.mp4')]
+    mp4_files = [
+        mp4_file
+        for mp4_file in Path(folder_path).glob("*.mp4")
+        if not mp4_file.name.endswith("-.mp4")
+    ]
     for mp4_file in mp4_files:
-        date_part = mp4_file.stem.split('_')[1].split('-')[0]
+        date_part = mp4_file.stem.split("_")[1].split("-")[0]
 
         if date_part not in files_by_date:
             files_by_date[date_part] = []
@@ -31,7 +36,7 @@ def process_folder_merge(folder_path):
     for date, files in files_by_date.items():
         if len(files) > 1:
             # If there are multiple segments with the same date, merge them
-            sorted_files = sorted(files, key=lambda x: x.stem.split('_')[1])
+            sorted_files = sorted(files, key=lambda x: x.stem.split("_")[1])
             scan_log.info(f"Merging {sorted_files}...")
             render_then_merge(sorted_files)
         else:
@@ -39,9 +44,14 @@ def process_folder_merge(folder_path):
                 scan_log.info(f"Begin processing {file}...")
                 render_video(file)
 
+
 def process_folder_append(folder_path):
     # process the recorded files
-    mp4_files = [mp4_file for mp4_file in Path(folder_path).glob('*.mp4') if not mp4_file.name.endswith('-.mp4')]
+    mp4_files = [
+        mp4_file
+        for mp4_file in Path(folder_path).glob("*.mp4")
+        if not mp4_file.name.endswith("-.mp4")
+    ]
     mp4_files.sort()
     for file in mp4_files:
         scan_log.info(f"Begin processing {file}...")
@@ -49,6 +59,7 @@ def process_folder_append(folder_path):
             video_render_queue.pipeline_render(file)
         else:
             render_video(file)
+
 
 if __name__ == "__main__":
     room_folder_path = VIDEOS_DIR

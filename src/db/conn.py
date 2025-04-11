@@ -1,11 +1,13 @@
 import sqlite3
 import os
 
-DATA_BASE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.db')
+DATA_BASE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data.db")
+
 
 def connect():
     db = sqlite3.connect(DATA_BASE_FILE)
     return db
+
 
 def create_table():
     try:
@@ -23,37 +25,43 @@ def create_table():
     except:
         print("Create table failed.")
         return False
-    
+
+
 def get_single_upload_queue():
     db = connect()
     cursor = db.cursor()
     cursor.execute("select video_path from upload_queue where locked = 0 limit 1;")
     row = cursor.fetchone()
-    result = {'video_path': row[0]} if row else None
+    result = {"video_path": row[0]} if row else None
     db.close()
     return result
+
 
 def get_all_upload_queue():
     db = connect()
     cursor = db.cursor()
     cursor.execute("select id, video_path, locked from upload_queue;")
     rows = cursor.fetchall()
-    result = [{'id': row[0], 'video_path': row[1], 'locked': row[2]} for row in rows]
+    result = [{"id": row[0], "video_path": row[1], "locked": row[2]} for row in rows]
     db.close()
     return result
+
 
 def insert_upload_queue(video_path: str):
     try:
         db = connect()
         cursor = db.cursor()
-        cursor.execute("insert into upload_queue (video_path) values (?);", (video_path,))
+        cursor.execute(
+            "insert into upload_queue (video_path) values (?);", (video_path,)
+        )
         db.commit()
         db.close()
         return True
     except sqlite3.IntegrityError:
         print("Insert Upload Queue failed, the video path already exists.")
         return False
-    
+
+
 def delete_upload_queue(video_path: str):
     try:
         db = connect()
@@ -66,35 +74,42 @@ def delete_upload_queue(video_path: str):
         print("Delete Upload Queue failed.")
         return False
 
+
 def update_upload_queue_lock(video_path: str, locked: int):
     try:
         db = connect()
         cursor = db.cursor()
-        cursor.execute("update upload_queue set locked = ? where video_path = ?;", (locked, video_path))
+        cursor.execute(
+            "update upload_queue set locked = ? where video_path = ?;",
+            (locked, video_path),
+        )
         db.commit()
         db.close()
         return True
     except:
         print("Update Upload Queue failed.")
         return False
-    
+
+
 def get_single_lock_queue():
     db = connect()
     cursor = db.cursor()
     cursor.execute("select video_path from upload_queue where locked = 1 limit 1;")
     row = cursor.fetchone()
-    result = {'video_path': row[0]} if row else None
+    result = {"video_path": row[0]} if row else None
     db.close()
     return result
+
 
 def get_all_reserve_for_fixing_queue():
     db = connect()
     cursor = db.cursor()
     cursor.execute("select video_path from upload_queue where locked = 2;")
     rows = cursor.fetchall()
-    result = [{'video_path': row[0]} for row in rows]
+    result = [{"video_path": row[0]} for row in rows]
     db.close()
     return result
+
 
 def delete_all_queue():
     db = connect()
@@ -102,6 +117,7 @@ def delete_all_queue():
     cursor.execute("delete from upload_queue;")
     db.commit()
     db.close()
+
 
 if __name__ == "__main__":
     # Create Table
