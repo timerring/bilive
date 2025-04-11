@@ -211,6 +211,7 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 
 - `title` 标题模板。
 - `description` 简介模板。
+- `tid` 视频分区，请参考 [bilitool tid](https://bilitool.timerring.com/tid.html) 文档。
 - `gift_price_filter = 1` 表示过滤价格低于 1 元的礼物。
 - `reserve_for_fixing = false` 表示如果视频出现错误，重试失败后不保留视频用于修复，推荐硬盘空间有限的用户设置 false。
 - `upload_line = "auto"` 表示自动探测上传线路并上传，如果需要指定固定的线路，可以设置为 `bldsa`、`ws`、`tx`、`qn`、`bda2`。

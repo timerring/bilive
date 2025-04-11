@@ -62,6 +62,7 @@ INFERENCE_MODEL = config.get("asr", {}).get("inference_model")
 
 TITLE = config.get("video", {}).get("title")
 DESC = config.get("video", {}).get("description")
+TID = config.get("video", {}).get("tid")
 GIFT_PRICE_FILTER = config.get("video", {}).get("gift_price_filter")
 RESERVE_FOR_FIXING = config.get("video", {}).get("reserve_for_fixing")
 UPLOAD_LINE = config.get("video", {}).get("upload_line")

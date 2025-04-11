@@ -12,12 +12,13 @@ from src.upload.extract_video_info import (
 )
 import subprocess
 import json
+from src.config import TID
 
 
 def generate_video_data(video_path):
     title = generate_title(video_path)
     desc = generate_desc(video_path)
-    tid = 138
+    tid = TID
     tag = generate_tag(video_path)
     source = generate_source(video_path)
     cover = ""
@@ -41,7 +42,7 @@ def generate_slice_data(video_path):
         )
         parsed_output = json.loads(output)
         title = parsed_output["format"]["tags"]["generate"]
-        tid = 138
+        tid = TID
         tag = "直播切片"
         return title, tid, tag
     except Exception as e:

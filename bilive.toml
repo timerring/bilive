@@ -17,6 +17,7 @@ inference_model = "small" # If you choose "deploy", you should download the infe
 # You can change the title as you like, eg.
 title = "{date}直播" # Key words: {artist}, {date}, {title}, {source_link}
 description = "录制请征求主播同意，若未经同意就录制，所引起的任何法律问题均由该违规录制的 b 站账号承担。" # Key words: {artist}, {date}, {title}, {source_link}
+tid = # The tid of the video, see https://bilitool.timerring.com/tid.html
 gift_price_filter = 1 # The gift whose price is less than this value will be filtered, unit: RMB
 reserve_for_fixing = false # If encounter MOOV crash error, delete the video or reserve for fixing
 upload_line = "auto" # The upload line to be used, default None is auto detect(recommended), if you want to specify, it can be "bldsa", "ws", "tx", "qn", "bda2".
