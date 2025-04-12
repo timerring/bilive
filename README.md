@@ -173,7 +173,7 @@ pip install -r requirements.txt
 > [!TIP]
 > - 有关自动切片的配置在 `bilive.toml` 文件的 `[slice]` 部分。
 > - `auto_slice` 默认为 false, 即不进行自动切片。
-> - 可以通过单元测试调试你自己的 prompt，单元测试在 `tests/test_autoslice.py`，执行 `python -m unittest` 即可，后接 `tests.test_autoslice` 测试整个模块，`tests.test_autoslice.TestXXXMain` 测试某个模型。
+> - 可以通过单元测试调试你自己的 prompt，单元测试在 `tests/test_autoslice.py`，执行 `python -m unittest` 即可，后接 `tests.test_autoslice` 测试整个模块，`tests.test_autoslice.TestXXXMain` 测试某个模型。部分模型会返回多个标题，请在 prompt 中指出，仅返回一个标题的字符串即可。
 
 MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关闭，如果需要打开请将 `auto_slice` 参数设置为 `true`，并且写下你自己的 `slice_prompt`(可以包含 `{artist}` 关键词会自动替换)，其他配置分别有：
 - `slice_duration` 以秒为单位设置切片时长（不建议超过 180 秒）。
@@ -196,6 +196,7 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 > [!TIP]
 > - 有关自动生成视频封面的配置在 `bilive.toml` 文件的 `[cover]` 部分。
 > - `generate_cover` 默认为 false, 即不进行自动生成视频封面。
+> - 可以通过单元测试调试你自己的 prompt，单元测试在 `tests/test_cover.py`，执行 `python -m unittest` 即可，后接 `tests.test_cover` 测试整个模块，`tests.test_cover.TestXXXMain` 测试某个模型。
 
 采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面，如需使用本功能，请将 `generate_cover` 参数设置为 `true`，并且写下你自己的 prompt，注意部分模型只支持英文，接下来需要配置的参数有 image_gen_model 和对应的 api key，请自行根据链接注册账号并且申请对应 api key，填写在对应的参数中，请注意以下模型只有你在 `image_gen_model` 参数中设置的那个模型会生效。
 
