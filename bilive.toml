@@ -30,7 +30,7 @@ slice_num = 2 # the number of slices
 slice_overlap = 30 # the overlap of slices(seconds) see my package https://github.com/timerring/auto-slice-video for more details
 slice_step = 1 # the step of slices(seconds)
 min_video_size = 200 # The minimum video size to be sliced (MB)
-mllm_model = "qwen" # the multi-model LLMs, can be "qwen" or "gemini" or "zhipu"
+mllm_model = "qwen" # the multi-model LLMs, can be "qwen" or "gemini" or "zhipu" or "sensenova"
 qwen_api_key = "" # Apply for your own Qwen API key at https://bailian.console.aliyun.com/?apiKey=1
 zhipu_api_key = "" # Apply for your own GLM-4v-Plus API key at https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D
 gemini_api_key = "" # Apply for your own Gemini API key at https://aistudio.google.com/app/apikey
@@ -39,7 +39,7 @@ sensenova_api_key = "" # Apply for your own SenseNova API key at https://console
 [cover]
 generate_cover = false # whether to generate cover
 cover_prompt = "" # Write your own cover prompt here
-image_gen_model = "minimax" # the image generation model, can be "minimax" or "siliconflow" or "tencent" or "baidu" or "stability" or "luma" or "ideogram" or "recraft" or "amazon"
+image_gen_model = "minimax" # the image generation model, can be "minimax" or "siliconflow" or "tencent" or "baidu" or "stability" or "luma" or "ideogram" or "recraft" or "amazon" or "hidream"
 minimax_api_key = "" # Apply for your own Minimax API key at https://platform.minimaxi.com/user-center/basic-information/interface-key
 siliconflow_api_key = "" # Apply for your own SiliconFlow API key at https://cloud.siliconflow.cn/i/3Szr5BVg
 tencent_secret_id = "" # Apply for your own Tencent Cloud API key at https://console.cloud.tencent.com/cam/capi
@@ -51,3 +51,4 @@ ideogram_api_key = "" # Apply for your own Ideogram API key at https://ideogram.
 recraft_api_key = "" # Apply for your own Recraft API key at https://www.recraft.ai/profile/api
 aws_access_key_id = "" # Apply for your own AWS access key id at https://aws.amazon.com/console/
 aws_secret_access_key = "" # Apply for your own AWS secret access key as above
+hidream_api_key = "" # Apply for your own Hidream API key at https://www.hidreamai.com/platform/token

@@ -89,6 +89,10 @@ def cover_generator(model_type):
                 from .image_model_sdk.amazon_sdk import amazon_generate_cover
 
                 return amazon_generate_cover(cover_path)
+            elif model_type == "hidream":
+                from .image_model_sdk.hidream_sdk import hidream_generate_cover
+
+                return hidream_generate_cover(cover_path)
             else:
                 upload_log.error(f"Unsupported model type: {model_type}")
                 return None

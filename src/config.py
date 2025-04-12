@@ -91,6 +91,7 @@ IDEOGRAM_API_KEY = config.get("cover", {}).get("ideogram_api_key")
 RECRAFT_API_KEY = config.get("cover", {}).get("recraft_api_key")
 AWS_ACCESS_KEY_ID = config.get("cover", {}).get("aws_access_key_id")
 AWS_SECRET_ACCESS_KEY = config.get("cover", {}).get("aws_secret_access_key")
+HIDREAM_API_KEY = config.get("cover", {}).get("hidream_api_key")
 
 SLICE_PROMPT = config.get("slice", {}).get("slice_prompt")
 COVER_PROMPT = config.get("cover", {}).get("cover_prompt")

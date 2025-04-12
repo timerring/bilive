@@ -32,6 +32,7 @@
   <img src="assets/ideogram.svg" alt="Ideogram V_2" width="50" height="60" />
   <img src="assets/recraft.svg" alt="Recraft" width="50" height="60" />
   <img src="assets/aws-color.svg" alt="Amazon" width="50" height="60" />
+  <img src="assets/hidream-color.png" alt="Hidream I1" width="60" height="60" />
 </div>
 
 ##  1. Introduction
@@ -70,6 +71,8 @@
   - `Ideogram V_2`
   - `Recraft`
   - `Amazon Titan Image Generator V2`
+  - `Hidream I1`
+
 
 项目架构流程如下：
 
@@ -207,6 +210,7 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 | Ideogram     | Ideogram V_2                   | `ideogram`          | [ideogram_api_key](https://ideogram.ai/manage-api)                              |
 | Recraft      | Recraft V3                       | `recraft`           | [recraft_api_key](https://www.recraft.ai/profile/api)                           |
 | Amazon       | Titan Image Generator V2                        | `amazon`            | [aws_access_key_id and aws_secret_access_key](https://aws.amazon.com/console/)                               |
+| Hidream      | Hidream I1                       | `hidream`            | [hidream_api_key](https://www.hidreamai.com/platform/token)                               |
 
 #### 3. 配置上传参数
 
