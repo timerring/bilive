@@ -32,7 +32,7 @@
   <img src="assets/ideogram.svg" alt="Ideogram V_2" width="50" height="60" />
   <img src="assets/recraft.svg" alt="Recraft" width="50" height="60" />
   <img src="assets/aws-color.svg" alt="Amazon" width="50" height="60" />
-  <img src="assets/hidream-color.png" alt="Hidream I1" width="60" height="60" />
+  <img src="assets/hidream-color.svg" alt="Hidream I1" width="60" height="60" />
 </div>
 
 ##  1. Introduction
