@@ -17,7 +17,7 @@
   <img src="assets/zhipu-color.svg" alt="Zhipu GLM-4V-PLUS" width="60" height="60" />
   <img src="assets/gemini-brand-color.svg" alt="Google Gemini 1.5 Pro" width="60" height="60" />
   <img src="assets/qwen-color.svg" alt="Qwen-2.5-72B-Instruct" width="60" height="60" />
-  <img src="assets/sensenova-brand-color.svg" alt="SenseNova V6 Pro" width="60" height="60" />
+  <img src="assets/sensenova-brand-color.svg" alt="SenseNova V6 Pro" width="100" height="60" />
 </div>
 
   <img src="assets/hunyuan-color.svg" alt="Tencent Hunyuan" width="50" height="60" />
@@ -73,7 +73,7 @@
 
 项目架构流程如下：
 
-![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-10-17-08-35.png)
+![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-12-14-46-16.png)
 
 ## 3. 测试硬件
 
