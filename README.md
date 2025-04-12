@@ -32,7 +32,7 @@
   <img src="assets/ideogram.svg" alt="Ideogram V_2" width="50" height="60" />
   <img src="assets/recraft.svg" alt="Recraft" width="50" height="60" />
   <img src="assets/aws-color.svg" alt="Amazon" width="50" height="60" />
-  <img src="assets/hidream-color.svg" alt="Hidream I1" width="60" height="60" />
+  <img src="assets/hidream-color.svg" alt="Hidream I1" width="100" height="60" />
 </div>
 
 ##  1. Introduction
@@ -76,7 +76,7 @@
 
 项目架构流程如下：
 
-![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-12-14-46-16.png)
+![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-12-17-04-11.png)
 
 ## 3. 测试硬件
 

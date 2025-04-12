@@ -36,4 +36,4 @@ Automatically monitors and records Bilibili live broadcasts and danmaku (includi
 
 The project architecture process is as follows:
 
-![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-12-14-46-16.png)
+![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-12-17-04-11.png)
