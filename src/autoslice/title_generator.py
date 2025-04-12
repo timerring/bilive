@@ -25,6 +25,10 @@ def title_generator(model_type):
                 from .mllm_sdk.qwen_sdk import qwen_generate_title
 
                 return qwen_generate_title(video_path, artist)
+            elif model_type == "sensenova":
+                from .mllm_sdk.sensenova_sdk import sensenova_generate_title
+
+                return sensenova_generate_title(video_path, artist)
             else:
                 scan_log.error(f"Unsupported model type: {model_type}")
                 return None

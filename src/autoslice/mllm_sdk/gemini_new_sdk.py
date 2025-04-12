@@ -15,14 +15,14 @@ def gemini_generate_title(video_path, artist):
         model="models/gemini-2.0-flash",
         contents=types.Content(
             parts=[
-                types.Part(text=SLICE_PROMPT),
+                types.Part(text=SLICE_PROMPT.format(artist=artist)),
                 types.Part(
                     inline_data=types.Blob(data=video_bytes, mime_type="video/mp4")
                 ),
             ]
         ),
     )
-    scan_log.info("使用 Gemini-2.0-flash 生成切片标题")
-    scan_log.info(f"Prompt: {SLICE_PROMPT}")
-    scan_log.info(f"生成的切片标题为: {response.text}")
+    scan_log.info("Using Gemini-2.0-flash to generate slice title")
+    scan_log.info(f"Prompt: {SLICE_PROMPT.format(artist=artist)}")
+    scan_log.info(f"Generated slice title: {response.text}")
     return response.text

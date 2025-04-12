@@ -17,23 +17,24 @@ inference_model = "small" # If you choose "deploy", you should download the infe
 # You can change the title as you like, eg.
 title = "{date}直播" # Key words: {artist}, {date}, {title}, {source_link}
 description = "录制请征求主播同意，若未经同意就录制，所引起的任何法律问题均由该违规录制的 b 站账号承担。" # Key words: {artist}, {date}, {title}, {source_link}
-tid = # The tid of the video, see https://bilitool.timerring.com/tid.html
+tid = # The tid of the video(int), see https://bilitool.timerring.com/tid.html
 gift_price_filter = 1 # The gift whose price is less than this value will be filtered, unit: RMB
 reserve_for_fixing = false # If encounter MOOV crash error, delete the video or reserve for fixing
 upload_line = "auto" # The upload line to be used, default None is auto detect(recommended), if you want to specify, it can be "bldsa", "ws", "tx", "qn", "bda2".
 
 [slice]
 auto_slice = false # General control: true or false
+slice_prompt = "" # Write your own slice prompt here, key word: {artist}
 slice_duration = 60 # better not exceed 300 seconds
 slice_num = 2 # the number of slices
 slice_overlap = 30 # the overlap of slices(seconds) see my package https://github.com/timerring/auto-slice-video for more details
 slice_step = 1 # the step of slices(seconds)
 min_video_size = 200 # The minimum video size to be sliced (MB)
 mllm_model = "qwen" # the multi-model LLMs, can be "qwen" or "gemini" or "zhipu"
-slice_prompt = "" # Write your own slice prompt here
 qwen_api_key = "" # Apply for your own Qwen API key at https://bailian.console.aliyun.com/?apiKey=1
 zhipu_api_key = "" # Apply for your own GLM-4v-Plus API key at https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D
 gemini_api_key = "" # Apply for your own Gemini API key at https://aistudio.google.com/app/apikey
+sensenova_api_key = "" # Apply for your own SenseNova API key at https://console.sensecore.cn/aistudio/management/api-key
 
 [cover]
 generate_cover = false # whether to generate cover

@@ -23,7 +23,7 @@ def gemini_generate_title(video_path, artist):
         raise ValueError(video_file.state.name)
 
     # Create the prompt.
-    prompt = SLICE_PROMPT
+    prompt = SLICE_PROMPT.format(artist=artist)
 
     # Set the model to Gemini Flash.
     model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
@@ -33,7 +33,7 @@ def gemini_generate_title(video_path, artist):
     )
     # delete the video file
     genai.delete_file(video_file.name)
-    scan_log.info("使用 Gemini-2.0-flash 生成切片标题")
-    scan_log.info(f"Prompt: {SLICE_PROMPT}")
-    scan_log.info(f"生成的切片标题为: {response.text}")
+    scan_log.info("Using Gemini-2.0-flash to generate slice title")
+    scan_log.info(f"Prompt: {SLICE_PROMPT.format(artist=artist)}")
+    scan_log.info(f"Generated slice title: {response.text}")
     return response.text

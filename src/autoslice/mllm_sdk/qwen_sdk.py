@@ -31,12 +31,12 @@ def qwen_generate_title(video_path, artist):
                         "type": "video_url",
                         "video_url": {"url": f"data:video/mp4;base64,{base64_video}"},
                     },
-                    {"type": "text", "text": SLICE_PROMPT},
+                    {"type": "text", "text": SLICE_PROMPT.format(artist=artist)},
                 ],
             },
         ],
     )
-    scan_log.info("使用 Qwen-2.5-72B-Instruct 生成切片标题")
-    scan_log.info(f"Prompt: {SLICE_PROMPT}")
-    scan_log.info(f"生成的切片标题为: {completion.choices[0].message.content}")
+    scan_log.info("Using Qwen-2.5-72B-Instruct to generate slice title")
+    scan_log.info(f"Prompt: {SLICE_PROMPT.format(artist=artist)}")
+    scan_log.info(f"Generated slice title: {completion.choices[0].message.content}")
     return completion.choices[0].message.content.strip('"')

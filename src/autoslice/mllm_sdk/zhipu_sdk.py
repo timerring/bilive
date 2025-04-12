@@ -18,12 +18,12 @@ def zhipu_glm_4v_plus_generate_title(video_path, artist):
                 "role": "user",
                 "content": [
                     {"type": "video_url", "video_url": {"url": video_base}},
-                    {"type": "text", "text": SLICE_PROMPT},
+                    {"type": "text", "text": SLICE_PROMPT.format(artist=artist)},
                 ],
             }
         ],
     )
-    scan_log.info("使用 Zhipu-glm-4v-plus 生成切片标题")
-    scan_log.info(f"Prompt: {SLICE_PROMPT}")
-    scan_log.info(f"生成的切片标题为: {response.choices[0].message.content}")
+    scan_log.info("Using Zhipu-glm-4v-plus to generate slice title")
+    scan_log.info(f"Prompt: {SLICE_PROMPT.format(artist=artist)}")
+    scan_log.info(f"Generated slice title: {response.choices[0].message.content}")
     return response.choices[0].message.content.replace("《", "").replace("》", "")

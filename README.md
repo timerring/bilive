@@ -17,6 +17,7 @@
   <img src="assets/zhipu-color.svg" alt="Zhipu GLM-4V-PLUS" width="60" height="60" />
   <img src="assets/gemini-brand-color.svg" alt="Google Gemini 1.5 Pro" width="60" height="60" />
   <img src="assets/qwen-color.svg" alt="Qwen-2.5-72B-Instruct" width="60" height="60" />
+  <img src="assets/sensenova-brand-color.svg" alt="SenseNova V6 Pro" width="60" height="60" />
 </div>
 
   <img src="assets/hunyuan-color.svg" alt="Tencent Hunyuan" width="50" height="60" />
@@ -56,6 +57,7 @@
   - `GLM-4V-PLUS`
   - `Gemini-2.0-flash`
   - `Qwen-2.5-72B-Instruct`
+  - `SenseNova V6 Pro`
 - **( :tada: NEW)持久化登录/下载/上传视频(支持多p投稿)**：[bilitool](https://github.com/timerring/bilitool) 已经开源，实现持久化登录，下载视频及弹幕(含多p)/上传视频(可分p投稿)，查询投稿状态，查询详细信息等功能，一键pip安装，可以使用命令行 cli 操作，也可以作为api调用。
 - **( :tada: NEW)自动多平台循环直播推流**：该工具已经开源 [looplive](https://github.com/timerring/looplive) 是一个 7 x 24 小时全自动**循环多平台同时推流**直播工具。
 - **( :tada: NEW)自动生成风格变换的视频封面**：采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面。
@@ -168,8 +170,9 @@ pip install -r requirements.txt
 > [!TIP]
 > - 有关自动切片的配置在 `bilive.toml` 文件的 `[slice]` 部分。
 > - `auto_slice` 默认为 false, 即不进行自动切片。
+> - 可以通过单元测试调试你自己的 prompt，单元测试在 `tests/test_autoslice.py`，执行 `python -m unittest` 即可，后接 `tests.test_autoslice` 测试整个模块，`tests.test_autoslice.TestXXXMain` 测试某个模型。
 
-MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关闭，如果需要打开请将 `auto_slice` 参数设置为 `true`，并且写下你自己的 prompt，其他配置分别有：
+MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关闭，如果需要打开请将 `auto_slice` 参数设置为 `true`，并且写下你自己的 `slice_prompt`(请包含关键词 `{artist}`会自动替换)，其他配置分别有：
 - `slice_duration` 以秒为单位设置切片时长（不建议超过 180 秒）。
 - `slice_num` 设置切片数量。
 - `slice_overlap` 设置切片重叠时长。切片采用滑动窗口法处理，细节内容请见 [auto-slice-video](https://github.com/timerring/auto-slice-video)
@@ -178,11 +181,11 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 
 接下来配置模型有关的 `mllm_model` 参数即对应的 api-key，请自行根据链接注册账号并且申请对应 api key，填写在对应的参数中，请注意以下模型只有你在 `mllm_model` 参数中设置的那个模型会生效。
 
-| Company   |    Alicloud           |       zhipu        |    Google        |
-|----------------|-----------------------|------------------|-------------------|
-| Name   | Qwen-2.5-72B-Instruct | GLM-4V-PLUS | Gemini-2.0-flash       |
-| `mllm_model`   | `qwen`  | `zhipu` | `gemini` |
-| `API key`   | [qwen_api_key](https://bailian.console.aliyun.com/?apiKey=1) | [zhipu_api_key](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D) | [gemini_api_key](https://aistudio.google.com/app/apikey) |
+| Company   |    Alicloud           |       zhipu        |    Google        | SenseNova |
+|----------------|-----------------------|------------------|-------------------|-------------------|
+| Name   | Qwen-2.5-72B-Instruct | GLM-4V-PLUS | Gemini-2.0-flash | SenseNova V6 Pro |
+| `mllm_model`   | `qwen`  | `zhipu` | `gemini` | `sensenova` |
+| `API key`   | [qwen_api_key](https://bailian.console.aliyun.com/?apiKey=1) | [zhipu_api_key](https://www.bigmodel.cn/invite?icode=shBtZUfNE6FfdMH1R6NybGczbXFgPRGIalpycrEwJ28%3D) | [gemini_api_key](https://aistudio.google.com/app/apikey) | [sensenova_api_key](https://console.sensecore.cn/aistudio/management/api-key) |
 
 
 #### 2.3 Image Generation Model（自动生成视频封面）
