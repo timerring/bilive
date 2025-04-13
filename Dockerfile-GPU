@@ -19,4 +19,4 @@ ENV TZ="Asia/Shanghai"
 
 EXPOSE 2233
 
-CMD ["python", "-m", "src.upload.upload"]
+CMD ["./start.sh"]

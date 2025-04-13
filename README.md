@@ -173,7 +173,7 @@ pip install -r requirements.txt
 > [!TIP]
 > - 有关自动切片的配置在 `bilive.toml` 文件的 `[slice]` 部分。
 > - `auto_slice` 默认为 false, 即不进行自动切片。
-> - 可以通过单元测试调试你自己的 prompt，单元测试在 `tests/test_autoslice.py`，执行 `python -m unittest` 即可，后接 `tests.test_autoslice` 测试整个模块，`tests.test_autoslice.TestXXXMain` 测试某个模型。部分模型会返回多个标题，请在 prompt 中指出，仅返回一个标题的字符串即可。
+> - 可以通过单元测试调试你自己的 prompt，单元测试在 `tests/test_autoslice.py`，执行 `python -m unittest` 即可，后接 `tests.test_autoslice` 测试整个模块，`tests.test_autoslice.TestXXXMain` 测试某个模型。部分模型会返回多个标题及 emoji，请在 prompt 中指出，仅返回一个标题的字符串即可，推荐先自行调试确保您的 prompt works，欢迎在 issue 中分享你的 prompt。
 
 MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关闭，如果需要打开请将 `auto_slice` 参数设置为 `true`，并且写下你自己的 `slice_prompt`(可以包含 `{artist}` 关键词会自动替换)，其他配置分别有：
 - `slice_duration` 以秒为单位设置切片时长（不建议超过 180 秒）。
@@ -328,13 +328,17 @@ docker run -itd \
 
 #### 有 GPU 版本
 
-如果你能看到这行字，说明 0.3.0 版本还没有发布，会在两天内测试完发布，请耐心等待。可以尝试源码部署。注意：0.2.x 版本和 0.3.0 版本不兼容，如需采用 0.2.x 版本，请参考项目文档而不是本 README。
+有 GPU 版本仅支持 amd64 架构，已内置 small 参数量的模型，如需使用其他参数量模型，请自行按照 2.1.2 步骤调整。`your_record_password` 规则同上。
 
 ```bash
-sudo docker run \
-    -itd \
+sudo docker run -itd \
+    -v your/path/to/bilive.toml:/app/bilive.toml \
+    -v your/path/to/settings.toml:/app/settings.toml \
+    -v your/path/to/Videos:/app/Videos \
+    -v your/path/to/logs:/app/logs \
     --gpus 'all,"capabilities=compute,utility,video"' \
     --name bilive_docker_gpu \
+    -e RECORD_KEY=your_record_password \
     -p 22333:2233 \
     ghcr.io/timerring/bilive-gpu:0.3.0
 ```
@@ -345,7 +349,7 @@ sudo docker run \
 
 #### 使用镜像
 
-默认 CPU latest version，如需使用 GPU 版本，请自行在 `compose.yml` 中调整。
+如需使用 GPU 版本，请自行在 `compose.yml` 中调整。
 
 ```bash
 docker compose up -d

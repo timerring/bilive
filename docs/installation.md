@@ -241,11 +241,9 @@ sudo docker run \
 
 ### Docker Compose
 
-See [Installation](https://bilive.timerring.com/installation.html) for the adjustment method of `compose.yml`.
-
 #### Use image
 
-Default CPU latest version, if you need to use the GPU version, please adjust it in `compose.yml` yourself.
+The default is CPU latest version, if you need to use the GPU version, please modify the `image: ghcr.io/timerring/bilive:X.X.X` to `image: ghcr.io/timerring/bilive-gpu:X.X.X` in `compose.yml`.
 
 ```bash
 docker compose up -d
@@ -253,7 +251,17 @@ docker compose up -d
 
 #### Self-build
 
-Please adjust the relevant configuration in `compose.yml`, then execute the following command:
+> [!IMPORTANT]
+> If you want to compose self-built images, **please change the login method** in `src/upload/upload.py` from `LoginController().login_bilibili_with_cookie_file(file)` to `LoginController().login_bilibili(export=False)`, otherwise the login process will fail.
+
+The relevant configuration has been written, please replace the 3 to 6 lines of `compose.yml` with:
+
+```yaml
+    build:
+        context: .
+        dockerfile: Dockerfile # Dockerfile-GPU
+    # image: ghcr.io/timerring/bilive:X.X.X # ghcr.io/timerring/bilive-gpu:X.X.X
+```
 
 ```bash
 docker build
