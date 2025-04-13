@@ -2,3 +2,7 @@ node_modules/
 pnpm-lock.yaml
 **/__pycache__
 test/*
+bilive.toml
+settings.toml
+Videos/
+logs/
