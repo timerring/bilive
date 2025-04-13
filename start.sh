@@ -17,7 +17,7 @@ done
 ./record.sh
 
 # Start the scan process in the background
-nohup python -m src.burn.scan > ./logs/scan/scan-$(date +%Y%m%d-%H%M%S).log 2>&1 &
+nohup python -m src.burn.scan > ./logs/runtime/scan-$(date +%Y%m%d-%H%M%S).log 2>&1 &
 
 # Start the upload process
 exec python -m src.upload.upload
