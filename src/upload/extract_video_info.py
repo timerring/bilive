@@ -76,7 +76,7 @@ def generate_tag(video_path):
     tags = get_bilibili_suggestions(artist_text)
 
     if not tags:
-        tags = ["直播回放", "切片"]
+        tags = "直播回放"
 
     return tags
 
