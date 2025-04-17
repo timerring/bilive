@@ -26,10 +26,10 @@ def get_bilibili_suggestions(term):
             f"Request get_bilibili_suggestions failed with status code: {response.status_code}"
         )
         # fallback to default tags
-        return ["直播回放", "切片"]
+        return "直播回放"
     except requests.RequestException as e:
         upload_log.error(f"Request get_bilibili_suggestions failed with exception: {e}")
-        return ["直播回放", "切片"]
+        return "直播回放"
 
 
 if __name__ == "__main__":
