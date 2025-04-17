@@ -54,17 +54,21 @@ def render_video(video_path):
     srt_path = original_video_path[:-4] + ".srt"
     jsonl_path = original_video_path[:-4] + ".jsonl"
 
-    # Recoginze the resolution of video
-    resolution_x, resolution_y = get_resolution(original_video_path)
     try:
+        # Recoginze the resolution of video
+        resolution_x, resolution_y = get_resolution(original_video_path)
         # Process the danmakus to ass and remove emojis
         subtitle_font_size, subtitle_margin_v = process_danmakus(
             xml_path, resolution_x, resolution_y
         )
-    except TypeError as e:
-        scan_log.error(f"TypeError: {e} - Check the return value of process_danmakus")
-    except FileNotFoundError as e:
-        scan_log.error(f"FileNotFoundError: {e} - Check if the file exists")
+    # except TypeError as e:
+    #     scan_log.error(f"TypeError: {e} - Check the return value of process_danmakus")
+    # except FileNotFoundError as e:
+    #     scan_log.error(f"FileNotFoundError: {e} - Check if the file exists")
+    except Exception as e:
+        scan_log.error(f"Error in process_danmakus: {e}")
+        subtitle_font_size = "16"
+        subtitle_margin_v = "60"
 
     # Generate the srt file via whisper model
     if MODEL_TYPE != "pipeline":
