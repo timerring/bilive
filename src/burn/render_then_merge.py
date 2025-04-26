@@ -89,10 +89,10 @@ def render_then_merge(video_path_list):
             srt_path = original_video_path[:-4] + ".srt"
             jsonl_path = original_video_path[:-4] + ".jsonl"
             # Recoginze the resolution of video
-            video_resolution = get_resolution(original_video_path)
+            resolution_x, resolution_y = get_resolution(original_video_path)
             # Process the danmakus to ass and remove emojis
             subtitle_font_size, subtitle_margin_v = process_danmakus(
-                xml_path, video_resolution
+                xml_path, resolution_x, resolution_y
             )
             # Generate the srt file via whisper model
             generate_subtitle(original_video_path)
