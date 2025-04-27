@@ -225,7 +225,7 @@ docker run -itd \
     --name bilive_docker \
     -e RECORD_KEY=your_record_password \
     -p 22333:2233 \
-    ghcr.io/timerring/bilive:0.3.0
+    ghcr.io/timerring/bilive:0.3.1
 ```
 
 #### GPU version
@@ -236,7 +236,7 @@ sudo docker run \
     --gpus 'all,"capabilities=compute,utility,video"' \
     --name bilive_docker_gpu \
     -p 22333:2233 \
-    ghcr.io/timerring/bilive-gpu:0.3.0
+    ghcr.io/timerring/bilive-gpu:0.3.1
 ```
 
 ### Docker Compose
