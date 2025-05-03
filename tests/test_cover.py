@@ -12,7 +12,7 @@ from src.cover.image_model_sdk.tencent_sdk import hunyuan_generate_cover
 from src.cover.image_model_sdk.kling_sdk import kling_generate_cover
 
 class BaseTest(unittest.TestCase):
-    file_path = ""
+    file_path = "your_image_path"
 
 
 class TestAmazonMain(BaseTest):
