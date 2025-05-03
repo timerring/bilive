@@ -13,6 +13,14 @@
 [:thinking: Reporting Issues](https://github.com/timerring/bilive/issues/new/choose) |
 [:speech_balloon: Chat](https://github.com/timerring/bilive/blob/main/assets/wechat.png)
 
+<div>
+  
+  <img src="assets/dmx.png" alt="dmxapi.cn" width="450" height="300" />
+
+  **大模型API(<a href="https://www.dmxapi.cn" target="_blank">dmxapi.cn</a>)** 行业领先的 api 聚合平台 **[详细介绍](#特别感谢)**
+
+</div>
+
 支持模型
 
 <div>
@@ -77,11 +85,12 @@
   - `Recraft`
   - `Amazon Titan Image Generator V2`
   - `Hidream I1`
+  - `kling-v1-5`
 
 
 项目架构流程如下：
 
-![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-30-14-00-48.png)
+![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-05-03-22-09-56.png)
 
 ## 3. 测试硬件
 
@@ -205,18 +214,29 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 
 采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面，如需使用本功能，请将 `generate_cover` 参数设置为 `true`，并且写下你自己的 prompt，注意部分模型只支持英文，接下来需要配置的参数有 image_gen_model 和对应的 api key，请自行根据链接注册账号并且申请对应 api key，填写在对应的参数中，请注意以下模型只有你在 `image_gen_model` 参数中设置的那个模型会生效。
 
+推荐使用大模型API([dmxapi.cn](https://www.dmxapi.cn/))，一个 Key 用全球大模型，[查看详细介绍](#特别感谢)。
+
 | Company     | Model Name                        | `image_gen_model`   | `API Key`                                                                  |
 |--------------|--------------------------------|-------------------|---------------------------------------------------------------------------------|
-| Minimax      | image-01                       | `minimax`         | [minimax_api_key](https://platform.minimaxi.com/user-center/basic-information/interface-key)                                    |
-| Kwai  | Kolors                    | `siliconflow`       | [siliconflow_api_key](https://cloud.siliconflow.cn/i/3Szr5BVg)                  |
-| Tencent      | Hunyuan                | `tencent`           | [tencent_secret_id and tencent_secret_key](https://console.cloud.tencent.com/cam/capi)                   |
-| Baidu        | ERNIE irag-1.0                   | `baidu`             | [baidu_api_key](https://console.bce.baidu.com/iam/key/list)                     |
-| Stability AI | Stable Diffusion 3.5 large turbo   | `stability`         | [stability_api_key](https://platform.stability.ai/account/keys)                 |
-| Luma Labs    | Photon                    | `luma`              | [luma_api_key](https://lumalabs.ai/api/keys)                               |
-| Ideogram     | Ideogram V_2                   | `ideogram`          | [ideogram_api_key](https://ideogram.ai/manage-api)                              |
-| Recraft      | Recraft V3                       | `recraft`           | [recraft_api_key](https://www.recraft.ai/profile/api)                           |
-| Amazon       | Titan Image Generator V2                        | `amazon`            | [aws_access_key_id and aws_secret_access_key](https://aws.amazon.com/console/)                               |
-| Hidream      | Hidream I1                       | `hidream`            | [hidream_api_key](https://www.hidreamai.com/platform/token)                               |
+| Kwai      | v1-5                       | `kling`         | [dmx_api_token](https://www.dmxapi.cn/token)                                  |
+
+<details>
+<summary>其他支持的图像生成模型</summary>
+
+| Company     | Model Name                        | `image_gen_model`   | `API Key`                                                                  |
+|--------------|--------------------------------|-------------------|---------------------------------------------------------------------------------|
+| Minimax      | image-01                       | `minimax`         | minimax_api_key                                  |
+| Kwai  | Kolors                    | `siliconflow`       | siliconflow_api_key                  |
+| Tencent      | Hunyuan                | `tencent`           | tencent_secret_id and tencent_secret_key                  |
+| Baidu        | ERNIE irag-1.0                   | `baidu`             | baidu_api_key                    |
+| Stability AI | Stable Diffusion 3.5 large turbo   | `stability`         | stability_api_key                |
+| Luma Labs    | Photon                    | `luma`              | luma_api_key                               |
+| Ideogram     | Ideogram V_2                   | `ideogram`          | ideogram_api_key                             |
+| Recraft      | Recraft V3                       | `recraft`           | recraft_api_key                          |
+| Amazon       | Titan Image Generator V2                        | `amazon`            | aws_access_key_id and aws_secret_access_key                      |
+| Hidream      | Hidream I1                       | `hidream`            | hidream_api_key                              |
+
+</details>
 
 #### 3. 配置上传参数
 
@@ -374,6 +394,12 @@ docker compose up -d
 
 ## 特别感谢
 
+- 大模型API([dmxapi.cn](https://www.dmxapi.cn/))，DMX 取自“大模型”的拼音首字母，行业领先的智能API聚合服务平台，旨在帮助 LLM 应用开发的初学者轻松接入多种大模型，快速进入 AI 应用的广阔领域。
+  1. **人民币计价全球人工智能大模型API**，聚合中国和全球**300+多模态大模型**，直连畅通使用国内外领先大模型 API 服务，1个Key使用全模型，涵盖各个领域模型，应有尽有。
+  2. **RPM / TPM 无上限**，注册就是顶级账号，不设 RPM / TPM 限制，企业客户集群服务器，支持无限并发。
+  3. **合规发票 充值即开**，企业客户支持公对公付款，开具正规发票。
+  4. **海外模型低至 7 折，模型原厂集采直供**，通过直接与大模型原厂合作，我们采用集中采购的方式获取资源，确保为您提供极具竞争力的价格，**以更低的成本获取顶级的大模型服务**。
+  5. **坚守诚信与专业**，确保向客户提供真实、可靠的模型服务，维护客户的信任与满意度，[服务与承诺](https://dmxapi.cn/chengnuo.html)。
 - [acgnhiki/blrec](https://github.com/acgnhiki/blrec)
 - [OpenAI/whisper](https://github.com/OpenAI/whisper)
 - [biliup/biliup-rs](https://github.com/biliup/biliup-rs)
