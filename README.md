@@ -17,13 +17,16 @@
   
   <img src="assets/dmx.png" alt="DMXAPI.cn" width="450" height="300" />
 
-  **大模型API(<a href="https://www.dmxapi.cn" target="_blank">DMXAPI.cn</a>)** 行业领先的 api 聚合平台 **[详细介绍](#特别感谢)**
+  **大模型API(<a href="https://www.dmxapi.cn" target="_blank">DMXAPI</a>)** 行业领先的 api 聚合平台 **[详细介绍](#特别感谢)**
 
 <details open>
-  <summary>最新模型上架日志</summary>
-  <p> 2025.4.30：上架数学证明专用模型 DeepSeek-Prover-V2-671B </p>
-  <p> 2025.4.29：阿里云 Qwen3 系列模型尝鲜上架 </p>
-  <p> 2025.4.24：OpenAI 最新图像编辑模型 GPT-Image-1 上线 </p>
+  <summary> DMX = 大模型拼音首字母 </summary>
+  
+  <ul>
+    <li><a href="https://DMXAPI.cn">DMXAPI.cn</a> 一个key用全球大模型</li>
+    <li>GPT  Claude  Gemini  6.8折起</li>
+    <li><a href="https://ssvip.DMXAPI.com">ssvip.DMXAPI.com</a> 提供生产级稳定服务</li>
+  </ul>
 
 </details>
 
