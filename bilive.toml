@@ -40,6 +40,7 @@ sensenova_api_key = "" # Apply for your own SenseNova API key at https://console
 generate_cover = false # whether to generate cover
 cover_prompt = "" # Write your own cover prompt here
 image_gen_model = "minimax" # the image generation model, can be "minimax" or "siliconflow" or "tencent" or "baidu" or "stability" or "luma" or "ideogram" or "recraft" or "amazon" or "hidream"
+dmx_api_token = "" # Apply for your own dmxapi token at https://www.dmxapi.cn/token
 minimax_api_key = "" # Apply for your own Minimax API key at https://platform.minimaxi.com/user-center/basic-information/interface-key
 siliconflow_api_key = "" # Apply for your own SiliconFlow API key at https://cloud.siliconflow.cn/i/3Szr5BVg
 tencent_secret_id = "" # Apply for your own Tencent Cloud API key at https://console.cloud.tencent.com/cam/capi

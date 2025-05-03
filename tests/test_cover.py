@@ -9,10 +9,10 @@ from src.cover.image_model_sdk.minimax_sdk import minimax_generate_cover
 from src.cover.image_model_sdk.recraft_sdk import recraft_generate_cover
 from src.cover.image_model_sdk.stability_sdk import stable_diffusion_generate_cover
 from src.cover.image_model_sdk.tencent_sdk import hunyuan_generate_cover
-
+from src.cover.image_model_sdk.kling_sdk import kling_generate_cover
 
 class BaseTest(unittest.TestCase):
-    file_path = "your_image_path"
+    file_path = "/home/jh/Downloads/videos/coverexample.jpg"
 
 
 class TestAmazonMain(BaseTest):
@@ -73,6 +73,12 @@ class TestStabilityMain(BaseTest):
 class TestTencentMain(BaseTest):
     def test_hunyuan_generate_cover(self):
         cover_path = hunyuan_generate_cover(self.file_path)
+        self.assertIsNotNone(cover_path)
+        print(cover_path, flush=True)
+
+class TestKlingMain(BaseTest):
+    def test_kling_generate_cover(self):
+        cover_path = kling_generate_cover(self.file_path)
         self.assertIsNotNone(cover_path)
         print(cover_path, flush=True)
 

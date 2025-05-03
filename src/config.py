@@ -6,7 +6,7 @@ from datetime import datetime
 import configparser
 import torch
 import toml
-from db.conn import create_table
+# from db.conn import create_table
 
 
 def load_config_from_toml(file_path):
@@ -92,6 +92,6 @@ RECRAFT_API_KEY = config.get("cover", {}).get("recraft_api_key")
 AWS_ACCESS_KEY_ID = config.get("cover", {}).get("aws_access_key_id")
 AWS_SECRET_ACCESS_KEY = config.get("cover", {}).get("aws_secret_access_key")
 HIDREAM_API_KEY = config.get("cover", {}).get("hidream_api_key")
-
+DMX_API_TOKEN = config.get("cover", {}).get("dmx_api_token")
 SLICE_PROMPT = config.get("slice", {}).get("slice_prompt")
 COVER_PROMPT = config.get("cover", {}).get("cover_prompt")
