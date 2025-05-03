@@ -6,7 +6,7 @@ from datetime import datetime
 import configparser
 import torch
 import toml
-# from db.conn import create_table
+from db.conn import create_table
 
 
 def load_config_from_toml(file_path):
