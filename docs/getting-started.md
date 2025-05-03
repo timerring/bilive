@@ -5,6 +5,27 @@
 
 Automatically monitors and records Bilibili live broadcasts and danmaku (including paid comments, gifts, etc.), converts danmaku according to resolution, recognizes speech and renders subtitles into videos, splits exciting fragments according to danmaku density, and generates interesting titles through video understanding models, automatically generates video covers using image generation models, and automatically posts videos and slices to Bilibili, compatible with the version without GPU, compatible with low-configuration servers and hosts.
 
+# Sponsorship
+
+![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-05-04-01-45-57.png)
+
+<div>
+
+  **大模型API(<a href="https://www.dmxapi.cn/register?aff=vRzR" target="_blank">DMXAPI</a>)** Industry-leading API aggregation platform **[Details](https://bilive.timerring.com/reference.html)**
+
+<details open>
+  <summary> DMX = The abbreviation of 大模型 </summary>
+  
+  <ul>
+    <li><a href="https://www.dmxapi.cn/register?aff=vRzR">DMXAPI.cn</a> A key with a global model</li>
+    <li>GPT Claude Gemini from 62% off</li>
+    <li><a href="https://ssvip.DMXAPI.com">ssvip.DMXAPI.com</a> Provide production-level stable services</li>
+  </ul>
+
+</details>
+
+</div>
+
 ## Major features
 
 - **Fast**：Use the `pipeline` pipeline to process videos, in ideal conditions, the recording and live broadcast differ by half an hour, and the recording can be上线录播，**Currently the fastest version of Bilibili recording**!
@@ -33,7 +54,9 @@ Automatically monitors and records Bilibili live broadcasts and danmaku (includi
   - `Ideogram V_2`
   - `Recraft`
   - `Amazon Titan Image Generator V2`
+  - `Hidream I1`
+  - `kling-v1-5`
 
 The project architecture process is as follows:
 
-![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-04-12-17-04-11.png)
+![](https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-05-03-22-09-56.png)
