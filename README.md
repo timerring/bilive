@@ -15,9 +15,9 @@
 
 <div>
   
-  <img src="assets/dmx.png" alt="dmxapi.cn" width="450" height="300" />
+  <img src="assets/dmx.png" alt="DMXAPI.cn" width="450" height="300" />
 
-  **大模型API(<a href="https://www.dmxapi.cn" target="_blank">dmxapi.cn</a>)** 行业领先的 api 聚合平台 **[详细介绍](#特别感谢)**
+  **大模型API(<a href="https://www.dmxapi.cn" target="_blank">DMXAPI.cn</a>)** 行业领先的 api 聚合平台 **[详细介绍](#特别感谢)**
 
 <details open>
   <summary>最新模型上架日志</summary>
@@ -402,7 +402,7 @@ docker compose up -d
 
 ## 特别感谢
 
-- [大模型API](https://www.dmxapi.cn/)([dmxapi.cn](https://www.dmxapi.cn/))，**DMX 取自“大模型”的拼音首字母，行业领先的智能API聚合服务平台**，旨在帮助 LLM 应用开发的初学者轻松接入多种大模型，快速进入 AI 应用的广阔领域。
+- [大模型API](https://www.dmxapi.cn/)([DMXAPI.cn](https://www.dmxapi.cn/))，**DMX 取自“大模型”的拼音首字母，行业领先的智能API聚合服务平台**，旨在帮助 LLM 应用开发的初学者轻松接入多种大模型，快速进入 AI 应用的广阔领域。
   1. **人民币计价全球人工智能大模型API**，[聚合中国和全球**300+多模态大模型**](https://www.dmxapi.cn/pricing)，直连畅通使用国内外领先大模型 API 服务，1个Key使用全模型，涵盖各个领域模型，应有尽有。
   2. **RPM / TPM 无上限**，注册就是顶级账号，不设 RPM / TPM 限制，企业客户集群服务器，支持无限并发。
   3. **合规发票 充值即开**，企业客户支持公对公付款，开具正规发票。
