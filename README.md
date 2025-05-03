@@ -17,13 +17,13 @@
   
   <img src="assets/dmx.png" alt="DMXAPI.cn" width="450" height="300" />
 
-  **大模型API(<a href="https://www.dmxapi.cn" target="_blank">DMXAPI</a>)** 行业领先的 api 聚合平台 **[详细介绍](#特别感谢)**
+  **大模型API(<a href="https://www.dmxapi.cn/register?aff=vRzR" target="_blank">DMXAPI</a>)** 行业领先的 api 聚合平台 **[详细介绍](#特别感谢)**
 
 <details open>
   <summary> DMX = 大模型拼音首字母 </summary>
   
   <ul>
-    <li><a href="https://DMXAPI.cn">DMXAPI.cn</a> 一个key用全球大模型</li>
+    <li><a href="https://www.dmxapi.cn/register?aff=vRzR">DMXAPI.cn</a> 一个key用全球大模型</li>
     <li>GPT  Claude  Gemini  6.8折起</li>
     <li><a href="https://ssvip.DMXAPI.com">ssvip.DMXAPI.com</a> 提供生产级稳定服务</li>
   </ul>
@@ -225,7 +225,7 @@ MLLM 模型主要用于自动切片后的切片标题生成，此功能默认关
 
 采用图生图多模态模型，自动获取视频截图并上传风格变换后的视频封面，如需使用本功能，请将 `generate_cover` 参数设置为 `true`，并且写下你自己的 prompt，注意部分模型只支持英文，接下来需要配置的参数有 image_gen_model 和对应的 api key，请自行根据链接注册账号并且申请对应 api key，填写在对应的参数中，请注意以下模型只有你在 `image_gen_model` 参数中设置的那个模型会生效。
 
-推荐使用大模型API([dmxapi.cn](https://www.dmxapi.cn/))，一个 Key 用全球大模型，[查看详细介绍](#特别感谢)。
+推荐使用大模型API([dmxapi.cn](https://www.dmxapi.cn/register?aff=vRzR))，一个 Key 用全球大模型，[查看详细介绍](#特别感谢)。
 
 | Company     | Model Name                        | `image_gen_model`   | `API Key`                                                                  |
 |--------------|--------------------------------|-------------------|---------------------------------------------------------------------------------|
@@ -405,7 +405,7 @@ docker compose up -d
 
 ## 特别感谢
 
-- [大模型API](https://www.dmxapi.cn/)([DMXAPI.cn](https://www.dmxapi.cn/))，**DMX 取自“大模型”的拼音首字母，行业领先的智能API聚合服务平台**，旨在帮助 LLM 应用开发的初学者轻松接入多种大模型，快速进入 AI 应用的广阔领域。
+- [大模型API](https://www.dmxapi.cn/register?aff=vRzR)([DMXAPI.cn](https://www.dmxapi.cn/register?aff=vRzR))，**DMX 取自“大模型”的拼音首字母，行业领先的智能API聚合服务平台**，旨在帮助 LLM 应用开发的初学者轻松接入多种大模型，快速进入 AI 应用的广阔领域。
   1. **人民币计价全球人工智能大模型API**，[聚合中国和全球**300+多模态大模型**](https://www.dmxapi.cn/pricing)，直连畅通使用国内外领先大模型 API 服务，1个Key使用全模型，涵盖各个领域模型，应有尽有。
   2. **RPM / TPM 无上限**，注册就是顶级账号，不设 RPM / TPM 限制，企业客户集群服务器，支持无限并发。
   3. **合规发票 充值即开**，企业客户支持公对公付款，开具正规发票。
