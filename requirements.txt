@@ -3,7 +3,7 @@ ffmpeg_python==0.2.0
 librosa==0.9.1
 more_itertools==10.6.0
 numba>=0.55.1
-numpy>=1.21.6, <1.26.4
+numpy>=1.21.6, <2.0.3
 pysrt==1.1.2
 six==1.16.0
 tiktoken==0.4.0
