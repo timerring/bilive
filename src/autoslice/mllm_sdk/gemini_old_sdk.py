@@ -26,14 +26,14 @@ def gemini_generate_title(video_path, artist):
     prompt = SLICE_PROMPT.format(artist=artist)
 
     # Set the model to Gemini Flash.
-    model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
+    model = genai.GenerativeModel(model_name="models/gemini-2.5-flash")
 
     response = model.generate_content(
         [prompt, video_file], request_options={"timeout": 600}
     )
     # delete the video file
     genai.delete_file(video_file.name)
-    scan_log.info("Using Gemini-2.0-flash to generate slice title")
+    scan_log.info("Using Gemini-2.5-Flash to generate slice title")
     scan_log.info(f"Prompt: {SLICE_PROMPT.format(artist=artist)}")
     scan_log.info(f"Generated slice title: {response.text}")
     return response.text
