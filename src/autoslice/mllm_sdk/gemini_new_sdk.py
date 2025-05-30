@@ -12,7 +12,7 @@ def gemini_generate_title(video_path, artist):
     video_bytes = open(video_path, "rb").read()
 
     response = client.models.generate_content(
-        model="models/gemini-2.0-flash",
+        model="models/gemini-2.5-flash",
         contents=types.Content(
             parts=[
                 types.Part(text=SLICE_PROMPT.format(artist=artist)),
@@ -22,7 +22,7 @@ def gemini_generate_title(video_path, artist):
             ]
         ),
     )
-    scan_log.info("Using Gemini-2.0-flash to generate slice title")
+    scan_log.info("Using Gemini-2.5-Flash to generate slice title")
     scan_log.info(f"Prompt: {SLICE_PROMPT.format(artist=artist)}")
     scan_log.info(f"Generated slice title: {response.text}")
     return response.text
