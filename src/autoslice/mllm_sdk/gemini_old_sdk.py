@@ -26,7 +26,7 @@ def gemini_generate_title(video_path, artist):
     prompt = SLICE_PROMPT.format(artist=artist)
 
     # Set the model to Gemini Flash.
-    model = genai.GenerativeModel(model_name="models/gemini-2.5-flash")
+    model = genai.GenerativeModel(model_name="gemini-2.5-flash-preview-05-20")
 
     response = model.generate_content(
         [prompt, video_file], request_options={"timeout": 600}
