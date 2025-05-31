@@ -1,4 +1,4 @@
-blrec==2.0.0b4
+./wheel/blrec-2.0.0b4-py3-none-any.whl
 ffmpeg_python==0.2.0
 librosa==0.9.1
 more_itertools==10.6.0
