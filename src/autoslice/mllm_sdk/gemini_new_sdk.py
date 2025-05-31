@@ -12,7 +12,7 @@ def gemini_generate_title(video_path, artist):
     video_bytes = open(video_path, "rb").read()
 
     response = client.models.generate_content(
-        model="models/gemini-2.5-flash",
+        model="gemini-2.5-flash-preview-05-20",
         contents=types.Content(
             parts=[
                 types.Part(text=SLICE_PROMPT.format(artist=artist)),
